@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Gabe OS</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Arial', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 20px 20px 16px;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .brand {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #FFD700;
+            margin-bottom: 8px;
+        }
+
+        .date-greeting {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            background: #0f0f0f;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            color: #999;
+        }
+
+        .card-body {
+            padding: 24px 20px;
+        }
+
+        .quote-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 2px solid #FFD700;
+            margin-bottom: 24px;
+        }
+
+        .quote-card .card-body {
+            padding: 32px 24px;
+        }
+
+        .quote-text {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 20px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .quote-author {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #FFD700;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            background: #FFD700;
+            color: #0a0a0a;
+            border: none;
+            padding: 12px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            background: #FFC700;
+        }
+
+        .focus-input {
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 16px;
+            width: 100%;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .focus-input:focus {
+            border-color: #FFD700;
+        }
+
+        .focus-input::placeholder {
+            color: #555;
+        }
+
+        .wins-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-win-btn {
+            background: #FFD700;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-win-btn:active {
+            transform: scale(0.98);
+        }
+
+        .win-input-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .win-input-container.active {
+            display: block;
+        }
+
+        .win-input {
+            background: #0a0a0a;
+            border: 1px solid #FFD700;
+            color: #ffffff;
+            font-size: 14px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        .win-input::placeholder {
+            color: #555;
+        }
+
+        .win-submit-btn {
+            background: #FFD700;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        .win-cancel-btn {
+            background: transparent;
+            color: #999;
+            border: 1px solid #2a2a2a;
+            padding: 10px 24px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .wins-list {
+            list-style: none;
+        }
+
+        .win-item {
+            background: #0f0f0f;
+            border-left: 3px solid #FFD700;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+
+        .win-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .win-timestamp {
+            font-size: 11px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #555;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        .ops-content {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .ops-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .ops-text {
+            font-size: 13px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="brand">BECOMING // CONTROL CENTER</div>
+        <div class="date-greeting" id="dateGreeting"></div>
+    </div>
+
+    <div class="container">
+        <div class="card quote-card">
+            <div class="card-body">
+                <div class="quote-text" id="quoteText"></div>
+                <div class="quote-author" id="quoteAuthor"></div>
+                <button class="btn" id="newQuoteBtn">NEW QUOTE</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">TODAY'S FOCUS</div>
+            </div>
+            <div class="card-body">
+                <input 
+                    type="text" 
+                    class="focus-input" 
+                    id="focusInput" 
+                    placeholder="LOCK IN YOUR MISSION..."
+                >
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">WORK RATE // WINS</div>
+            </div>
+            <div class="card-body">
+                <div class="wins-header">
+                    <button class="add-win-btn" id="addWinBtn">+ ADD WIN</button>
+                </div>
+                
+                <div class="win-input-container" id="winInputContainer">
+                    <input 
+                        type="text" 
+                        class="win-input" 
+                        id="winInput" 
+                        placeholder="WHAT DID YOU EXECUTE?"
+                    >
+                    <button class="win-submit-btn" id="winSubmitBtn">LOG IT</button>
+                    <button class="win-cancel-btn" id="winCancelBtn">CANCEL</button>
+                </div>
+
+                <ul class="wins-list" id="winsList"></ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">OPS // TRAVEL // SCHEDULE</div>
+            </div>
+            <div class="card-body ops-content">
+                <div class="ops-icon">✈️</div>
+                <div class="ops-text">LOGISTICS MODULE COMING SOON</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quotes = [
+            { text: "You are in danger of living a life so comfortable that you will die without ever realizing your true potential.", author: "DAVID GOGGINS" },
+            { text: "The only thing that I see that is distinctly different about me is I'm not afraid to die on a treadmill. I will not be outworked.", author: "DAVID GOGGINS" },
+            { text: "Suffering is a test. That's all it is. A test to see what you're made of.", author: "DAVID GOGGINS" },
+            { text: "Talent without working hard is nothing.", author: "CRISTIANO RONALDO" },
+            { text: "Your love makes me strong, your hate makes me unstoppable.", author: "CRISTIANO RONALDO" },
+            { text: "I'm not a perfectionist, but I like to feel that things are done well. More important than that, I feel an endless need to learn, to improve.", author: "CRISTIANO RONALDO" },
+            { text: "Everything negative – pressure, challenges – is all an opportunity for me to rise.", author: "KOBE BRYANT" },
+            { text: "The most important thing is to try and inspire people so that they can be great in whatever they want to do.", author: "KOBE BRYANT" },
+            { text: "I can't relate to lazy people. We don't speak the same language.", author: "KOBE BRYANT" },
+            { text: "The only limit to your impact is your imagination and commitment.", author: "TONY ROBBINS" },
+            { text: "It's not about the goal. It's about growing to become the person that can accomplish that goal.", author: "TONY ROBBINS" },
+            { text: "Sacrifice is giving up something good for something better.", author: "GREG PLITT" },
+            { text: "The difference between a winner and a loser is the winner played it out regardless of what the scoreboard said.", author: "GREG PLITT" },
+            { text: "Today is the opportunity to build the tomorrow you want.", author: "GREG PLITT" }
+        ];
+
+        function getRandomQuote() {
+            return quotes[Math.floor(Math.random() * quotes.length)];
+        }
+
+        function saveQuote(quote) {
+            localStorage.setItem('lastShownQuote', JSON.stringify(quote));
+        }
+
+        function loadQuote() {
+            const saved = localStorage.getItem('lastShownQuote');
+            return saved ? JSON.parse(saved) : getRandomQuote();
+        }
+
+        function saveFocus(text) {
+            localStorage.setItem('todayFocus', text);
+        }
+
+        function loadFocus() {
+            return localStorage.getItem('todayFocus') || '';
+        }
+
+        function addWin(text) {
+            const wins = loadWins();
+            const timestamp = new Date().toISOString();
+            wins.unshift({ text, timestamp });
+            localStorage.setItem('wins', JSON.stringify(wins));
+            return wins;
+        }
+
+        function loadWins() {
+            const saved = localStorage.getItem('wins');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function formatTimestamp(isoString) {
+            const d = new Date(isoString);
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const year = d.getFullYear();
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hours}:${minutes}`;
+        }
+
+        function initDateGreeting() {
+            const now = new Date();
+            const options = { month: 'short', day: 'numeric', year: 'numeric' };
+            const dateStr = now.toLocaleDateString('en-US', options).toUpperCase().replace(',', '');
+            document.getElementById('dateGreeting').textContent = `${dateStr} — STAY DANGEROUS, GABE`;
+        }
+
+        function initQuote() {
+            const quote = loadQuote();
+            displayQuote(quote);
+        }
+
+        function displayQuote(quote) {
+            document.getElementById('quoteText').textContent = `"${quote.text}"`;
+            document.getElementById('quoteAuthor').textContent = `— ${quote.author}`;
+        }
+
+        function initFocus() {
+            const focusInput = document.getElementById('focusInput');
+            focusInput.value = loadFocus();
+            
+            focusInput.addEventListener('input', (e) => {
+                saveFocus(e.target.value);
+            });
+        }
+
+        function initWins() {
+            renderWins();
+            
+            document.getElementById('addWinBtn').addEventListener('click', () => {
+                document.getElementById('winInputContainer').classList.add('active');
+                document.getElementById('winInput').focus();
+            });
+
+            document.getElementById('winCancelBtn').addEventListener('click', () => {
+                document.getElementById('winInputContainer').classList.remove('active');
+                document.getElementById('winInput').value = '';
+            });
+
+            document.getElementById('winSubmitBtn').addEventListener('click', submitWin);
+            
+            document.getElementById('winInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') submitWin();
+            });
+        }
+
+        function submitWin() {
+            const input = document.getElementById('winInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            addWin(text);
+            renderWins();
+            
+            input.value = '';
+            document.getElementById('winInputContainer').classList.remove('active');
+        }
+
+        function renderWins() {
+            const wins = loadWins();
+            const list = document.getElementById('winsList');
+            
+            if (wins.length === 0) {
+                list.innerHTML = '<div class="empty-state">NO WINS LOGGED YET. GET AFTER IT.</div>';
+                return;
+            }
+            
+            list.innerHTML = wins.map(win => `
+                <li class="win-item">
+                    <div class="win-text">${win.text}</div>
+                    <div class="win-timestamp">${formatTimestamp(win.timestamp)}</div>
+                </li>
+            `).join('');
+        }
+
+        document.getElementById('newQuoteBtn').addEventListener('click', () => {
+            const newQuote = getRandomQuote();
+            saveQuote(newQuote);
+            displayQuote(newQuote);
+        });
+
+        initDateGreeting();
+        initQuote();
+        initFocus();
+        initWins();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed'));
+        }
+    </script>
+</body>
+</html>
