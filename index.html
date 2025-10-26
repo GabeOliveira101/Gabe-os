@@ -14,7 +14,7 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue','Arial',sans-serif;
   background:#0a0a0a;color:#fff;min-height:100vh;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
-  padding-bottom:70px;
+  padding-bottom:90px;
 }
 .header{
   background:linear-gradient(180deg,#1a1a1a 0%,#0a0a0a 100%);
@@ -52,7 +52,7 @@ body{
 .win-timestamp{font-size:11px;color:#666;letter-spacing:1px;}
 .empty-state{text-align:center;padding:40px;color:#555;font-size:13px;letter-spacing:1px;}
 #bottomNav{
-  position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-around;
+  position:fixed;bottom:10;left:0;right:0;display:flex;justify-content:space-around;
   background:#0a0a0a;border-top:2px solid #00ff77;z-index:100;
 }
 #bottomNav button{
@@ -190,19 +190,22 @@ focusInput.addEventListener('input',e=>{
 });
 
 // --- Navigation ---
-const navButtons=document.querySelectorAll('#bottomNav button');
-navButtons.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const target=btn.dataset.target;
-    document.querySelectorAll('section').forEach(sec=>{
-      sec.style.display=(sec.id===target||sec.id==='motivationSection')?'block':'none';
+const navButtons = document.querySelectorAll('#bottomNav button');
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.target;
+    document.querySelectorAll('section').forEach(sec => {
+      sec.style.display = (sec.id === target) ? 'block' : 'none';
     });
+    document.getElementById('motivationSection').style.display =
+      (target === 'focusSection') ? 'block' : 'none';
   });
 });
 
 // Init
 initDateGreeting();
 renderWins();
+
 </script>
 </body>
 </html>
