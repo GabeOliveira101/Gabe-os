@@ -237,6 +237,58 @@ focusInput.value=localStorage.getItem('todayFocus')||'';
 focusInput.addEventListener('input',e=>{
   localStorage.setItem('todayFocus',e.target.value);
 });
+// --- Focus Assistant ---
+const focusTips = document.getElementById('focusTips');
+
+function getFocusTips(focus) {
+  focus = focus.toLowerCase();
+  if (focus.includes('gym') || focus.includes('workout') || focus.includes('train')) {
+    return [
+      "Lay your gear out the night before.",
+      "Hydrate and stretch early.",
+      "Win the morning — own the day."
+    ];
+  }
+  if (focus.includes('read') || focus.includes('study')) {
+    return [
+      "Silence notifications.",
+      "Set a 20-minute timer — no distractions.",
+      "Highlight one powerful line."
+    ];
+  }
+  if (focus.includes('work') || focus.includes('project')) {
+    return [
+      "Start with the hardest task.",
+      "Block one deep-work session.",
+      "Momentum > perfection."
+    ];
+  }
+  if (focus.includes('rest') || focus.includes('recovery')) {
+    return [
+      "Unplug fully.",
+      "Reflect — progress needs rest.",
+      "Tomorrow starts with how you recharge today."
+    ];
+  }
+  return [
+    "Focus is power — stay locked in.",
+    "Discipline beats motivation.",
+    "Small steps today build your tomorrow."
+  ];
+}
+
+function showTips(focus) {
+  const tips = getFocusTips(focus);
+  const randomTip = tips[Math.floor(Math.random() * tips.length)];
+  focusTips.textContent = randomTip;
+}
+
+// When typing, update tips
+focusInput.addEventListener('input', e => {
+  const val = e.target.value.trim();
+  if (val.length > 0) showTips(val);
+  else focusTips.textContent = '';
+});
 
 // --- Navigation ---
 // --- Navigation with transitions and highlights ---
