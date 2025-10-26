@@ -239,17 +239,35 @@ focusInput.addEventListener('input',e=>{
 });
 
 // --- Navigation ---
+// --- Navigation with transitions and highlights ---
 const navButtons = document.querySelectorAll('#bottomNav button');
-navButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.target;
-    document.querySelectorAll('section').forEach(sec => {
-      sec.style.display = (sec.id === target) ? 'block' : 'none';
-    });
-    document.getElementById('motivationSection').style.display =
-      (target === 'focusSection') ? 'block' : 'none';
+const sections = document.querySelectorAll('section');
+
+function showSection(target) {
+  sections.forEach(sec => {
+    if (sec.id === target) {
+      sec.style.display = 'block';
+      sec.classList.add('active');
+    } else {
+      sec.style.display = 'none';
+      sec.classList.remove('active');
+    }
   });
+
+  // Show the video section only on Focus tab
+  const motivation = document.getElementById('motivationSection');
+  motivation.style.display = (target === 'focusSection') ? 'block' : 'none';
+
+  // Highlight active button
+  navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+}
+
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => showSection(btn.dataset.target));
 });
+
+// Show default section on load
+showSection('focusSection');
 
 // Init
 initDateGreeting();
