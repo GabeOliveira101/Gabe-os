@@ -323,6 +323,19 @@ focusInput.addEventListener('keydown', e => {
     if (val.length > 0) showTips(val);
   }
 });
+focusInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = e.target.value.trim();
+    if (val.length > 0) showTips(val);
+  }
+});
+
+// --- Shuffle button logic ---
+document.getElementById('shuffleTip').addEventListener('click', () => {
+  const val = focusInput.value.trim();
+  if (val.length > 0) showTips(val);
+});
 
 // --- Navigation ---
 // --- Navigation with transitions and highlights ---
