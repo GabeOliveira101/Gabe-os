@@ -503,6 +503,59 @@ function updateCalendar() {
     ${month} Gym Days: ${count} &nbsp;|&nbsp; 🔥 Streak: ${streak} day${streak!==1?'s':''}
   `;
 }
+// --- Enhanced Gym Tracker: Select any date for upload ---
+let selectedDate = new Date().toISOString().split('T')[0];
+
+// Make each calendar cell clickable for backdating uploads
+document.querySelectorAll('#calendarGrid div').forEach(dayCell => {
+  dayCell.addEventListener('click', () => {
+    const allCells = document.querySelectorAll('#calendarGrid div');
+    allCells.forEach(c => c.style.outline = '');
+    selectedDate = dayCell.dataset.date;
+    dayCell.style.outline = '2px solid #00ff77';
+  });
+});
+
+// Handle photo uploads and associate with selected date
+const photoInputEl = document.getElementById('photoInput');
+if (photoInputEl) {
+  photoInputEl.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const stored = JSON.parse(localStorage.getItem('gymPhotos') || '{}');
+      const arr = stored[selectedDate] || [];
+      arr.unshift({ src: ev.target.result, date: selectedDate });
+      stored[selectedDate] = arr;
+      localStorage.setItem('gymPhotos', JSON.stringify(stored));
+      renderGymPhotos();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// Re-render photo grid by chronological order
+function renderGymPhotos() {
+  const feed = document.getElementById('photoFeed');
+  if (!feed) return;
+  const stored = JSON.parse(localStorage.getItem('gymPhotos') || '{}');
+  const allEntries = Object.values(stored).flat().sort((a,b)=>new Date(b.date)-new Date(a.date));
+  feed.innerHTML = '';
+  allEntries.forEach(item => {
+    const img = document.createElement('img');
+    img.src = item.src;
+    img.alt = item.date;
+    img.style.width = '100%';
+    img.style.borderRadius = '8px';
+    img.style.marginBottom = '10px';
+    feed.appendChild(img);
+  });
+}
+
+// Call once on load
+renderGymPhotos();
 
 // Init
 initDateGreeting();
