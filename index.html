@@ -332,11 +332,15 @@ focusInput.addEventListener('keydown', e => {
   }
 });
 
-// --- Shuffle button logic ---
-document.getElementById('shuffleTip').addEventListener('click', () => {
-  const val = focusInput.value.trim();
-  if (val.length > 0) showTips(val);
-});
+// --- Shuffle button logic (safe) ---
+const shuffleTipBtn = document.getElementById('shuffleTip');
+if (shuffleTipBtn) {
+  shuffleTipBtn.addEventListener('click', () => {
+    const val = focusInput.value.trim();
+    if (val.length > 0) showTips(val);
+  });
+}
+
 
 // --- Navigation ---
 // --- Navigation with transitions and highlights ---
