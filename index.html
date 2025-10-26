@@ -284,10 +284,29 @@ function showTips(focus) {
 }
 
 // When typing, update tips
+let focusTimer;
 focusInput.addEventListener('input', e => {
+  clearTimeout(focusTimer);
   const val = e.target.value.trim();
-  if (val.length > 0) showTips(val);
-  else focusTips.textContent = '';
+
+  if (val.length === 0) {
+    focusTips.textContent = '';
+    return;
+  }
+
+  // Wait until the user stops typing for 1 second
+  focusTimer = setTimeout(() => {
+    showTips(val);
+  }, 1000);
+});
+
+// Also show a tip when user presses Enter
+focusInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = e.target.value.trim();
+    if (val.length > 0) showTips(val);
+  }
 });
 
 // --- Navigation ---
