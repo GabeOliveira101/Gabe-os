@@ -60,6 +60,56 @@ body{
   font-size:20px;cursor:pointer;
 }
 .video-wrapper iframe{border:none;border-radius:8px;margin-bottom:16px;}
+.video-wrapper iframe{border:none;border-radius:8px;margin-bottom:16px;}
+
+/* --- SMOOTH TRANSITIONS --- */
+section {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+section.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- ELEVATED NAV --- */
+#bottomNav {
+  position: fixed;
+  bottom: 12px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-around;
+  background: rgba(10,10,10,0.95);
+  border: 2px solid #00ff77;
+  border-radius: 14px;
+  z-index: 100;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 12px rgba(0,255,119,0.3);
+}
+
+/* --- NAV BUTTON STYLES --- */
+#bottomNav button {
+  flex: 1;
+  padding: 12px 0;
+  border: none;
+  background: none;
+  color: #00ff77;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+}
+#bottomNav button:active {
+  transform: scale(0.9);
+}
+#bottomNav button.active {
+  color: #0a0a0a;
+  background: #00ff77;
+  border-radius: 10px;
+}
+</style>
+
 </style>
 </head>
 <body>
