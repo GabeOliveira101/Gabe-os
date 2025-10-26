@@ -203,6 +203,7 @@ section.active {
   <button data-target="focusSection">🎯</button>
   <button data-target="winsSection">🏆</button>
   <button data-target="videosSection">🎥</button>
+  <button data-target="photosSection">📸</button>
   <button data-target="opsSection">⚙️</button>
 </nav>
 
@@ -372,6 +373,118 @@ navButtons.forEach(btn => {
 
 // Show default section on load
 showSection('focusSection');
+// --- GYM / PHOTO TRACKER LOGIC ---
+const photoInput = document.getElementById('photoInput');
+const photoFeed = document.getElementById('photoFeed');
+const photoSummary = document.getElementById('photoSummary');
+const calendarGrid = document.getElementById('calendarGrid');
+
+// Load saved photos
+let gymPhotos = JSON.parse(localStorage.getItem('gymPhotos') || '[]');
+renderPhotos();
+
+// Handle new upload
+photoInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const newPhoto = {
+      src: ev.target.result,
+      date: new Date().toISOString().split('T')[0],
+      note: ''
+    };
+    gymPhotos.push(newPhoto);
+    localStorage.setItem('gymPhotos', JSON.stringify(gymPhotos));
+    renderPhotos();
+  };
+  reader.readAsDataURL(file);
+});
+
+// Render photos
+function renderPhotos() {
+  photoFeed.innerHTML = '';
+  gymPhotos.slice().reverse().forEach((p, idx) => {
+    const div = document.createElement('div');
+    div.style.marginBottom = '15px';
+    div.innerHTML = `
+      <img src="${p.src}" style="width:100%;border-radius:10px;margin-bottom:5px;">
+      <small style="color:#888;">${p.date}</small><br>
+      <button data-idx="${idx}" class="deletePhoto" style="background:none;border:1px solid #333;color:#ff4444;border-radius:6px;padding:4px 6px;margin-bottom:6px;cursor:pointer;">🗑️ Delete</button>
+      <textarea placeholder="Add note..." data-idx="${idx}"
+        style="width:100%;margin-top:5px;background:#111;color:#fff;border:1px solid #333;border-radius:6px;padding:6px;">${p.note||''}</textarea>
+    `;
+    photoFeed.appendChild(div);
+  });
+
+  // Save notes
+  document.querySelectorAll('#photoFeed textarea').forEach(t => {
+    t.addEventListener('input', e => {
+      const i = e.target.dataset.idx;
+      gymPhotos[gymPhotos.length - 1 - i].note = e.target.value;
+      localStorage.setItem('gymPhotos', JSON.stringify(gymPhotos));
+    });
+  });
+
+  // Delete photo
+  document.querySelectorAll('.deletePhoto').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const i = e.target.dataset.idx;
+      gymPhotos.splice(gymPhotos.length - 1 - i, 1);
+      localStorage.setItem('gymPhotos', JSON.stringify(gymPhotos));
+      renderPhotos();
+    });
+  });
+
+  updateCalendar();
+}
+
+// --- CALENDAR + STREAK TRACKER ---
+function updateCalendar() {
+  const now = new Date();
+  const month = now.toISOString().slice(0,7);
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const gymDays = {};
+  gymPhotos.forEach(p => {
+    const d = p.date;
+    if (d.startsWith(month)) gymDays[d] = true;
+  });
+
+  // Streak logic
+  let streak = 0, currentStreak = 0;
+  const today = new Date().toISOString().split('T')[0];
+  const dates = Object.keys(gymDays).sort();
+  for (let i=0; i<dates.length; i++) {
+    if (i>0) {
+      const diff = (new Date(dates[i]) - new Date(dates[i-1])) / (1000*60*60*24);
+      if (diff === 1) currentStreak++;
+      else currentStreak = 1;
+    } else currentStreak = 1;
+  }
+  if (gymDays[today]) streak = currentStreak;
+
+  // Calendar grid
+  let calHTML = '';
+  for (let d=1; d<=daysInMonth; d++) {
+    const dateStr = `${month}-${String(d).padStart(2,'0')}`;
+    const workedOut = gymDays[dateStr];
+    calHTML += `<div style="
+      background:${workedOut?'#00ff77':'#111'};
+      color:${workedOut?'#000':'#555'};
+      text-align:center;
+      padding:4px 0;
+      border-radius:6px;
+      font-size:12px;
+    ">${d}</div>`;
+  }
+  calendarGrid.innerHTML = calHTML;
+
+  // Summary text
+  const count = Object.keys(gymDays).length;
+  photoSummary.innerHTML = `
+    ${month} Gym Days: ${count} &nbsp;|&nbsp; 🔥 Streak: ${streak} day${streak!==1?'s':''}
+  `;
+}
 
 // Init
 initDateGreeting();
