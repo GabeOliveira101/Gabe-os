@@ -503,59 +503,132 @@ function updateCalendar() {
     ${month} Gym Days: ${count} &nbsp;|&nbsp; 🔥 Streak: ${streak} day${streak!==1?'s':''}
   `;
 }
-// --- Enhanced Gym Tracker: Select any date for upload ---
+// --- GYM / PHOTO TRACKER (Full Upgrade) ---
 let selectedDate = new Date().toISOString().split('T')[0];
 
-// Make each calendar cell clickable for backdating uploads
-document.querySelectorAll('#calendarGrid div').forEach(dayCell => {
-  dayCell.addEventListener('click', () => {
-    const allCells = document.querySelectorAll('#calendarGrid div');
-    allCells.forEach(c => c.style.outline = '');
-    selectedDate = dayCell.dataset.date;
-    dayCell.style.outline = '2px solid #00ff77';
-  });
-});
+// Initialize storage structure
+if (!localStorage.getItem('gymPhotos')) {
+  localStorage.setItem('gymPhotos', JSON.stringify({}));
+}
 
-// Handle photo uploads and associate with selected date
-const photoInputEl = document.getElementById('photoInput');
-if (photoInputEl) {
-  photoInputEl.addEventListener('change', e => {
+const photoInput = document.getElementById('photoInput');
+const photoFeed = document.getElementById('photoFeed');
+const photoSummary = document.getElementById('photoSummary');
+const calendarGrid = document.getElementById('calendarGrid');
+
+function loadPhotos() {
+  return JSON.parse(localStorage.getItem('gymPhotos') || '{}');
+}
+
+function savePhotos(data) {
+  localStorage.setItem('gymPhotos', JSON.stringify(data));
+}
+
+// Handle upload
+if (photoInput) {
+  photoInput.addEventListener('change', e => {
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = ev => {
-      const stored = JSON.parse(localStorage.getItem('gymPhotos') || '{}');
-      const arr = stored[selectedDate] || [];
-      arr.unshift({ src: ev.target.result, date: selectedDate });
-      stored[selectedDate] = arr;
-      localStorage.setItem('gymPhotos', JSON.stringify(stored));
-      renderGymPhotos();
+      const photos = loadPhotos();
+      if (!photos[selectedDate]) photos[selectedDate] = [];
+      photos[selectedDate].push({
+        src: ev.target.result,
+        note: '',
+        date: selectedDate
+      });
+      savePhotos(photos);
+      renderPhotos(selectedDate);
+      updateCalendar();
     };
     reader.readAsDataURL(file);
   });
 }
 
-// Re-render photo grid by chronological order
-function renderGymPhotos() {
-  const feed = document.getElementById('photoFeed');
-  if (!feed) return;
-  const stored = JSON.parse(localStorage.getItem('gymPhotos') || '{}');
-  const allEntries = Object.values(stored).flat().sort((a,b)=>new Date(b.date)-new Date(a.date));
-  feed.innerHTML = '';
-  allEntries.forEach(item => {
-    const img = document.createElement('img');
-    img.src = item.src;
-    img.alt = item.date;
-    img.style.width = '100%';
-    img.style.borderRadius = '8px';
-    img.style.marginBottom = '10px';
-    feed.appendChild(img);
+// Calendar + selectable dates
+function updateCalendar() {
+  const now = new Date();
+  const month = now.toISOString().slice(0,7);
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  const photos = loadPhotos();
+
+  calendarGrid.innerHTML = '';
+  for (let d=1; d<=daysInMonth; d++) {
+    const dateStr = `${month}-${String(d).padStart(2,'0')}`;
+    const workedOut = photos[dateStr] && photos[dateStr].length > 0;
+    const cell = document.createElement('div');
+    cell.dataset.date = dateStr;
+    cell.textContent = d;
+    cell.style.textAlign = 'center';
+    cell.style.padding = '5px 0';
+    cell.style.borderRadius = '6px';
+    cell.style.cursor = 'pointer';
+    cell.style.background = workedOut ? '#00ff77' : '#111';
+    cell.style.color = workedOut ? '#000' : '#555';
+    cell.addEventListener('click', () => {
+      selectedDate = dateStr;
+      document.querySelectorAll('#calendarGrid div').forEach(c => c.style.outline = '');
+      cell.style.outline = '2px solid #FFD700';
+      renderPhotos(selectedDate);
+    });
+    calendarGrid.appendChild(cell);
+  }
+
+  const count = Object.values(photos).flat().length;
+  photoSummary.textContent = `${month} Gym Entries: ${count}`;
+}
+
+// Render photos for the selected date
+function renderPhotos(date) {
+  const photos = loadPhotos();
+  const list = photos[date] || [];
+  photoFeed.innerHTML = '';
+
+  if (list.length === 0) {
+    photoFeed.innerHTML = `<p style="text-align:center;color:#777;">No photos logged for ${date}</p>`;
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'photo-grid';
+  list.slice().reverse().forEach((p, idx) => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <img src="${p.src}" style="border-radius:10px;">
+      <textarea placeholder="Add note..." data-idx="${idx}"
+        style="width:100%;margin-top:6px;background:#111;color:#fff;border:1px solid #333;border-radius:6px;padding:6px;">${p.note||''}</textarea>
+      <button data-idx="${idx}" class="deletePhoto" style="background:none;border:1px solid #333;color:#ff4444;border-radius:6px;padding:4px 6px;margin-top:6px;cursor:pointer;">🗑️ Delete</button>
+    `;
+    grid.appendChild(div);
+  });
+  photoFeed.appendChild(grid);
+
+  // Save notes
+  photoFeed.querySelectorAll('textarea').forEach(t => {
+    t.addEventListener('input', e => {
+      const i = e.target.dataset.idx;
+      photos[date][i].note = e.target.value;
+      savePhotos(photos);
+    });
+  });
+
+  // Delete photos
+  photoFeed.querySelectorAll('.deletePhoto').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const i = e.target.dataset.idx;
+      photos[date].splice(i, 1);
+      savePhotos(photos);
+      renderPhotos(date);
+      updateCalendar();
+    });
   });
 }
 
-// Call once on load
-renderGymPhotos();
+// Initialize on load
+updateCalendar();
+renderPhotos(selectedDate);
+
 
 // Init
 initDateGreeting();
