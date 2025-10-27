@@ -393,52 +393,7 @@ navButtons.forEach(btn => {
 showSection('focusSection');
 
 
-// --- CALENDAR + STREAK TRACKER ---
-function updateCalendar() {
-  const now = new Date();
-  const month = now.toISOString().slice(0,7);
-  const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-  const gymDays = {};
-  gymPhotos.forEach(p => {
-    const d = p.date;
-    if (d.startsWith(month)) gymDays[d] = true;
-  });
 
-  // Streak logic
-  let streak = 0, currentStreak = 0;
-  const today = new Date().toISOString().split('T')[0];
-  const dates = Object.keys(gymDays).sort();
-  for (let i=0; i<dates.length; i++) {
-    if (i>0) {
-      const diff = (new Date(dates[i]) - new Date(dates[i-1])) / (1000*60*60*24);
-      if (diff === 1) currentStreak++;
-      else currentStreak = 1;
-    } else currentStreak = 1;
-  }
-  if (gymDays[today]) streak = currentStreak;
-
-  // Calendar grid
-  let calHTML = '';
-  for (let d=1; d<=daysInMonth; d++) {
-    const dateStr = `${month}-${String(d).padStart(2,'0')}`;
-    const workedOut = gymDays[dateStr];
-    calHTML += `<div style="
-      background:${workedOut?'#00ff77':'#111'};
-      color:${workedOut?'#000':'#555'};
-      text-align:center;
-      padding:4px 0;
-      border-radius:6px;
-      font-size:12px;
-    ">${d}</div>`;
-  }
-  calendarGrid.innerHTML = calHTML;
-
-  // Summary text
-  const count = Object.keys(gymDays).length;
-  photoSummary.innerHTML = `
-    ${month} Gym Days: ${count} &nbsp;|&nbsp; 🔥 Streak: ${streak} day${streak!==1?'s':''}
-  `;
-}
 // --- GYM / PHOTO TRACKER (Full Upgrade) ---
 let selectedDate = new Date().toISOString().split('T')[0];
 
