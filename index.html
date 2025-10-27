@@ -391,71 +391,7 @@ navButtons.forEach(btn => {
 
 // Show default section on load
 showSection('focusSection');
-// --- GYM / PHOTO TRACKER LOGIC ---
 
-const photoFeed = document.getElementById('photoFeed');
-const photoSummary = document.getElementById('photoSummary');
-const calendarGrid = document.getElementById('calendarGrid');
-
-// Load saved photos
-let gymPhotos = JSON.parse(localStorage.getItem('gymPhotos') || '[]');
-renderPhotos();
-
-// Handle new upload
-photoInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const newPhoto = {
-      src: ev.target.result,
-      date: new Date().toISOString().split('T')[0],
-      note: ''
-    };
-    gymPhotos.push(newPhoto);
-    localStorage.setItem('gymPhotos', JSON.stringify(gymPhotos));
-    renderPhotos();
-  };
-  reader.readAsDataURL(file);
-});
-
-// Render photos
-function renderPhotos() {
-  photoFeed.innerHTML = '';
-  gymPhotos.slice().reverse().forEach((p, idx) => {
-    const div = document.createElement('div');
-    div.style.marginBottom = '15px';
-    div.innerHTML = `
-      <img src="${p.src}" style="width:100%;border-radius:10px;margin-bottom:5px;">
-      <small style="color:#888;">${p.date}</small><br>
-      <button data-idx="${idx}" class="deletePhoto" style="background:none;border:1px solid #333;color:#ff4444;border-radius:6px;padding:4px 6px;margin-bottom:6px;cursor:pointer;">🗑️ Delete</button>
-      <textarea placeholder="Add note..." data-idx="${idx}"
-        style="width:100%;margin-top:5px;background:#111;color:#fff;border:1px solid #333;border-radius:6px;padding:6px;">${p.note||''}</textarea>
-    `;
-    photoFeed.appendChild(div);
-  });
-
-  // Save notes
-  document.querySelectorAll('#photoFeed textarea').forEach(t => {
-    t.addEventListener('input', e => {
-      const i = e.target.dataset.idx;
-      gymPhotos[gymPhotos.length - 1 - i].note = e.target.value;
-      localStorage.setItem('gymPhotos', JSON.stringify(gymPhotos));
-    });
-  });
-
-  // Delete photo
-  document.querySelectorAll('.deletePhoto').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const i = e.target.dataset.idx;
-      gymPhotos.splice(gymPhotos.length - 1 - i, 1);
-      localStorage.setItem('gymPhotos', JSON.stringify(gymPhotos));
-      renderPhotos();
-    });
-  });
-
-  updateCalendar();
-}
 
 // --- CALENDAR + STREAK TRACKER ---
 function updateCalendar() {
