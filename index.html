@@ -394,131 +394,301 @@ showSection('focusSection');
 
 
 
-// --- GYM / PHOTO TRACKER (Full Upgrade) ---
+<!-- ========================= GYM / PHOTO TRACKER (INSTAGRAM EDITION) ========================= -->
+<style>
+  /* --- Instagram-style Gym Tracker --- */
+  #gymWrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    color: #fff;
+  }
+
+  #calendarGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin: 12px 0;
+  }
+
+  #calendarGrid div {
+    background: #111;
+    padding: 6px;
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  #calendarGrid div.active {
+    background: #00ff77;
+    color: #000;
+    font-weight: bold;
+    box-shadow: 0 0 6px #00ff77;
+  }
+
+  #calendarGrid div.logged {
+    background: #004d2e;
+    color: #00ff77;
+  }
+
+  #photoFeed {
+    margin-top: 10px;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 6px;
+  }
+
+  .photo-card {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 8px rgba(0,255,119,0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .photo-card:hover {
+    transform: scale(1.03);
+  }
+
+  .photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+  }
+
+  /* Modal viewer */
+  #photoModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+  }
+
+  #photoModal.hidden {
+    display: none;
+  }
+
+  #photoModal img {
+    max-width: 90%;
+    max-height: 70vh;
+    border-radius: 10px;
+    box-shadow: 0 0 12px #00ff77;
+  }
+
+  #modalNote {
+    margin-top: 12px;
+    width: 90%;
+    background: #111;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  #closeModal, #deletePhoto {
+    background: none;
+    border: 1px solid #00ff77;
+    color: #00ff77;
+    border-radius: 6px;
+    padding: 6px 14px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+
+  #closeModal:hover, #deletePhoto:hover {
+    background: #00ff77;
+    color: #000;
+  }
+
+  /* Streak bar */
+  #streakBar {
+    margin: 10px 0;
+    font-weight: 600;
+    color: #00ff77;
+    text-align: center;
+  }
+
+  #progressOuter {
+    width: 100%;
+    height: 10px;
+    background: #222;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  #progressInner {
+    height: 100%;
+    background: #00ff77;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+</style>
+
+<div id="gymWrapper">
+  <input type="file" id="photoInput" accept="image/*" style="margin-top:10px;">
+  <div id="photoSummary"></div>
+  <div id="streakBar">
+    🔥 Current Streak: 0 days | 🏅 Longest Streak: 0 days
+    <div id="progressOuter"><div id="progressInner"></div></div>
+  </div>
+  <div id="calendarGrid"></div>
+  <div id="photoFeed"></div>
+</div>
+
+<!-- Modal -->
+<div id="photoModal" class="hidden">
+  <img id="modalImg" src="" alt="">
+  <textarea id="modalNote" placeholder="Add a note..."></textarea>
+  <button id="deletePhoto">🗑️ Delete</button>
+  <button id="closeModal">Close</button>
+</div>
+
+<script>
 let selectedDate = new Date().toISOString().split('T')[0];
-
-// Initialize storage structure
-if (!localStorage.getItem('gymPhotos')) {
-  localStorage.setItem('gymPhotos', JSON.stringify({}));
-}
-
 const photoInput = document.getElementById('photoInput');
 const photoFeed = document.getElementById('photoFeed');
-const photoSummary = document.getElementById('photoSummary');
 const calendarGrid = document.getElementById('calendarGrid');
+const modal = document.getElementById('photoModal');
+const modalImg = document.getElementById('modalImg');
+const modalNote = document.getElementById('modalNote');
+const deletePhotoBtn = document.getElementById('deletePhoto');
+const closeModalBtn = document.getElementById('closeModal');
 
-function loadPhotos() {
-  return JSON.parse(localStorage.getItem('gymPhotos') || '{}');
-}
+const loadPhotos = () => JSON.parse(localStorage.getItem('gymPhotos') || '{}');
+const savePhotos = d => localStorage.setItem('gymPhotos', JSON.stringify(d));
 
-function savePhotos(data) {
-  localStorage.setItem('gymPhotos', JSON.stringify(data));
-}
+// Upload handler
+photoInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const data = loadPhotos();
+    if (!data[selectedDate]) data[selectedDate] = [];
+    data[selectedDate].push({ src: ev.target.result, note: '', date: selectedDate });
+    savePhotos(data);
+    renderPhotos(selectedDate);
+    updateCalendar();
+    updateStreakBar();
+  };
+  reader.readAsDataURL(file);
+});
 
-// Handle upload
-if (photoInput) {
-  photoInput.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      const photos = loadPhotos();
-      if (!photos[selectedDate]) photos[selectedDate] = [];
-      photos[selectedDate].push({
-        src: ev.target.result,
-        note: '',
-        date: selectedDate
-      });
-      savePhotos(photos);
-      renderPhotos(selectedDate);
-      updateCalendar();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// Calendar + selectable dates
+// Calendar render
 function updateCalendar() {
   const now = new Date();
   const month = now.toISOString().slice(0,7);
   const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-  const photos = loadPhotos();
+  const data = loadPhotos();
 
   calendarGrid.innerHTML = '';
   for (let d=1; d<=daysInMonth; d++) {
     const dateStr = `${month}-${String(d).padStart(2,'0')}`;
-    const workedOut = photos[dateStr] && photos[dateStr].length > 0;
-    const cell = document.createElement('div');
-    cell.dataset.date = dateStr;
-    cell.textContent = d;
-    cell.style.textAlign = 'center';
-    cell.style.padding = '5px 0';
-    cell.style.borderRadius = '6px';
-    cell.style.cursor = 'pointer';
-    cell.style.background = workedOut ? '#00ff77' : '#111';
-    cell.style.color = workedOut ? '#000' : '#555';
-    cell.addEventListener('click', () => {
+    const div = document.createElement('div');
+    div.textContent = d;
+    if (data[dateStr]?.length) div.classList.add('logged');
+    if (dateStr===selectedDate) div.classList.add('active');
+    div.onclick = () => {
       selectedDate = dateStr;
-      document.querySelectorAll('#calendarGrid div').forEach(c => c.style.outline = '');
-      cell.style.outline = '2px solid #FFD700';
-      renderPhotos(selectedDate);
-    });
-    calendarGrid.appendChild(cell);
+      updateCalendar();
+      renderPhotos(dateStr);
+    };
+    calendarGrid.appendChild(div);
   }
-
-  const count = Object.values(photos).flat().length;
-  photoSummary.textContent = `${month} Gym Entries: ${count}`;
+  const total = Object.values(data).flat().length;
+  document.getElementById('photoSummary').textContent = `${month} Gym Entries: ${total}`;
 }
 
-// Render photos for the selected date
+// Render grid
 function renderPhotos(date) {
-  const photos = loadPhotos();
-  const list = photos[date] || [];
+  const data = loadPhotos();
+  const list = data[date] || [];
   photoFeed.innerHTML = '';
-
   if (list.length === 0) {
-    photoFeed.innerHTML = `<p style="text-align:center;color:#777;">No photos logged for ${date}</p>`;
+    photoFeed.innerHTML = `<p style="color:#777;text-align:center;">No photos for ${date}</p>`;
     return;
   }
-
   const grid = document.createElement('div');
   grid.className = 'photo-grid';
-  list.slice().reverse().forEach((p, idx) => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <img src="${p.src}" style="border-radius:10px;">
-      <textarea placeholder="Add note..." data-idx="${idx}"
-        style="width:100%;margin-top:6px;background:#111;color:#fff;border:1px solid #333;border-radius:6px;padding:6px;">${p.note||''}</textarea>
-      <button data-idx="${idx}" class="deletePhoto" style="background:none;border:1px solid #333;color:#ff4444;border-radius:6px;padding:4px 6px;margin-top:6px;cursor:pointer;">🗑️ Delete</button>
-    `;
-    grid.appendChild(div);
+  list.forEach((p, idx) => {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    card.innerHTML = `<img src="${p.src}" data-idx="${idx}">`;
+    grid.appendChild(card);
   });
   photoFeed.appendChild(grid);
-
-  // Save notes
-  photoFeed.querySelectorAll('textarea').forEach(t => {
-    t.addEventListener('input', e => {
-      const i = e.target.dataset.idx;
-      photos[date][i].note = e.target.value;
-      savePhotos(photos);
-    });
-  });
-
-  // Delete photos
-  photoFeed.querySelectorAll('.deletePhoto').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const i = e.target.dataset.idx;
-      photos[date].splice(i, 1);
-      savePhotos(photos);
-      renderPhotos(date);
-      updateCalendar();
-    });
-  });
 }
 
-// Initialize on load
+// Modal logic
+photoFeed.addEventListener('click', e => {
+  if (e.target.tagName === 'IMG') {
+    const idx = e.target.dataset.idx;
+    const data = loadPhotos();
+    const current = data[selectedDate][idx];
+    modalImg.src = current.src;
+    modalNote.value = current.note || '';
+    modal.dataset.idx = idx;
+    modal.classList.remove('hidden');
+  }
+});
+
+modalNote.addEventListener('input', e => {
+  const data = loadPhotos();
+  const idx = modal.dataset.idx;
+  if (data[selectedDate] && data[selectedDate][idx]) {
+    data[selectedDate][idx].note = e.target.value;
+    savePhotos(data);
+  }
+});
+
+deletePhotoBtn.addEventListener('click', () => {
+  const data = loadPhotos();
+  const idx = modal.dataset.idx;
+  data[selectedDate].splice(idx,1);
+  savePhotos(data);
+  modal.classList.add('hidden');
+  renderPhotos(selectedDate);
+  updateCalendar();
+  updateStreakBar();
+});
+
+closeModalBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+// Streak bar logic
+function updateStreakBar() {
+  const data = loadPhotos();
+  const dates = Object.keys(data).sort();
+  let streak=0,longest=0;
+  for(let i=0;i<dates.length;i++){
+    if(i>0){
+      const diff=(new Date(dates[i])-new Date(dates[i-1]))/(1000*60*60*24);
+      if(diff===1) streak++;
+      else streak=1;
+    } else streak=1;
+    if(streak>longest) longest=streak;
+  }
+  document.getElementById('streakBar').innerHTML =
+    `🔥 Current Streak: ${streak} days | 🏅 Longest Streak: ${longest} days
+     <div id="progressOuter"><div id="progressInner" style="width:${Math.min((streak/30)*100,100)}%"></div></div>`;
+}
+
 updateCalendar();
 renderPhotos(selectedDate);
+updateStreakBar();
+</script>
+<!-- ========================= END GYM / PHOTO TRACKER ========================= -->
 
 
 // Init
