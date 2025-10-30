@@ -130,21 +130,7 @@ section.active {
 
 <div class="container">
 
-  <!-- 🧠 DAILY MINDSET VIDEO -->
-  <section id="motivationSection">
-    <div class="card">
-      <div class="card-header"><div class="card-title">DAILY MINDSET</div></div>
-      <div class="card-body video-wrapper">
-        <iframe width="100%" height="220"
-          src="https://www.youtube.com/embed/UNQhuFL6CWg"
-          title="Goggins – Stay Hard"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen></iframe>
-      </div>
-    </div>
-  </section>
-
+ 
  <!-- 🎯 FOCUS + WINS COMBINED -->
 <section id="focusWinsSection">
   <div class="card">
@@ -169,20 +155,31 @@ section.active {
 </section>
 
 
-  <!-- 🎥 VIDEOS TAB -->
-  <section id="videosSection" style="display:none;">
-    <div class="card">
-      <div class="card-header"><div class="card-title">MOTIVATION VIDEOS</div></div>
-      <div class="card-body video-wrapper">
-        <iframe width="100%" height="200"
-          src="https://www.youtube.com/embed/hbkZrOU1Zag"
-          title="Kobe Mamba Mindset" allowfullscreen></iframe>
-        <iframe width="100%" height="200"
-          src="https://www.youtube.com/embed/2fC8R6E0Xyw"
-          title="Greg Plitt Motivation" allowfullscreen></iframe>
-      </div>
+<!-- 🎥 MEDIA TAB -->
+<section id="mediaSection" style="display:none;">
+  <div class="card">
+    <div class="card-header"><div class="card-title">MEDIA CENTER</div></div>
+    <div class="card-body video-wrapper">
+
+      <!-- Moved from Focus page -->
+      <iframe width="100%" height="220"
+        src="https://www.youtube.com/embed/UNQhuFL6CWg"
+        title="Goggins – Stay Hard"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+
+      <iframe width="100%" height="200"
+        src="https://www.youtube.com/embed/hbkZrOU1Zag"
+        title="Kobe Mamba Mindset" allowfullscreen></iframe>
+
+      <iframe width="100%" height="200"
+        src="https://www.youtube.com/embed/2fC8R6E0Xyw"
+        title="Greg Plitt Motivation" allowfullscreen></iframe>
     </div>
-  </section>
+  </div>
+</section>
+
 <!-- 📸 GYM / PHOTO TRACKER (FINAL INSTAGRAM EDITION) -->
 <section id="photosSection" style="display:none;">
   <div class="card">
@@ -418,12 +415,12 @@ updateStreakBar();
 
 <!-- Bottom Navigation -->
 <nav id="bottomNav">
-  <button data-target="focusSection">🎯</button>
-  <button data-target="winsSection">🏆</button>
-  <button data-target="videosSection">🎥</button>
+  <button data-target="focusWinsSection" class="active">🎯</button>
+  <button data-target="mediaSection">🎥</button>
   <button data-target="photosSection">📸</button>
   <button data-target="opsSection">⚙️</button>
 </nav>
+
 
 <script>
 function initDateGreeting(){
