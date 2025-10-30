@@ -145,30 +145,29 @@ section.active {
     </div>
   </section>
 
-  <!-- 🎯 TODAY'S FOCUS -->
-  <section id="focusSection">
-    <div class="card">
-      <div class="card-header"><div class="card-title">TODAY'S FOCUS</div></div>
-      <div class="card-body">
-        <input type="text" class="focus-input" id="focusInput" placeholder="LOCK IN YOUR MISSION...">
-      <div id="focusTips" style="margin-top:15px;font-size:14px;color:#00ff77;line-height:1.4;"></div>
+ <!-- 🎯 FOCUS + WINS COMBINED -->
+<section id="focusWinsSection">
+  <div class="card">
+    <div class="card-header"><div class="card-title">🎯 TODAY'S FOCUS</div></div>
+    <div class="card-body">
+      <input type="text" id="focusInput" placeholder="LOCK IN YOUR MISSION..." class="focus-input">
+      <div id="focusTips" style="margin-top:10px;font-size:14px;color:#00ff77;"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- 🏆 WINS -->
-  <section id="winsSection" style="display:none;">
-    <div class="card">
-      <div class="card-header"><div class="card-title">WORK RATE // WINS</div></div>
-      <div class="card-body">
-        <button class="btn" id="addWinBtn">+ ADD WIN</button>
-        <div id="winInputContainer" style="display:none;margin-top:15px;">
-          <input type="text" class="win-input" id="winInput" placeholder="WHAT DID YOU EXECUTE?">
-          <button class="btn" id="winSubmitBtn" style="margin-top:10px;">LOG IT</button>
-        </div>
-        <ul class="wins-list" id="winsList"></ul>
+  <div class="card">
+    <div class="card-header"><div class="card-title">🏆 WINS</div></div>
+    <div class="card-body">
+      <button class="btn" id="addWinBtn">+ ADD WIN</button>
+      <div id="winInputContainer" style="display:none;margin-top:15px;">
+        <input type="text" id="winInput" class="win-input" placeholder="WHAT DID YOU EXECUTE?">
+        <button class="btn" id="winSubmitBtn" style="margin-top:10px;">LOG IT</button>
       </div>
+      <ul id="winsList" class="wins-list"></ul>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- 🎥 VIDEOS TAB -->
   <section id="videosSection" style="display:none;">
