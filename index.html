@@ -180,6 +180,16 @@ section.active {
   </div>
 </section>
 
+<!-- 💪 FINAL WORKOUT TRACKER -->
+<section id="workoutSection" style="display:none;">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">WORKOUT TRACKER</div>
+    </div>
+    <div class="card-body" id="workoutList"></div>
+  </div>
+</section>
+
 <!-- 📸 GYM / PHOTO TRACKER (FINAL INSTAGRAM EDITION) -->
 <section id="photosSection" style="display:none;">
   <div class="card">
@@ -417,6 +427,7 @@ updateStreakBar();
 <nav id="bottomNav">
   <button data-target="focusWinsSection" class="active">🎯</button>
   <button data-target="mediaSection">🎥</button>
+  <button data-target="workoutSection">💪</button>
   <button data-target="photosSection">📸</button>
   <button data-target="opsSection">⚙️</button>
 </nav>
@@ -591,7 +602,116 @@ navButtons.forEach(btn => {
 });
 
 // Show default section on load
-showSection('focusSection');
+showSection('focusWinsSection');
+  // === 💪 WORKOUT TRACKER SYSTEM ===
+
+// --- Rotation Logic ---
+const startDate = new Date("2025-10-27");
+const today = new Date();
+const dayDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+const currentCycle = Math.floor(dayDiff / 14) % 2 === 0 ? "A" : "B";
+
+const workoutsA = {
+  Monday: ["Bench Press", "Incline Dumbbell Press", "Dips", "Push-ups", "Cable Crunch"],
+  Tuesday: ["Back Squat", "Walking Lunge", "Romanian Deadlift", "Box Jumps", "Plank"],
+  Wednesday: ["Dynamic Stretch", "Treadmill Sprints", "Core Circuit"],
+  Thursday: ["Pull-ups", "Barbell Row", "Face Pulls", "EZ Bar Curl"],
+  Friday: ["Incline Bench", "Arnold Press", "Lateral Raises", "Cable Crossover"],
+  Saturday: ["Hanging Leg Raise", "Russian Twist", "Burpees", "Run 15 min"],
+  Sunday: ["Rest / Mobility"]
+};
+
+const workoutsB = {
+  Monday: ["Bench ⇄ Pull-ups", "Incline DB ⇄ Rows", "Chest Fly"],
+  Tuesday: ["Leg Press", "Lunges", "Leg Curl", "Standing Calf Raise"],
+  Wednesday: ["Arnold Press", "Lateral Raise", "Skull Crusher", "DB Curl"],
+  Thursday: ["Ab Wheel", "Cable Crunch", "Mountain Climbers", "Run 2 mi"],
+  Friday: ["Deadlift", "Front Squat", "Push Press", "Battle Ropes"],
+  Saturday: ["Swim/Bike 30 min", "Stretch 15 min"],
+  Sunday: ["Rest"]
+};
+
+const workouts = currentCycle === "A" ? workoutsA : workoutsB;
+
+function loadWorkoutData() {
+  return JSON.parse(localStorage.getItem("workoutProgress") || "{}");
+}
+function saveWorkoutData(data) {
+  localStorage.setItem("workoutProgress", JSON.stringify(data));
+}
+
+function renderWorkouts() {
+  const container = document.getElementById("workoutList");
+  if (!container) return;
+  const progress = loadWorkoutData();
+  container.innerHTML = "";
+
+  Object.keys(workouts).forEach(day => {
+    const dayDiv = document.createElement("div");
+    dayDiv.classList.add("workout-day");
+    dayDiv.innerHTML = `<h3 style="cursor:pointer;color:#00ff77;margin-top:15px;">${day}</h3>`;
+    const exDiv = document.createElement("div");
+    exDiv.classList.add("exercise-list");
+    exDiv.style.display = "none";
+
+    workouts[day].forEach(ex => {
+      const key = `${currentCycle}_${day}_${ex}`;
+      const record = progress[key] || { done: false, weight: "", reps: "" };
+
+      const row = document.createElement("div");
+      row.classList.add("exercise-row");
+      row.style.display = "flex";
+      row.style.justifyContent = "space-between";
+      row.style.alignItems = "center";
+      row.style.margin = "8px 0";
+      row.innerHTML = `
+        <span style="flex:1;">${ex}</span>
+        <input type="number" placeholder="lbs" value="${record.weight}"
+          style="width:60px;background:#111;border:1px solid #333;color:#fff;padding:4px;border-radius:6px;margin-right:6px;">
+        <input type="number" placeholder="reps" value="${record.reps}"
+          style="width:55px;background:#111;border:1px solid #333;color:#fff;padding:4px;border-radius:6px;margin-right:6px;">
+        <input type="checkbox" ${record.done ? "checked" : ""}>
+      `;
+
+      const [weightInput, repsInput, checkbox] = row.querySelectorAll("input");
+      const update = () => {
+        progress[key] = {
+          done: checkbox.checked,
+          weight: weightInput.value,
+          reps: repsInput.value
+        };
+        saveWorkoutData(progress);
+      };
+      [weightInput, repsInput, checkbox].forEach(el =>
+        el.addEventListener("input", update)
+      );
+
+      exDiv.appendChild(row);
+    });
+
+    dayDiv.appendChild(exDiv);
+    container.appendChild(dayDiv);
+
+    // Toggle dropdown
+    dayDiv.querySelector("h3").addEventListener("click", () => {
+      exDiv.style.display = exDiv.style.display === "none" ? "block" : "none";
+    });
+  });
+
+  const cycleNote = document.createElement("p");
+  cycleNote.style.textAlign = "center";
+  cycleNote.style.color = "#888";
+  cycleNote.style.marginTop = "20px";
+  cycleNote.textContent =
+    "Current Cycle: " +
+    (currentCycle === "A"
+      ? "A – CR7 / Plitt (Lean Power)"
+      : "B – Arnold / Plitt (Volume)");
+  container.appendChild(cycleNote);
+}
+
+renderWorkouts();
+
 </script>
 
 
