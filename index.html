@@ -584,15 +584,6 @@ function showSection(target) {
     }
   });
 
-  // Show the video section only on Focus tab
-  const motivation = document.getElementById('motivationSection');
-  motivation.style.display = (target === 'focusSection') ? 'block' : 'none';
-if (target === 'focusSection') {
-  motivation.classList.add('active');
-} else {
-  motivation.classList.remove('active');
-}
-
   // Highlight active button
   navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === target));
 }
