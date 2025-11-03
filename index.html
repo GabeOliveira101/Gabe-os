@@ -158,6 +158,23 @@ section:hover {
   text-transform: uppercase;
 }
 
+/* 🧭 MOBILE FIXES */
+section input[type="text"] {
+  width: calc(100% - 28px); /* fixes focus box being too wide on phones */
+  box-sizing: border-box;
+}
+
+#bottomNav button {
+  padding: 16px 0; /* adds a bit more space so text isn't cut off */
+}
+
+/* iPhone / Android bottom bar safe area fix */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #bottomNav {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 </style>
 
 </head>
