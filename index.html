@@ -261,54 +261,106 @@ section:hover {
     </div>
   </div>
 </section>
-
 <style>
-.photo-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-  gap:6px;
+/* ✨ LV LIGHT GYM TRACKER */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 8px;
 }
-.photo-card{
-  position:relative;border-radius:10px;overflow:hidden;
-  box-shadow:0 0 8px rgba(0,255,119,0.1);
-  cursor:pointer;transition:transform .2s ease;
+
+.photo-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
-.photo-card:hover{transform:scale(1.03);}
-.photo-card img{
-  width:100%;height:100%;object-fit:cover;aspect-ratio:1/1;
+.photo-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(212, 175, 55, 0.15);
 }
+.photo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+}
+
 /* Modal viewer */
-#photoModal{
-  position:fixed;inset:0;background:rgba(0,0,0,.9);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:9999;padding:20px;
+#photoModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
 }
-#photoModal.hidden{display:none;}
-#photoModal img{
-  max-width:90%;max-height:70vh;border-radius:10px;
-  box-shadow:0 0 12px #d4af37;
+#photoModal.hidden { display: none; }
+#photoModal img {
+  max-width: 90%;
+  max-height: 70vh;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
 }
-#modalNote{
-  margin-top:12px;width:90%;background:#111;color:#fff;
-  border:1px solid #333;border-radius:6px;padding:8px;font-size:14px;
+#modalNote {
+  margin-top: 12px;
+  width: 90%;
+  background: rgba(255,255,255,0.9);
+  color: #333;
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
 }
-#closeModal,#deletePhoto{
-  background:none;border:1px solid #d4af37;color:#d4af37;
-  border-radius:6px;padding:6px 14px;margin-top:10px;cursor:pointer;
+#closeModal, #deletePhoto {
+  background: linear-gradient(90deg, #d4af37, #f0d886);
+  border: none;
+  color: #222;
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-family: 'League Spartan', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: opacity 0.25s ease;
 }
-#closeModal:hover,#deletePhoto:hover{
-  background:#d4af37;color:#000;
+#closeModal:hover, #deletePhoto:hover {
+  opacity: 0.85;
 }
-#calendarGrid div{
-  background:#111;padding:6px;border-radius:6px;text-align:center;
-  cursor:pointer;transition:all .2s ease;
+
+/* Calendar Grid */
+#calendarGrid div {
+  background: rgba(255,255,255,0.9);
+  border-radius: 8px;
+  border: 1px solid rgba(212,175,55,0.2);
+  color: #333;
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 10px 0;
+  transition: all 0.2s ease;
 }
-#calendarGrid div.active{
-  background:#d4af37;color:#000;font-weight:bold;
-  box-shadow:0 0 6px #d4af37;
+#calendarGrid div.active {
+  background: linear-gradient(90deg, #d4af37, #f0d886);
+  color: #111;
+  font-weight: 600;
+  box-shadow: 0 0 6px rgba(212,175,55,0.3);
 }
-#calendarGrid div.logged{
-  background:#004d2e;color:#d4af37;
+#calendarGrid div.logged {
+  background: rgba(212, 175, 55, 0.15);
+  color: #a98d37;
+  font-weight: 500;
 }
 </style>
 
