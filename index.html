@@ -613,23 +613,104 @@ const dayDiff = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
 const currentCycle = Math.floor(dayDiff / 14) % 2 === 0 ? "A" : "B";
 
 const workoutsA = {
-  Monday: ["Bench Press", "Incline Dumbbell Press", "Dips", "Push-ups", "Cable Crunch"],
-  Tuesday: ["Back Squat", "Walking Lunge", "Romanian Deadlift", "Box Jumps", "Plank"],
-  Wednesday: ["Dynamic Stretch", "Treadmill Sprints", "Core Circuit"],
-  Thursday: ["Pull-ups", "Barbell Row", "Face Pulls", "EZ Bar Curl"],
-  Friday: ["Incline Bench", "Arnold Press", "Lateral Raises", "Cable Crossover"],
-  Saturday: ["Hanging Leg Raise", "Russian Twist", "Burpees", "Run 15 min"],
-  Sunday: ["Rest / Mobility"]
+  Monday: [
+    "Incline Dumbbell Press – 4×10",
+    "Flat Barbell Bench Press – 4×8",
+    "Cable Fly (High to Low) – 3×15",
+    "Dips (Weighted if possible) – 3×Failure",
+    "Push-ups – 2×Failure",
+    "Hanging Knee Raises – 3×20",
+    "Plank – 3×1 min"
+  ],
+  Tuesday: [
+    "Back Squat – 5×8",
+    "Walking Lunges – 3×20 steps",
+    "Romanian Deadlift – 4×10",
+    "Leg Press – 3×12",
+    "Seated Calf Raise – 4×15",
+    "Standing Calf Raise – 4×20"
+  ],
+  Wednesday: [
+    "Sprints – 10 × 60 m",
+    "Incline Treadmill Run (20 min)",
+    "Cable Crunch – 3×20",
+    "Russian Twist – 3×30",
+    "Plank Circuit – 3 rounds"
+  ],
+  Thursday: [
+    "Pull-ups – 4×Failure",
+    "Barbell Row – 4×10",
+    "Lat Pulldown – 3×12",
+    "Seated Cable Row – 3×12",
+    "Face Pull – 3×15",
+    "EZ-Bar Curl – 4×12",
+    "Hammer Curl – 3×12"
+  ],
+  Friday: [
+    "Military Press – 4×10",
+    "Arnold Press – 4×10",
+    "Lateral Raise – 3×15",
+    "Front Raise – 3×15",
+    "Cable Crossover – 3×12",
+    "Tricep Pushdown – 3×15",
+    "Overhead Extension – 3×12"
+  ],
+  Saturday: [
+    "Core Circuit (5 Rounds): Hanging Leg Raises + Mountain Climbers + Flutter Kicks",
+    "Battle Ropes – 3×1 min",
+    "Run 2 miles steady pace",
+    "Stretch / Foam Roll – 10 min"
+  ],
+  Sunday: ["Rest / Active Recovery (Walk, Swim, Mobility)"]
+};
+
 };
 
 const workoutsB = {
-  Monday: ["Bench ⇄ Pull-ups", "Incline DB ⇄ Rows", "Chest Fly"],
-  Tuesday: ["Leg Press", "Lunges", "Leg Curl", "Standing Calf Raise"],
-  Wednesday: ["Arnold Press", "Lateral Raise", "Skull Crusher", "DB Curl"],
-  Thursday: ["Ab Wheel", "Cable Crunch", "Mountain Climbers", "Run 2 mi"],
-  Friday: ["Deadlift", "Front Squat", "Push Press", "Battle Ropes"],
-  Saturday: ["Swim/Bike 30 min", "Stretch 15 min"],
-  Sunday: ["Rest"]
+  Monday: [
+    "Bench Press – 5×10",
+    "Incline DB Press – 4×12",
+    "Decline Press – 3×12",
+    "Cable Fly – 4×15",
+    "Push-ups – 2×Failure"
+  ],
+  Tuesday: [
+    "Deadlift – 5×5",
+    "Front Squat – 4×8",
+    "Leg Press – 4×12",
+    "Leg Extension – 4×15",
+    "Standing Calf Raise – 4×20"
+  ],
+  Wednesday: [
+    "Pull-ups – 4×Failure",
+    "T-Bar Row – 4×10",
+    "Lat Pulldown – 3×12",
+    "Seated Row – 3×12",
+    "Preacher Curl – 3×12",
+    "Hammer Curl – 3×12"
+  ],
+  Thursday: [
+    "Arnold Press – 4×10",
+    "Upright Row – 4×10",
+    "Lateral Raise Superset Front Raise – 3×12 each",
+    "Rear Delt Fly – 3×15",
+    "Tricep Dips – 3×Failure",
+    "Overhead Cable Extension – 3×12"
+  ],
+  Friday: [
+    "Romanian Deadlift – 4×10",
+    "Walking Lunge – 4×20 steps",
+    "Bulgarian Split Squat – 3×12",
+    "Leg Curl – 3×15",
+    "Ab Wheel – 3×20"
+  ],
+  Saturday: [
+    "Sprints – 6×100 m",
+    "HIIT Bike – 20 min",
+    "Hanging Leg Raises – 3×15",
+    "Weighted Sit-ups – 3×20"
+  ],
+  Sunday: ["Rest / Mobility / Stretch"]
 };
 
 const workouts = currentCycle === "A" ? workoutsA : workoutsB;
@@ -712,6 +793,27 @@ function renderWorkouts() {
 }
 
 renderWorkouts();
+// === 🎯 RESET FOCUS AT MIDNIGHT ===
+
+// Function to clear today's focus at midnight
+function resetFocusAtMidnight() {
+  const now = new Date();
+  const msUntilMidnight =
+    new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0) - now;
+
+  setTimeout(() => {
+    localStorage.removeItem("focusText");
+    const focusInput = document.getElementById("focusInput");
+    if (focusInput) focusInput.value = "";
+    console.log("Focus reset at midnight");
+
+    // Schedule again for next midnight
+    resetFocusAtMidnight();
+  }, msUntilMidnight);
+}
+
+// Run on load
+resetFocusAtMidnight();
 
 </script>
 
