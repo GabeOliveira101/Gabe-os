@@ -449,24 +449,30 @@ updateStreakBar();
     width: 100%;
     display: flex;
     justify-content: space-around;
-    background: #111;
-    color: white;
-    border-top: 1px solid #333;
+    background: #0a0a0a; /* rich black */
+    border-top: 1px solid #222;
   }
+
   #bottomNav button {
     flex: 1;
     padding: 12px 0;
     font-size: 0.9rem;
-    text-transform: uppercase;
     font-weight: 600;
     background: none;
     border: none;
-    color: inherit;
-    letter-spacing: 1px;
+    color: #fff; /* always white */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background 0.2s ease-in-out;
   }
+
   #bottomNav button.active {
-    color: gold;
-    border-top: 2px solid gold;
+    background: rgba(255, 255, 255, 0.05); /* subtle highlight */
+    color: #fff; /* stays white */
+  }
+
+  #bottomNav button:active {
+    background: rgba(255, 255, 255, 0.1);
   }
 </style>
 
