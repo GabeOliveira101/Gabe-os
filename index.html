@@ -9,11 +9,13 @@
 <title>Gabe OS</title>
 <link rel="manifest" href="manifest.json">
 <style>
-/* ✨ LOUIS VUITTON INSPIRED LIGHT THEME */
+/* ✨ LOUIS VUITTON INSPIRED LIGHT THEME — MOBILE FIXED */
 body {
   background: linear-gradient(180deg, #faf8f6, #f3f1ee);
   font-family: 'Inter', sans-serif;
   color: #222;
+  margin: 0;
+  padding: 0;
 }
 
 /* Section Container (Cards) */
@@ -26,6 +28,7 @@ section {
   backdrop-filter: blur(14px);
   border: 1px solid rgba(206, 175, 95, 0.3);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 /* Section Titles */
@@ -38,9 +41,9 @@ section h2 {
   margin-bottom: 10px;
 }
 
-/* Inputs */
+/* Inputs — fixed width on phones */
 section input[type="text"] {
-  width: 100%;
+  width: calc(100% - 28px);
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid #e5e2dc;
   border-radius: 10px;
@@ -50,6 +53,7 @@ section input[type="text"] {
   font-size: 0.95rem;
   outline: none;
   transition: border 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 section input[type="text"]:focus {
   border: 1px solid #c7a53d;
@@ -81,101 +85,19 @@ section:hover {
   box-shadow: 0 12px 25px rgba(212, 175, 55, 0.08);
 }
 
-/* Nav bar (bottom) */
+/* Nav bar (bottom) — spacing fixed */
 #bottomNav {
   position: fixed;
   bottom: 0;
   width: 100%;
   display: flex;
   justify-content: space-around;
-  background: rgba(255, 255, 255, 0.85);
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
   backdrop-filter: blur(12px);
+  z-index: 999;
 }
-#bottomNav button {
-  flex: 1;
-  padding: 14px 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  font-family: 'League Spartan', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #222;
-  background: none;
-  border: none;
-  transition: color 0.3s, border 0.3s;
-}
-#bottomNav button.active {
-  color: #a98d37;
-  border-top: 2px solid #d4af37;
-}
-#bottomNav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  background: rgba(255, 255, 255, 0.85);
-  border-top: 1px solid rgba(212, 175, 55, 0.2);
-  backdrop-filter: blur(12px);
-}
-#bottomNav button {
-  flex: 1;
-  padding: 14px 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-  font-family: 'League Spartan', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #222;
-  background: none;
-  border: none;
-  transition: color 0.3s, border 0.3s;
-}
-#bottomNav button.active {
-  color: #a98d37;
-  border-top: 2px solid #d4af37;
-}
-/* ✨ LV HERO SECTION */
-#hero {
-  text-align: center;
-  padding: 80px 20px 40px;
-}
-
-#hero h1 {
-  font-family: 'League Spartan', sans-serif;
-  font-size: 1.6rem;
-  color: #222;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-}
-
-#hero p {
-  font-size: 0.95rem;
-  color: #a98d37;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-/* 🧭 MOBILE FIXES */
-section input[type="text"] {
-  width: calc(100% - 28px); /* fixes focus box being too wide on phones */
-  box-sizing: border-box;
-}
-
-#bottomNav button {
-  padding: 16px 0; /* adds a bit more space so text isn't cut off */
-}
-
-/* iPhone / Android bottom bar safe area fix */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  #bottomNav {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-}
-
-</style>
+#
 
 </head>
 <body>
