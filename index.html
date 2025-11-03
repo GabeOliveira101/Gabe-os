@@ -435,12 +435,41 @@ updateStreakBar();
 
 <!-- Bottom Navigation -->
 <nav id="bottomNav">
-  <button data-target="focusWinsSection" class="active">🎯</button>
-  <button data-target="mediaSection">🎥</button>
-  <button data-target="workoutSection">💪</button>
-  <button data-target="photosSection">📸</button>
-  <button data-target="opsSection">⚙️</button>
+  <button data-target="focusWinsSection" class="active">Focus</button>
+  <button data-target="mediaSection">Media</button>
+  <button data-target="workoutSection">Workout</button>
+  <button data-target="photosSection">Photos</button>
+  <button data-target="opsSection">Settings</button>
 </nav>
+
+<style>
+  #bottomNav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background: #111;
+    color: white;
+    border-top: 1px solid #333;
+  }
+  #bottomNav button {
+    flex: 1;
+    padding: 12px 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    background: none;
+    border: none;
+    color: inherit;
+    letter-spacing: 1px;
+  }
+  #bottomNav button.active {
+    color: gold;
+    border-top: 2px solid gold;
+  }
+</style>
+
 
 
 <script>
