@@ -129,14 +129,55 @@ section.active {
   transform:scale(1.2);
   accent-color:#00ff77;
 }
+
+/* ✨ LV Hero Section Styling */
+#hero {
+  height: 100vh;
+  background: url('YOUR_HERO_IMAGE.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+#hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.1));
+}
+
+#hero .hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+#hero .hero-inner h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+#hero .hero-inner p {
+  font-size: 1.3rem;
+  color: #d4d4d4;
+  letter-spacing: 0.8px;
+}
+
 </style>
 </head>
 <body>
+<!-- ✨ Louis Vuitton–style Hero Section -->
+<section id="hero">
+  <div class="hero-inner">
+    <h1>Good Morning, Gabe.</h1>
+    <p>Your next chapter begins now.</p>
+  </div>
+</section>
 
-<div class="header">
-  <div class="brand">BECOMING // CONTROL CENTER</div>
-  <div class="date-greeting" id="dateGreeting"></div>
-</div>
 
 <div class="container">
 
@@ -449,8 +490,9 @@ updateStreakBar();
     width: 100%;
     display: flex;
     justify-content: space-around;
-    background: #0a0a0a; /* rich black */
+    background: rgba(10, 10, 10, 0.95);
     border-top: 1px solid #222;
+    backdrop-filter: blur(10px);
   }
 
   #bottomNav button {
@@ -460,21 +502,22 @@ updateStreakBar();
     font-weight: 600;
     background: none;
     border: none;
-    color: #fff; /* always white */
+    color: #fff;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: background 0.2s ease-in-out;
+    letter-spacing: 1px;
+    transition: background 0.3s ease-in-out;
   }
 
   #bottomNav button.active {
-    background: rgba(255, 255, 255, 0.05); /* subtle highlight */
-    color: #fff; /* stays white */
+    background: rgba(255,255,255,0.07);
+    color: #fff;
   }
 
   #bottomNav button:active {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255,0.1);
   }
 </style>
+
 
 
 
