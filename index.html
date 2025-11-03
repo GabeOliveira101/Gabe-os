@@ -109,6 +109,55 @@ section:hover {
   color: #a98d37;
   border-top: 2px solid #d4af37;
 }
+#bottomNav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.85);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  backdrop-filter: blur(12px);
+}
+#bottomNav button {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'League Spartan', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #222;
+  background: none;
+  border: none;
+  transition: color 0.3s, border 0.3s;
+}
+#bottomNav button.active {
+  color: #a98d37;
+  border-top: 2px solid #d4af37;
+}
+/* ✨ LV HERO SECTION */
+#hero {
+  text-align: center;
+  padding: 80px 20px 40px;
+}
+
+#hero h1 {
+  font-family: 'League Spartan', sans-serif;
+  font-size: 1.6rem;
+  color: #222;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+#hero p {
+  font-size: 0.95rem;
+  color: #a98d37;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 </style>
 
 </head>
@@ -131,7 +180,7 @@ section:hover {
     <div class="card-header"><div class="card-title">🎯 TODAY'S FOCUS</div></div>
     <div class="card-body">
       <input type="text" id="focusInput" placeholder="LOCK IN YOUR MISSION..." class="focus-input">
-      <div id="focusTips" style="margin-top:10px;font-size:14px;color:#00ff77;"></div>
+      <div id="focusTips" style="margin-top:10px;font-size:14px;color:#d4af37;"></div>
     </div>
   </div>
 
@@ -192,16 +241,16 @@ section:hover {
     </div>
     <div class="card-body">
       <input type="file" id="photoInput" accept="image/*" style="margin-bottom:10px;">
-      <div id="photoSummary" style="font-size:14px;color:#00ff77;margin-bottom:10px;"></div>
+      <div id="photoSummary" style="font-size:14px;color:#d4af37;margin-bottom:10px;"></div>
 
       <!-- Calendar -->
       <div id="calendarGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px;"></div>
 
       <!-- Streak -->
-<div id="streakBar" style="font-weight:600;color:#00ff77;text-align:center;margin-bottom:12px;">
+<div id="streakBar" style="font-weight:600;color:#d4af37;text-align:center;margin-bottom:12px;">
   🔥 Current Streak: 0 days | 🏅 Longest Streak: 0 days
   <div id="progressOuter" style="width:100%;height:10px;background:#222;border-radius:6px;overflow:hidden;margin-top:4px;">
-    <div id="progressInner" style="height:100%;background:#00ff77;width:0%;transition:width 0.4s ease;"></div>
+    <div id="progressInner" style="height:100%;background:#d4af37;width:0%;transition:width 0.4s ease;"></div>
   </div>
 </div>
 
@@ -237,29 +286,29 @@ section:hover {
 #photoModal.hidden{display:none;}
 #photoModal img{
   max-width:90%;max-height:70vh;border-radius:10px;
-  box-shadow:0 0 12px #00ff77;
+  box-shadow:0 0 12px #d4af37;
 }
 #modalNote{
   margin-top:12px;width:90%;background:#111;color:#fff;
   border:1px solid #333;border-radius:6px;padding:8px;font-size:14px;
 }
 #closeModal,#deletePhoto{
-  background:none;border:1px solid #00ff77;color:#00ff77;
+  background:none;border:1px solid #d4af37;color:#d4af37;
   border-radius:6px;padding:6px 14px;margin-top:10px;cursor:pointer;
 }
 #closeModal:hover,#deletePhoto:hover{
-  background:#00ff77;color:#000;
+  background:#d4af37;color:#000;
 }
 #calendarGrid div{
   background:#111;padding:6px;border-radius:6px;text-align:center;
   cursor:pointer;transition:all .2s ease;
 }
 #calendarGrid div.active{
-  background:#00ff77;color:#000;font-weight:bold;
-  box-shadow:0 0 6px #00ff77;
+  background:#d4af37;color:#000;font-weight:bold;
+  box-shadow:0 0 6px #d4af37;
 }
 #calendarGrid div.logged{
-  background:#004d2e;color:#00ff77;
+  background:#004d2e;color:#d4af37;
 }
 </style>
 
@@ -712,7 +761,7 @@ function renderWorkouts() {
   Object.keys(workouts).forEach(day => {
     const dayDiv = document.createElement("div");
     dayDiv.classList.add("workout-day");
-    dayDiv.innerHTML = `<h3 style="cursor:pointer;color:#00ff77;margin-top:15px;">${day}</h3>`;
+    dayDiv.innerHTML = `<h3 style="cursor:pointer;color:#d4af37;margin-top:15px;">${day}</h3>`;
     const exDiv = document.createElement("div");
     exDiv.classList.add("exercise-list");
     exDiv.style.display = "none";
