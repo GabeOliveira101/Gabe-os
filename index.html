@@ -85,6 +85,7 @@ section:hover {
 }
 
 /* Bottom nav fixed */
+/* ✨ CONTROL ROOM NAV (raised and padded for phones) */
 #bottomNav {
   position: fixed;
   bottom: 0;
@@ -95,8 +96,28 @@ section:hover {
   border-top: 1px solid rgba(212, 175, 55, 0.25);
   backdrop-filter: blur(12px);
   z-index: 999;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 6px);
+  padding: 12px 0 calc(env(safe-area-inset-bottom) + 12px);
 }
+
+#bottomNav button {
+  flex: 1;
+  padding: 18px 0; /* slightly taller for thumbs */
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: 'League Spartan', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #222;
+  background: none;
+  border: none;
+  transition: color 0.3s, border 0.3s;
+}
+
+#bottomNav button.active {
+  color: #a98d37;
+  border-top: 2px solid #d4af37;
+}
+
 #bottomNav button {
   flex: 1;
   padding: 16px 0;
