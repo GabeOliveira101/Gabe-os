@@ -344,3 +344,151 @@ input[type="text"]:focus,textarea:focus{
   <button data-target="workoutSection">Workout</button>
   <button data-target="photosSection">Photos</button>
 </nav>
+<script>
+/* =====================================================
+   GABE OS V2 — ROYAL PRECISION ENGINE
+   Smooth navigation · Planner persistence · LocalStorage
+   ===================================================== */
+
+/* ---------- Section Navigation ---------- */
+const navButtons = document.querySelectorAll('#bottomNav button');
+const sections   = document.querySelectorAll('section');
+
+function showSection(targetId){
+  sections.forEach(sec=>{
+    if(sec.id===targetId){ sec.classList.remove('hidden'); sec.style.opacity='1'; }
+    else{ sec.classList.add('hidden'); sec.style.opacity='0'; }
+  });
+  navButtons.forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.target===targetId);
+  });
+}
+navButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>showSection(btn.dataset.target));
+});
+showSection('focusSection');
+
+/* ---------- Focus Input + Tips ---------- */
+const focusInput=document.getElementById('focusInput');
+const focusTips=document.getElementById('focusTips');
+
+focusInput.value=localStorage.getItem('todayFocus')||'';
+focusInput.addEventListener('input',e=>{
+  const val=e.target.value.trim();
+  localStorage.setItem('todayFocus',val);
+  if(val.length>0)showTips(val); else focusTips.textContent='';
+});
+
+function getFocusTips(focus){
+  focus=focus.toLowerCase();
+  if(focus.includes('gym')||focus.includes('train'))return[
+    "Lay your gear out the night before.",
+    "Hydrate early and stretch.",
+    "Win the morning — own the day."];
+  if(focus.includes('work')||focus.includes('project'))return[
+    "Start with the hardest task.",
+    "Block one deep-work session.",
+    "Momentum beats perfection."];
+  if(focus.includes('rest')||focus.includes('recover'))return[
+    "Unplug fully.",
+    "Reflect — progress needs rest.",
+    "Tomorrow starts with how you recharge today."];
+  return[
+    "Focus is power — stay locked in.",
+    "Discipline beats motivation.",
+    "Small steps today build your tomorrow."];
+}
+function showTips(focus){
+  const tips=getFocusTips(focus);
+  const random=tips[Math.floor(Math.random()*tips.length)];
+  focusTips.textContent=random;
+}
+
+/* ---------- Wins Tracker ---------- */
+function loadWins(){return JSON.parse(localStorage.getItem('wins')||'[]');}
+function saveWins(w){localStorage.setItem('wins',JSON.stringify(w));}
+
+const winsList=document.getElementById('winsList');
+function renderWins(){
+  const wins=loadWins();
+  winsList.innerHTML=wins.length
+    ? wins.map(w=>`<li style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">${w.text}<br><span style="color:var(--text-muted);font-size:12px;">${w.time}</span></li>`).join('')
+    : `<li style="color:var(--text-muted);font-size:14px;">No wins logged yet.</li>`;
+}
+renderWins();
+
+document.getElementById('addWinBtn').onclick=()=>{
+  document.getElementById('winInputContainer').style.display='block';
+  document.getElementById('winInput').focus();
+};
+document.getElementById('winSubmitBtn').onclick=()=>{
+  const val=document.getElementById('winInput').value.trim();
+  if(!val)return;
+  const wins=loadWins();
+  wins.unshift({text:val,time:new Date().toLocaleTimeString()});
+  saveWins(wins);
+  document.getElementById('winInput').value='';
+  document.getElementById('winInputContainer').style.display='none';
+  renderWins();
+};
+document.getElementById('clearWinsBtn').onclick=()=>{
+  if(confirm('Clear all wins?')){
+    localStorage.removeItem('wins');
+    renderWins();
+  }
+};
+
+/* ---------- Planner Tabs + Storage ---------- */
+const plannerBtns=document.querySelectorAll('.planner-btn');
+const plannerViews=document.querySelectorAll('.planner-view');
+plannerBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    plannerBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const viewId=btn.dataset.view+'Planner';
+    plannerViews.forEach(v=>v.classList.remove('active'));
+    document.getElementById(viewId).classList.add('active');
+  });
+});
+
+const yearlyInput=document.getElementById('yearlyInput');
+const weeklyInput=document.getElementById('weeklyInput');
+const dailyInput=document.getElementById('dailyInput');
+
+function loadPlanner(){
+  yearlyInput.value=localStorage.getItem('yearlyInput')||'';
+  weeklyInput.value=localStorage.getItem('weeklyInput')||'';
+  dailyInput.value=localStorage.getItem('dailyInput')||'';
+}
+loadPlanner();
+
+[yearlyInput,weeklyInput,dailyInput].forEach(el=>{
+  el.addEventListener('input',()=>{
+    localStorage.setItem(el.id,el.value);
+  });
+});
+
+/* ---------- Midnight Reset for Focus and Wins ---------- */
+function resetDaily(){
+  const today=new Date().toDateString();
+  const last=localStorage.getItem('lastReset')||'';
+  if(today!==last){
+    localStorage.setItem('lastReset',today);
+    localStorage.removeItem('todayFocus');
+    localStorage.removeItem('wins');
+    renderWins();
+    if(focusInput)focusInput.value='';
+  }
+}
+resetDaily();
+
+/* ---------- Subtle Fade In on Load ---------- */
+window.addEventListener('load',()=>{
+  document.body.style.opacity='0';
+  document.body.style.transition='opacity 1s ease';
+  requestAnimationFrame(()=>{document.body.style.opacity='1';});
+});
+</script>
+
+</body>
+</html>
