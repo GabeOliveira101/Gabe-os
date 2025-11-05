@@ -257,6 +257,17 @@ section:hover {
 section {
   margin-top: 100px;
 }
+/* ✅ Bottom nav padding fix for iPhone safe area */
+#bottomNav {
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  background: #faf8f3;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
 
 </style>
 
