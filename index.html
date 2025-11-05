@@ -1,494 +1,1163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#101826">
-<title>GABE OS V2 – Royal Precision Edition</title>
-<link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=League+Spartan:wght@500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>GABE OS V2 - Royal Precision Edition</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkdBQkUgT1MgVjIiLAogICJzaG9ydF9uYW1lIjogIkdBQkUgT1MiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBmMTgyNCIsCiAgInRoZW1lX2NvbG9yIjogIiMwZjE4MjQiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSXlOVFlpSUdobGFXZG9kRDBpTWpVMklqNDhjbVZqZENCM2FXUjBhRDBpTWpVMklpQm9aV2xuYUhROUlqSTFOaUlnWm1sc2JEMGlJekJtTVRneU5DSXZQanh3WVhSb0lHUTlJazB4TWpnZ05qUk1NVEk0SURFeU9FdzJOQ0F4TWpoYUlpQm1hV3hzUFNJalpEUmhabXpNM0lpQnpkSEp2YTJVdGQybGtkR2c5SWpRaUx6NDhMM04yWno0PSIsCiAgICAgICJzaXplcyI6ICIyNTZ4MjU2IiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0KICBdCn0=">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-/* ===========================
-   GABE OS V2 — ROYAL PRECISION EDITION
-   =========================== */
+        :root {
+            --navy-dark: #0f1824;
+            --navy-mid: #1b2432;
+            --navy-light: #2a3f5f;
+            --gold: #d4af37;
+            --gold-light: #f0d886;
+            --glass-bg: rgba(27, 36, 50, 0.6);
+            --glass-border: rgba(212, 175, 55, 0.2);
+        }
 
-/* ---------- Base ---------- */
-:root {
-  --navy-1:#0f1824;
-  --navy-2:#1b2432;
-  --gold-1:#d4af37;
-  --gold-2:#f0d886;
-  --text-light:#eaeaea;
-  --text-muted:#9ea4b2;
-  --card-bg:rgba(255,255,255,0.03);
-  --card-border:rgba(212,175,55,0.12);
-  --blur:16px;
-  --radius:18px;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-mid) 100%);
+            color: #e8eaed;
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            overflow-x: hidden;
+        }
 
-*{box-sizing:border-box;margin:0;padding:0;}
-body{
-  font-family:'Inter',sans-serif;
-  background:linear-gradient(180deg,var(--navy-1),var(--navy-2));
-  color:var(--text-light);
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
+        .header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            position: relative;
+        }
 
-/* ---------- Header ---------- */
-#appHeader{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:68px;
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  backdrop-filter:blur(var(--blur));
-  background:rgba(15,20,30,0.7);
-  border-bottom:1px solid var(--card-border);
-  z-index:1000;
-  animation:headerFade 1s ease forwards;
-}
-#appHeader h1{
-  font-family:'League Spartan',sans-serif;
-  font-size:1.1rem;
-  letter-spacing:2px;
-  color:var(--gold-1);
-  text-transform:uppercase;
-  font-weight:600;
-}
-#appHeader::after{
-  content:"";
-  width:0;height:2px;
-  background:linear-gradient(90deg,var(--gold-1),var(--gold-2));
-  border-radius:2px;
-  animation:underline 1.2s ease 0.5s forwards;
-}
-@keyframes headerFade{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:none;}}
-@keyframes underline{to{width:80%;}}
+        .settings-icon {
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
 
-/* ---------- Sections ---------- */
-section{
-  width:100%;
-  max-width:720px;
-  margin:90px auto 100px;
-  padding:24px;
-  border-radius:var(--radius);
-  background:var(--card-bg);
-  border:1px solid var(--card-border);
-  backdrop-filter:blur(var(--blur));
-  box-shadow:0 8px 30px rgba(0,0,0,0.25);
-  transition:opacity .3s ease;
-}
-.hidden{display:none;}
+        .settings-icon:hover {
+            transform: rotate(90deg);
+        }
 
-/* ---------- Cards ---------- */
-.card{
-  background:rgba(255,255,255,0.02);
-  border:1px solid var(--card-border);
-  border-radius:var(--radius);
-  padding:20px;
-  margin-bottom:24px;
-  box-shadow:0 4px 20px rgba(0,0,0,0.25);
-  transition:transform .2s ease,box-shadow .2s ease;
-}
-.card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 28px rgba(0,0,0,0.35);
-}
-.card-title{
-  font-family:'League Spartan',sans-serif;
-  text-transform:uppercase;
-  font-size:0.95rem;
-  color:var(--gold-1);
-  letter-spacing:1.2px;
-  margin-bottom:10px;
-}
+        .settings-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--gold);
+        }
 
-/* ---------- Inputs / Buttons ---------- */
-input[type="text"],textarea{
-  width:100%;
-  background:rgba(255,255,255,0.05);
-  color:var(--text-light);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:10px;
-  padding:12px 14px;
-  font-size:0.95rem;
-  outline:none;
-  transition:border .2s,box-shadow .2s;
-}
-input[type="text"]:focus,textarea:focus{
-  border:1px solid var(--gold-1);
-  box-shadow:0 0 0 3px rgba(212,175,55,0.15);
-}
-.btn{
-  background:linear-gradient(90deg,var(--gold-1),var(--gold-2));
-  color:#111;
-  font-family:'League Spartan',sans-serif;
-  font-weight:600;
-  text-transform:uppercase;
-  border:none;
-  border-radius:10px;
-  padding:10px 18px;
-  letter-spacing:0.5px;
-  cursor:pointer;
-  transition:all .25s ease;
-}
-.btn:hover{
-  transform:translateY(-1px);
-  opacity:.9;
-  box-shadow:0 6px 18px rgba(212,175,55,0.25);
-}
+        .logo {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
 
-/* ---------- Bottom Navigation ---------- */
-#bottomNav{
-  position:fixed;
-  bottom:0;left:0;width:100%;
-  display:flex;justify-content:space-around;
-  backdrop-filter:blur(var(--blur));
-  background:rgba(15,20,30,0.85);
-  border-top:1px solid var(--card-border);
-  padding:12px 0 calc(env(safe-area-inset-bottom)+12px);
-  z-index:999;
-}
-#bottomNav button{
-  flex:1;
-  background:none;
-  border:none;
-  font-family:'League Spartan',sans-serif;
-  font-size:0.9rem;
-  color:var(--text-muted);
-  text-transform:uppercase;
-  letter-spacing:0.5px;
-  cursor:pointer;
-  padding:14px 0;
-  transition:color .3s,border .3s;
-}
-#bottomNav button.active{
-  color:var(--gold-1);
-  border-top:2px solid var(--gold-1);
-}
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: glow 2s ease-in-out infinite;
+        }
 
-/* ---------- Planner Tabs ---------- */
-.planner-tabs{
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  margin-bottom:20px;
-}
-.planner-btn{
-  background:rgba(255,255,255,0.04);
-  color:var(--gold-1);
-  border:1px solid var(--gold-1);
-  border-radius:8px;
-  padding:8px 18px;
-  font-family:'League Spartan',sans-serif;
-  text-transform:uppercase;
-  font-weight:600;
-  cursor:pointer;
-  transition:all .25s ease;
-}
-.planner-btn:hover,.planner-btn.active{
-  background:linear-gradient(90deg,var(--gold-1),var(--gold-2));
-  color:#111;
-}
-.planner-view{
-  display:none;
-}
-.planner-view.active{
-  display:block;
-  animation:fadeIn .4s ease;
-}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+        @keyframes glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
 
-/* ---------- Planner Content ---------- */
-.planner-view textarea{
-  height:200px;
-  margin-top:10px;
-}
-.planner-view h2{
-  font-family:'League Spartan',sans-serif;
-  text-transform:uppercase;
-  font-size:1rem;
-  color:var(--gold-1);
-  margin-bottom:10px;
-  letter-spacing:1px;
-}
-.planner-view p{
-  color:var(--text-muted);
-  font-size:0.9rem;
-  margin-bottom:8px;
-}
+        .subtitle {
+            font-size: 0.9rem;
+            color: #8a92a0;
+            margin-top: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
 
-/* ---------- Subtle Animations ---------- */
-@keyframes glowPulse{
-  0%,100%{box-shadow:0 0 8px rgba(212,175,55,0.2);}
-  50%{box-shadow:0 0 14px rgba(212,175,55,0.35);}
-}
-.btn:active{
-  animation:glowPulse .5s ease;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+        }
 
-/* ---------- Hero Section ---------- */
-#hero{
-  text-align:center;
-  margin-top:90px;
-  margin-bottom:40px;
-}
-#hero h1{
-  font-family:'League Spartan',sans-serif;
-  font-size:1.5rem;
-  text-transform:uppercase;
-  letter-spacing:1.5px;
-  color:var(--gold-1);
-}
-#hero p{
-  color:var(--text-muted);
-  font-size:0.9rem;
-  letter-spacing:1px;
-}
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
 
-/* ---------- Responsive ---------- */
-@media(max-width:600px){
-  section{margin:80px 14px 100px;}
-}
-</style>
+        .card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
+        }
+
+        .card-title {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-field, .textarea-field {
+            width: 100%;
+            background: rgba(15, 24, 36, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 14px;
+            color: #e8eaed;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus, .textarea-field:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .textarea-field {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy-dark);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+        }
+
+        .wins-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .win-item {
+            background: rgba(15, 24, 36, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .win-item:hover {
+            border-color: var(--gold);
+        }
+
+        .win-text {
+            flex: 1;
+            color: #e8eaed;
+        }
+
+        .win-time {
+            font-size: 0.85rem;
+            color: #8a92a0;
+            margin-left: 12px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            background: transparent;
+            color: #8a92a0;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--gold-light);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .workout-day {
+            background: rgba(15, 24, 36, 0.5);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .workout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .workout-header h3 {
+            color: var(--gold-light);
+            font-family: 'League Spartan', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        .workout-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .workout-content.expanded {
+            max-height: 2000px;
+            margin-top: 16px;
+        }
+
+        .exercise-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            background: rgba(27, 36, 50, 0.4);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .exercise-name {
+            color: #e8eaed;
+            font-weight: 500;
+        }
+
+        .exercise-input {
+            width: 60px;
+            padding: 6px;
+            background: rgba(15, 24, 36, 0.7);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 6px;
+            color: #e8eaed;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .photo-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 24, 36, 0.5);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #8a92a0;
+            border: 1px solid transparent;
+        }
+
+        .calendar-day.has-photo {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .streak-display {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            text-align: center;
+        }
+
+        .streak-number {
+            font-family: 'League Spartan', sans-serif;
+            font-size: 2.5rem;
+            color: var(--gold-light);
+            font-weight: 800;
+        }
+
+        .streak-label {
+            color: #8a92a0;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(15, 24, 36, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
+            transition: width 0.5s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--navy-mid);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-image {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .settings-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--navy-mid);
+            transform: translateY(-100%);
+            transition: transform 0.4s ease;
+            z-index: 999;
+            padding: 60px 20px 40px;
+            overflow-y: auto;
+        }
+
+        .settings-drawer.open {
+            transform: translateY(0);
+        }
+
+        .close-settings {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--gold);
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tip-box {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 3px solid var(--gold);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 0.95rem;
+            color: #e8eaed;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+        }
+
+        .motivational-tip {
+            text-align: center;
+            color: var(--gold-light);
+            font-style: italic;
+            margin-top: 12px;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .exercise-item {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .exercise-input {
+                width: 100%;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            margin-top: 12px;
+        }
+    </style>
 </head>
-
 <body>
-<header id="appHeader"><h1>GABE OS CONTROL ROOM</h1></header>
-
-<section id="hero">
-  <h1>Welcome Back, Gabe.</h1>
-  <p>Your next chapter begins now.</p>
-</section>
-
-<!-- ========== SECTIONS ========== -->
-<section id="focusSection">
-  <div class="card">
-    <div class="card-title">🎯 Today's Focus</div>
-    <input type="text" id="focusInput" placeholder="Lock in your mission...">
-    <p id="focusTips" style="margin-top:8px;font-size:14px;color:var(--gold-1);"></p>
-  </div>
-
-  <div class="card">
-    <div class="card-title">🏆 Wins</div>
-    <button class="btn" id="addWinBtn">+ Add Win</button>
-    <div id="winInputContainer" style="display:none;margin-top:12px;">
-      <input type="text" id="winInput" placeholder="What did you execute?">
-      <button class="btn" id="winSubmitBtn" style="margin-top:8px;">Log It</button>
+    <div class="header">
+        <div class="settings-icon" onclick="toggleSettings()">
+            <svg viewBox="0 0 24 24">
+                <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+            </svg>
+        </div>
+        <div class="logo">CONTROL ROOM</div>
+        <div class="subtitle">Royal Precision Edition</div>
     </div>
-    <ul id="winsList" style="margin-top:12px;list-style:none;padding:0;"></ul>
-    <button id="clearWinsBtn" class="btn" style="margin-top:10px;background:linear-gradient(90deg,#b45e42,#d4af37);color:#fff;">Clear Wins</button>
-  </div>
-</section>
 
-<!-- Planner -->
-<section id="plannerSection" class="hidden">
-  <div class="planner-tabs">
-    <button class="planner-btn active" data-view="yearly">Yearly</button>
-    <button class="planner-btn" data-view="weekly">Weekly</button>
-    <button class="planner-btn" data-view="daily">Daily</button>
-  </div>
+    <div class="container">
+        <!-- Focus & Wins Section -->
+        <div class="card">
+            <div class="card-title">🎯 Today's Focus</div>
+            <input type="text" class="input-field" id="focusInput" placeholder="What's your main mission today?" />
+            <div class="motivational-tip" id="motivationalTip"></div>
+            
+            <div style="margin-top: 24px;">
+                <div class="card-title">🏆 Today's Wins</div>
+                <div class="wins-list" id="winsList"></div>
+                <div class="button-group">
+                    <button class="btn" onclick="addWin()">Add Win</button>
+                    <button class="btn btn-secondary" onclick="clearWins()">Clear All</button>
+                </div>
+            </div>
+        </div>
 
-  <div id="yearlyPlanner" class="planner-view active">
-    <h2>Yearly Goals</h2>
-    <p>Define your big targets for the year ahead.</p>
-    <textarea id="yearlyInput" placeholder="List your vision and objectives..."></textarea>
-  </div>
+        <!-- Planner Section -->
+        <div class="card">
+            <div class="card-title">📋 Planner</div>
+            <div class="tabs">
+                <button class="tab active" onclick="switchPlannerTab('yearly')">Yearly</button>
+                <button class="tab" onclick="switchPlannerTab('weekly')">Weekly</button>
+                <button class="tab" onclick="switchPlannerTab('daily')">Daily</button>
+            </div>
+            <div class="tab-content active" id="yearly-content">
+                <textarea class="textarea-field" id="yearlyPlanner" placeholder="Your yearly goals and vision..."></textarea>
+            </div>
+            <div class="tab-content" id="weekly-content">
+                <textarea class="textarea-field" id="weeklyPlanner" placeholder="This week's priorities..."></textarea>
+            </div>
+            <div class="tab-content" id="daily-content">
+                <textarea class="textarea-field" id="dailyPlanner" placeholder="Today's tasks and schedule..."></textarea>
+            </div>
+        </div>
 
-  <div id="weeklyPlanner" class="planner-view">
-    <h2>Weekly Plan</h2>
-    <p>Focus for this week — priorities, habits & check-ins.</p>
-    <textarea id="weeklyInput" placeholder="Outline your week’s priorities..."></textarea>
-  </div>
+        <!-- Workout Tracker -->
+        <div class="card">
+            <div class="card-title">💪 Workout Tracker</div>
+            <div id="workoutContainer"></div>
+        </div>
 
-  <div id="dailyPlanner" class="planner-view">
-    <h2>Daily Command Center</h2>
-    <p>Track your tasks and reflect on your day.</p>
-    <textarea id="dailyInput" placeholder="Today's tasks and reflections..."></textarea>
-  </div>
-</section>
+        <!-- Photo Gallery -->
+        <div class="card">
+            <div class="card-title">📸 Progress Photos</div>
+            <div class="streak-display">
+                <div class="streak-number" id="streakNumber">0</div>
+                <div class="streak-label">Day Streak</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="streakProgress" style="width: 0%"></div>
+                </div>
+            </div>
+            <label for="photoUpload" class="btn upload-btn">Upload Photo</label>
+            <input type="file" id="photoUpload" accept="image/*" onchange="uploadPhoto(event)">
+            <div class="calendar-grid" id="photoCalendar"></div>
+            <div class="photo-grid" id="photoGrid"></div>
+        </div>
 
-<!-- Media -->
-<section id="mediaSection" class="hidden">
-  <div class="card">
-    <div class="card-title">🎧 Media Center</div>
-    <iframe width="100%" height="220" src="https://www.youtube.com/embed/UNQhuFL6CWg" frameborder="0" allowfullscreen></iframe>
-  </div>
-</section>
+        <!-- Media Center -->
+        <div class="card">
+            <div class="card-title">🎬 Media Center</div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/videoseries?list=PLrAXtmErZgOeiKm4sgNOknGvNjby9efdf" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
-<!-- Workout -->
-<section id="workoutSection" class="hidden">
-  <div class="card">
-    <div class="card-title">💪 Workout Tracker</div>
-    <p style="color:var(--text-muted);">Coming soon — advanced training matrix.</p>
-  </div>
-</section>
+    <!-- Settings Drawer -->
+    <div class="settings-drawer" id="settingsDrawer">
+        <button class="close-settings" onclick="toggleSettings()">×</button>
+        <div class="card">
+            <div class="card-title">⚙️ Settings</div>
+            <div class="button-group">
+                <button class="btn" onclick="exportData()">Export Backup</button>
+                <button class="btn btn-secondary" onclick="importData()">Import Backup</button>
+                <button class="btn btn-secondary" onclick="clearAllData()">Reset All Data</button>
+            </div>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="handleImport(event)">
+        </div>
+    </div>
 
-<!-- Photos -->
-<section id="photosSection" class="hidden">
-  <div class="card">
-    <div class="card-title">📸 Photo Log</div>
-    <p style="color:var(--text-muted);">Your visual progress space coming next.</p>
-  </div>
-</section>
+    <!-- Photo Modal -->
+    <div class="modal" id="photoModal">
+        <div class="modal-content">
+            <img class="modal-image" id="modalImage" src="" alt="Photo">
+            <textarea class="textarea-field" id="photoNote" placeholder="Add a note about this photo..."></textarea>
+            <div class="button-group">
+                <button class="btn" onclick="savePhotoNote()">Save Note</button>
+                <button class="btn btn-secondary" onclick="deletePhoto()">Delete Photo</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
 
-<!-- ---------- Bottom Navigation ---------- -->
-<nav id="bottomNav">
-  <button class="active" data-target="focusSection">Focus</button>
-  <button data-target="plannerSection">Planner</button>
-  <button data-target="mediaSection">Media</button>
-  <button data-target="workoutSection">Workout</button>
-  <button data-target="photosSection">Photos</button>
-</nav>
-<script>
-/* =====================================================
-   GABE OS V2 — ROYAL PRECISION ENGINE
-   Smooth navigation · Planner persistence · LocalStorage
-   ===================================================== */
+    <script>
+        // Initialize app
+        let currentPhotoId = null;
+        const motivationalTips = {
+            workout: "Your body is capable of amazing things. Push through!",
+            focus: "Deep work creates deep results. Stay locked in.",
+            win: "Every small win compounds into massive success.",
+            goal: "Dream big, plan smart, execute relentlessly.",
+            discipline: "Discipline is choosing what you want most over what you want now.",
+            default: "Today is your chance to be 1% better than yesterday."
+        };
 
-/* ---------- Section Navigation ---------- */
-const navButtons = document.querySelectorAll('#bottomNav button');
-const sections   = document.querySelectorAll('section');
+        // Check and reset daily data
+        function checkDailyReset() {
+            const today = new Date().toDateString();
+            const lastDate = localStorage.getItem('lastDate');
+            
+            if (lastDate !== today) {
+                localStorage.setItem('lastDate', today);
+                localStorage.setItem('todaysFocus', '');
+                localStorage.setItem('todaysWins', JSON.stringify([]));
+            }
+        }
 
-function showSection(targetId){
-  sections.forEach(sec=>{
-    if(sec.id===targetId){ sec.classList.remove('hidden'); sec.style.opacity='1'; }
-    else{ sec.classList.add('hidden'); sec.style.opacity='0'; }
-  });
-  navButtons.forEach(btn=>{
-    btn.classList.toggle('active',btn.dataset.target===targetId);
-  });
-}
-navButtons.forEach(btn=>{
-  btn.addEventListener('click',()=>showSection(btn.dataset.target));
-});
-showSection('focusSection');
+        // Focus functionality
+        document.getElementById('focusInput').addEventListener('input', function(e) {
+            const focus = e.target.value;
+            localStorage.setItem('todaysFocus', focus);
+            updateMotivationalTip(focus);
+        });
 
-/* ---------- Focus Input + Tips ---------- */
-const focusInput=document.getElementById('focusInput');
-const focusTips=document.getElementById('focusTips');
+        function updateMotivationalTip(text) {
+            const lower = text.toLowerCase();
+            let tip = motivationalTips.default;
+            
+            if (lower.includes('workout') || lower.includes('gym') || lower.includes('train')) {
+                tip = motivationalTips.workout;
+            } else if (lower.includes('focus') || lower.includes('work')) {
+                tip = motivationalTips.focus;
+            } else if (lower.includes('goal')) {
+                tip = motivationalTips.goal;
+            } else if (lower.includes('discipline')) {
+                tip = motivationalTips.discipline;
+            }
+            
+            document.getElementById('motivationalTip').textContent = text ? `💡 ${tip}` : '';
+        }
 
-focusInput.value=localStorage.getItem('todayFocus')||'';
-focusInput.addEventListener('input',e=>{
-  const val=e.target.value.trim();
-  localStorage.setItem('todayFocus',val);
-  if(val.length>0)showTips(val); else focusTips.textContent='';
-});
+        // Wins functionality
+        function addWin() {
+            const winText = prompt('What did you accomplish?');
+            if (!winText) return;
+            
+            const wins = JSON.parse(localStorage.getItem('todaysWins') || '[]');
+            wins.push({
+                text: winText,
+                time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+            });
+            localStorage.setItem('todaysWins', JSON.stringify(wins));
+            renderWins();
+        }
 
-function getFocusTips(focus){
-  focus=focus.toLowerCase();
-  if(focus.includes('gym')||focus.includes('train'))return[
-    "Lay your gear out the night before.",
-    "Hydrate early and stretch.",
-    "Win the morning — own the day."];
-  if(focus.includes('work')||focus.includes('project'))return[
-    "Start with the hardest task.",
-    "Block one deep-work session.",
-    "Momentum beats perfection."];
-  if(focus.includes('rest')||focus.includes('recover'))return[
-    "Unplug fully.",
-    "Reflect — progress needs rest.",
-    "Tomorrow starts with how you recharge today."];
-  return[
-    "Focus is power — stay locked in.",
-    "Discipline beats motivation.",
-    "Small steps today build your tomorrow."];
-}
-function showTips(focus){
-  const tips=getFocusTips(focus);
-  const random=tips[Math.floor(Math.random()*tips.length)];
-  focusTips.textContent=random;
-}
+        function renderWins() {
+            const wins = JSON.parse(localStorage.getItem('todaysWins') || '[]');
+            const container = document.getElementById('winsList');
+            
+            if (wins.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #8a92a0; padding: 20px;">No wins logged yet. Add your first win!</div>';
+                return;
+            }
+            
+            container.innerHTML = wins.map(win => `
+                <div class="win-item">
+                    <div class="win-text">${win.text}</div>
+                    <div class="win-time">${win.time}</div>
+                </div>
+            `).join('');
+        }
 
-/* ---------- Wins Tracker ---------- */
-function loadWins(){return JSON.parse(localStorage.getItem('wins')||'[]');}
-function saveWins(w){localStorage.setItem('wins',JSON.stringify(w));}
+        function clearWins() {
+            if (confirm('Clear all wins for today?')) {
+                localStorage.setItem('todaysWins', JSON.stringify([]));
+                renderWins();
+            }
+        }
 
-const winsList=document.getElementById('winsList');
-function renderWins(){
-  const wins=loadWins();
-  winsList.innerHTML=wins.length
-    ? wins.map(w=>`<li style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);">${w.text}<br><span style="color:var(--text-muted);font-size:12px;">${w.time}</span></li>`).join('')
-    : `<li style="color:var(--text-muted);font-size:14px;">No wins logged yet.</li>`;
-}
-renderWins();
+        // Planner functionality
+        function switchPlannerTab(tab) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tab}-content`).classList.add('active');
+        }
 
-document.getElementById('addWinBtn').onclick=()=>{
-  document.getElementById('winInputContainer').style.display='block';
-  document.getElementById('winInput').focus();
-};
-document.getElementById('winSubmitBtn').onclick=()=>{
-  const val=document.getElementById('winInput').value.trim();
-  if(!val)return;
-  const wins=loadWins();
-  wins.unshift({text:val,time:new Date().toLocaleTimeString()});
-  saveWins(wins);
-  document.getElementById('winInput').value='';
-  document.getElementById('winInputContainer').style.display='none';
-  renderWins();
-};
-document.getElementById('clearWinsBtn').onclick=()=>{
-  if(confirm('Clear all wins?')){
-    localStorage.removeItem('wins');
-    renderWins();
-  }
-};
+        document.getElementById('yearlyPlanner').addEventListener('input', function(e) {
+            localStorage.setItem('yearlyPlanner', e.target.value);
+        });
 
-/* ---------- Planner Tabs + Storage ---------- */
-const plannerBtns=document.querySelectorAll('.planner-btn');
-const plannerViews=document.querySelectorAll('.planner-view');
-plannerBtns.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    plannerBtns.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const viewId=btn.dataset.view+'Planner';
-    plannerViews.forEach(v=>v.classList.remove('active'));
-    document.getElementById(viewId).classList.add('active');
-  });
-});
+        document.getElementById('weeklyPlanner').addEventListener('input', function(e) {
+            localStorage.setItem('weeklyPlanner', e.target.value);
+        });
 
-const yearlyInput=document.getElementById('yearlyInput');
-const weeklyInput=document.getElementById('weeklyInput');
-const dailyInput=document.getElementById('dailyInput');
+        document.getElementById('dailyPlanner').addEventListener('input', function(e) {
+            localStorage.setItem('dailyPlanner', e.target.value);
+        });
 
-function loadPlanner(){
-  yearlyInput.value=localStorage.getItem('yearlyInput')||'';
-  weeklyInput.value=localStorage.getItem('weeklyInput')||'';
-  dailyInput.value=localStorage.getItem('dailyInput')||'';
-}
-loadPlanner();
+        // Workout functionality
+        const workoutProgram = {
+            monday: {
+                name: 'Chest & Triceps',
+                exercises: [
+                    'Bench Press',
+                    'Incline Dumbbell Press',
+                    'Cable Flyes',
+                    'Tricep Pushdowns',
+                    'Overhead Tricep Extension'
+                ]
+            },
+            tuesday: {
+                name: 'Back & Biceps',
+                exercises: [
+                    'Deadlifts',
+                    'Pull-ups',
+                    'Barbell Rows',
+                    'Bicep Curls',
+                    'Hammer Curls'
+                ]
+            },
+            wednesday: {
+                name: 'Legs',
+                exercises: [
+                    'Squats',
+                    'Leg Press',
+                    'Leg Curls',
+                    'Leg Extensions',
+                    'Calf Raises'
+                ]
+            },
+            thursday: {
+                name: 'Shoulders & Abs',
+                exercises: [
+                    'Military Press',
+                    'Lateral Raises',
+                    'Front Raises',
+                    'Hanging Leg Raises',
+                    'Planks'
+                ]
+            },
+            friday: {
+                name: 'Full Body',
+                exercises: [
+                    'Power Cleans',
+                    'Front Squats',
+                    'Push Press',
+                    'Romanian Deadlifts',
+                    'Face Pulls'
+                ]
+            }
+        };
 
-[yearlyInput,weeklyInput,dailyInput].forEach(el=>{
-  el.addEventListener('input',()=>{
-    localStorage.setItem(el.id,el.value);
-  });
-});
+        function renderWorkouts() {
+            const container = document.getElementById('workoutContainer');
+            const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+            
+            container.innerHTML = days.map(day => {
+                const workout = workoutProgram[day];
+                return `
+                    <div class="workout-day">
+                        <div class="workout-header" onclick="toggleWorkout('${day}')">
+                            <h3>${day.charAt(0).toUpperCase() + day.slice(1)} - ${workout.name}</h3>
+                            <span id="${day}-arrow">▼</span>
+                        </div>
+                        <div class="workout-content" id="${day}-content">
+                            ${workout.exercises.map((exercise, idx) => `
+                                <div class="exercise-item">
+                                    <span class="exercise-name">${exercise}</span>
+                                    <input type="number" class="exercise-input" placeholder="Weight" 
+                                           id="${day}-${idx}-weight" 
+                                           onchange="saveWorkoutData('${day}', ${idx}, 'weight', this.value)">
+                                    <input type="number" class="exercise-input" placeholder="Reps" 
+                                           id="${day}-${idx}-reps" 
+                                           onchange="saveWorkoutData('${day}', ${idx}, 'reps', this.value)">
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" 
+                                               id="${day}-${idx}-done" 
+                                               onchange="saveWorkoutData('${day}', ${idx}, 'done', this.checked)">
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            loadWorkoutData();
+        }
 
-/* ---------- Midnight Reset for Focus and Wins ---------- */
-function resetDaily(){
-  const today=new Date().toDateString();
-  const last=localStorage.getItem('lastReset')||'';
-  if(today!==last){
-    localStorage.setItem('lastReset',today);
-    localStorage.removeItem('todayFocus');
-    localStorage.removeItem('wins');
-    renderWins();
-    if(focusInput)focusInput.value='';
-  }
-}
-resetDaily();
+        function toggleWorkout(day) {
+            const content = document.getElementById(`${day}-content`);
+            const arrow = document.getElementById(`${day}-arrow`);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                arrow.textContent = '▼';
+            } else {
+                content.classList.add('expanded');
+                arrow.textContent = '▲';
+            }
+        }
 
-/* ---------- Subtle Fade In on Load ---------- */
-window.addEventListener('load',()=>{
-  document.body.style.opacity='0';
-  document.body.style.transition='opacity 1s ease';
-  requestAnimationFrame(()=>{document.body.style.opacity='1';});
-});
-</script>
+        function saveWorkoutData(day, exerciseIdx, field, value) {
+            const workoutData = JSON.parse(localStorage.getItem('workoutData') || '{}');
+            if (!workoutData[day]) workoutData[day] = {};
+            if (!workoutData[day][exerciseIdx]) workoutData[day][exerciseIdx] = {};
+            
+            workoutData[day][exerciseIdx][field] = value;
+            localStorage.setItem('workoutData', JSON.stringify(workoutData));
+        }
 
+        function loadWorkoutData() {
+            const workoutData = JSON.parse(localStorage.getItem('workoutData') || '{}');
+            
+            for (let day in workoutData) {
+                for (let exerciseIdx in workoutData[day]) {
+                    const data = workoutData[day][exerciseIdx];
+                    
+                    if (data.weight) {
+                        const weightInput = document.getElementById(`${day}-${exerciseIdx}-weight`);
+                        if (weightInput) weightInput.value = data.weight;
+                    }
+                    if (data.reps) {
+                        const repsInput = document.getElementById(`${day}-${exerciseIdx}-reps`);
+                        if (repsInput) repsInput.value = data.reps;
+                    }
+                    if (data.done) {
+                        const doneCheckbox = document.getElementById(`${day}-${exerciseIdx}-done`);
+                        if (doneCheckbox) doneCheckbox.checked = true;
+                    }
+                }
+            }
+        }
+
+        // Photo functionality
+        function uploadPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+                const photoData = {
+                    id: Date.now(),
+                    date: new Date().toDateString(),
+                    image: e.target.result,
+                    note: ''
+                };
+                photos.push(photoData);
+                localStorage.setItem('photos', JSON.stringify(photos));
+                renderPhotos();
+                updateStreak();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderPhotos() {
+            const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const grid = document.getElementById('photoGrid');
+            
+            grid.innerHTML = photos.map(photo => `
+                <div class="photo-item" onclick="openPhotoModal(${photo.id})">
+                    <img src="${photo.image}" alt="Progress photo">
+                </div>
+            `).join('');
+            
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const photoDates = photos.map(p => p.date);
+            const calendar = document.getElementById('photoCalendar');
+            
+            const today = new Date();
+            const daysToShow = 28;
+            let html = '';
+            
+            for (let i = daysToShow - 1; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateString = date.toDateString();
+                const hasPhoto = photoDates.includes(dateString);
+                const dayNum = date.getDate();
+                
+                html += `<div class="calendar-day ${hasPhoto ? 'has-photo' : ''}">${dayNum}</div>`;
+            }
+            
+            calendar.innerHTML = html;
+        }
+
+        function updateStreak() {
+            const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const photoDates = [...new Set(photos.map(p => p.date))].sort((a, b) => 
+                new Date(b) - new Date(a)
+            );
+            
+            let streak = 0;
+            const today = new Date();
+            
+            for (let i = 0; i < photoDates.length; i++) {
+                const checkDate = new Date(today);
+                checkDate.setDate(checkDate.getDate() - i);
+                
+                if (photoDates.includes(checkDate.toDateString())) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            document.getElementById('streakNumber').textContent = streak;
+            const progressPercent = Math.min((streak / 30) * 100, 100);
+            document.getElementById('streakProgress').style.width = progressPercent + '%';
+        }
+
+        function openPhotoModal(photoId) {
+            const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const photo = photos.find(p => p.id === photoId);
+            if (!photo) return;
+            
+            currentPhotoId = photoId;
+            document.getElementById('modalImage').src = photo.image;
+            document.getElementById('photoNote').value = photo.note || '';
+            document.getElementById('photoModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('photoModal').classList.remove('active');
+            currentPhotoId = null;
+        }
+
+        function savePhotoNote() {
+            if (!currentPhotoId) return;
+            
+            const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const photo = photos.find(p => p.id === currentPhotoId);
+            if (photo) {
+                photo.note = document.getElementById('photoNote').value;
+                localStorage.setItem('photos', JSON.stringify(photos));
+                alert('Note saved!');
+            }
+        }
+
+        function deletePhoto() {
+            if (!currentPhotoId) return;
+            if (!confirm('Delete this photo?')) return;
+            
+            const photos = JSON.parse(localStorage.getItem('photos') || '[]');
+            const filtered = photos.filter(p => p.id !== currentPhotoId);
+            localStorage.setItem('photos', JSON.stringify(filtered));
+            
+            closeModal();
+            renderPhotos();
+            updateStreak();
+        }
+
+        // Settings functionality
+        function toggleSettings() {
+            document.getElementById('settingsDrawer').classList.toggle('open');
+        }
+
+        function exportData() {
+            const data = {
+                focus: localStorage.getItem('todaysFocus'),
+                wins: localStorage.getItem('todaysWins'),
+                yearlyPlanner: localStorage.getItem('yearlyPlanner'),
+                weeklyPlanner: localStorage.getItem('weeklyPlanner'),
+                dailyPlanner: localStorage.getItem('dailyPlanner'),
+                workoutData: localStorage.getItem('workoutData'),
+                photos: localStorage.getItem('photos'),
+                lastDate: localStorage.getItem('lastDate')
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gabe-os-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        function importData() {
+            document.getElementById('importFile').click();
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    for (let key in data) {
+                        if (data[key]) {
+                            localStorage.setItem(key, data[key]);
+                        }
+                    }
+                    
+                    alert('Data imported successfully!');
+                    location.reload();
+                } catch (error) {
+                    alert('Error importing data. Please check the file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            if (!confirm('This will delete ALL your data. Are you sure?')) return;
+            if (!confirm('Really? This cannot be undone!')) return;
+            
+            localStorage.clear();
+            location.reload();
+        }
+
+        // Initialize on load
+        window.addEventListener('load', function() {
+            checkDailyReset();
+            
+            // Load focus
+            const savedFocus = localStorage.getItem('todaysFocus') || '';
+            document.getElementById('focusInput').value = savedFocus;
+            if (savedFocus) updateMotivationalTip(savedFocus);
+            
+            // Load wins
+            renderWins();
+            
+            // Load planners
+            document.getElementById('yearlyPlanner').value = localStorage.getItem('yearlyPlanner') || '';
+            document.getElementById('weeklyPlanner').value = localStorage.getItem('weeklyPlanner') || '';
+            document.getElementById('dailyPlanner').value = localStorage.getItem('dailyPlanner') || '';
+            
+            // Load workouts
+            renderWorkouts();
+            
+            // Load photos
+            renderPhotos();
+            updateStreak();
+        });
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => {
+                    e.waitUntil(
+                        caches.open('gabe-os-v2').then((cache) => {
+                            return cache.addAll(['/']);
+                        })
+                    );
+                });
+
+                self.addEventListener('fetch', (e) => {
+                    e.respondWith(
+                        caches.match(e.request).then((response) => {
+                            return response || fetch(e.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl).catch(() => {});
+        }
+    </script>
 </body>
 </html>
