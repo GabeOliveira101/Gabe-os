@@ -454,6 +454,38 @@ section {
   </div>
 </section>
 
+<!-- 🧭 CONTROL ROOM: PLANNING SECTION -->
+<section id="planningSection" class="hidden">
+  <h2>Daily Command Center</h2>
+  <p id="plannerDate"></p>
+
+  <div class="planner-block">
+    <h3>🎯 Top 3 Priorities</h3>
+    <ul id="priorityList"></ul>
+    <div class="planner-input">
+      <input type="text" id="newPriority" placeholder="Add a new priority...">
+      <button id="addPriorityBtn">＋</button>
+    </div>
+  </div>
+
+  <div class="planner-block">
+    <h3>📋 Task List</h3>
+    <ul id="taskList"></ul>
+    <div class="planner-input">
+      <input type="text" id="newTask" placeholder="Add a task...">
+      <button id="addTaskBtn">＋</button>
+    </div>
+  </div>
+
+  <div class="planner-block">
+    <h3>🧠 Reflection</h3>
+    <textarea id="dailyReflection" placeholder="What went well today? What can improve?"></textarea>
+  </div>
+
+  <div class="planner-footer">
+    <p id="taskSummary"></p>
+  </div>
+</section>
 
 <!-- 🎥 MEDIA TAB -->
 <section id="mediaSection" style="display:none;">
@@ -1195,7 +1227,79 @@ resetFocusAtMidnight();
 
 
 
-  
+<script>
+// 🧭 Planning Logic
+const priorityList = document.getElementById('priorityList');
+const addPriorityBtn = document.getElementById('addPriorityBtn');
+const newPriority = document.getElementById('newPriority');
+const taskList = document.getElementById('taskList');
+const addTaskBtn = document.getElementById('addTaskBtn');
+const newTask = document.getElementById('newTask');
+const dailyReflection = document.getElementById('dailyReflection');
+const taskSummary = document.getElementById('taskSummary');
+const plannerDate = document.getElementById('plannerDate');
+
+function loadPlanner(){
+  const today = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  plannerDate.textContent = today;
+
+  // Load saved data
+  dailyReflection.value = localStorage.getItem('dailyReflection') || '';
+  const priorities = JSON.parse(localStorage.getItem('priorities')) || [];
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+  priorities.forEach(p=>addListItem(priorityList,p.text,p.done,true));
+  tasks.forEach(t=>addListItem(taskList,t.text,t.done,false));
+  updateSummary();
+}
+
+function addListItem(list,text,done,isPriority){
+  const li=document.createElement('li');
+  li.textContent=text;
+  if(done) li.classList.add('done');
+  li.addEventListener('click',()=>{
+    li.classList.toggle('done');
+    saveData();
+    updateSummary();
+  });
+  list.appendChild(li);
+  saveData();
+  updateSummary();
+}
+
+function saveData(){
+  const priorities=[...priorityList.children].map(li=>({text:li.textContent,done:li.classList.contains('done')}));
+  const tasks=[...taskList.children].map(li=>({text:li.textContent,done:li.classList.contains('done')}));
+  localStorage.setItem('priorities',JSON.stringify(priorities));
+  localStorage.setItem('tasks',JSON.stringify(tasks));
+  localStorage.setItem('dailyReflection',dailyReflection.value);
+}
+
+addPriorityBtn.addEventListener('click',()=>{
+  const text=newPriority.value.trim();
+  if(!text) return;
+  addListItem(priorityList,text,false,true);
+  newPriority.value='';
+});
+
+addTaskBtn.addEventListener('click',()=>{
+  const text=newTask.value.trim();
+  if(!text) return;
+  addListItem(taskList,text,false,false);
+  newTask.value='';
+});
+
+dailyReflection.addEventListener('input',saveData);
+
+function updateSummary(){
+  const total=[...taskList.children].length;
+  const done=[...taskList.children].filter(li=>li.classList.contains('done')).length;
+  taskSummary.textContent = total>0 ? `✅ ${done} of ${total} tasks completed` : '';
+}
+
+loadPlanner();
+</script>
+
 <!-- Init -->
 <script>
 initDateGreeting();
