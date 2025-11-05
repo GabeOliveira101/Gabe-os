@@ -11,10 +11,6 @@
 <style>
 /* ✨ LOUIS VUITTON INSPIRED LIGHT THEME — MOBILE FIXED */
 body {
-  <body>
-  <header id="appHeader">
-    <h1>CONTROL ROOM</h1>
-  </header>
   background: linear-gradient(180deg, #faf8f6, #f3f1ee);
   font-family: 'Inter', sans-serif;
   color: #222;
@@ -377,6 +373,7 @@ section {
   width: 100%;
   z-index: 999;
 }
+.hidden { display: none; }
 
 </style>
 
@@ -421,38 +418,6 @@ section {
   </div>
 </section>
 
-<!-- 🧭 CONTROL ROOM: PLANNING SECTION -->
-<section id="planningSection" class="hidden">
-  <h2>Daily Command Center</h2>
-  <p id="plannerDate"></p>
-
-  <div class="planner-block">
-    <h3>🎯 Top 3 Priorities</h3>
-    <ul id="priorityList"></ul>
-    <div class="planner-input">
-      <input type="text" id="newPriority" placeholder="Add a new priority...">
-      <button id="addPriorityBtn">＋</button>
-    </div>
-  </div>
-
-  <div class="planner-block">
-    <h3>📋 Task List</h3>
-    <ul id="taskList"></ul>
-    <div class="planner-input">
-      <input type="text" id="newTask" placeholder="Add a task...">
-      <button id="addTaskBtn">＋</button>
-    </div>
-  </div>
-
-  <div class="planner-block">
-    <h3>🧠 Reflection</h3>
-    <textarea id="dailyReflection" placeholder="What went well today? What can improve?"></textarea>
-  </div>
-
-  <div class="planner-footer">
-    <p id="taskSummary"></p>
-  </div>
-</section>
 
 <!-- 🧭 CONTROL ROOM: PLANNING SECTION -->
 <section id="planningSection" class="hidden">
