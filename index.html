@@ -257,6 +257,115 @@ section:hover {
 section {
   margin-top: 100px;
 }
+/* 🧭 Premium Planning Section */
+#planningSection {
+  padding: 24px;
+  font-family: 'Inter', sans-serif;
+}
+
+#planningSection h2 {
+  font-family: 'League Spartan', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+#plannerDate {
+  color: #777;
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.planner-block {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.planner-block h3 {
+  margin-bottom: 10px;
+  color: #222;
+  font-family: 'League Spartan', sans-serif;
+  font-size: 1rem;
+}
+
+.planner-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.planner-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-family: 'Inter', sans-serif;
+}
+
+.planner-input button {
+  background: linear-gradient(90deg,#d4af37,#f0d886);
+  border: none;
+  color: #000;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: 'League Spartan', sans-serif;
+  transition: all 0.25s ease;
+}
+
+.planner-input button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#taskList, #priorityList {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+#taskList li, #priorityList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#taskList li.done, #priorityList li.done {
+  text-decoration: line-through;
+  color: #999;
+  background: #f0f0f0;
+}
+
+#dailyReflection {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.planner-footer {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
 /* ✅ Bottom nav padding fix for iPhone safe area */
 #bottomNav {
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
@@ -312,25 +421,39 @@ section {
   </div>
 </section>
 
-<!-- 🗓️ PLANNING SECTION -->
+<!-- 🧭 CONTROL ROOM: PLANNING SECTION -->
 <section id="planningSection" class="hidden">
-  <h2>Planning</h2>
+  <h2>Daily Command Center</h2>
+  <p id="plannerDate"></p>
 
-  <div class="planner-week">
-    <h3>This Week’s Goals</h3>
-    <textarea id="weeklyGoals" placeholder="Write 3–5 key goals for this week..."></textarea>
+  <div class="planner-block">
+    <h3>🎯 Top 3 Priorities</h3>
+    <ul id="priorityList"></ul>
+    <div class="planner-input">
+      <input type="text" id="newPriority" placeholder="Add a new priority...">
+      <button id="addPriorityBtn">＋</button>
+    </div>
   </div>
 
-  <div class="planner-day">
-    <h3>Today’s Plan</h3>
-    <input type="text" id="dailyFocus" placeholder="Main focus for today">
+  <div class="planner-block">
+    <h3>📋 Task List</h3>
     <ul id="taskList"></ul>
-    <div class="planner-inputs">
-      <input type="text" id="newTask" placeholder="Add a new task...">
+    <div class="planner-input">
+      <input type="text" id="newTask" placeholder="Add a task...">
       <button id="addTaskBtn">＋</button>
     </div>
   </div>
+
+  <div class="planner-block">
+    <h3>🧠 Reflection</h3>
+    <textarea id="dailyReflection" placeholder="What went well today? What can improve?"></textarea>
+  </div>
+
+  <div class="planner-footer">
+    <p id="taskSummary"></p>
+  </div>
 </section>
+
 
 <!-- 🎥 MEDIA TAB -->
 <section id="mediaSection" style="display:none;">
