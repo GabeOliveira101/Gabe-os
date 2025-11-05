@@ -489,27 +489,7 @@
       </div>
     </section>
 
-    };
-    feed.appendChild(expanded);
-  });
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-photoUpload.onchange=e=>{
-  const files=[...e.target.files];
-  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-  files.forEach(f=>{
-    const r=new FileReader();
-    r.onload=()=>{
-      arr.unshift({src:r.result,note:"",date:Date.now()});
-      localStorage.setItem("cc-photos",JSON.stringify(arr));
-      loadGallery();
-    };
-    r.readAsDataURL(f);
-  });
-};
-loadGallery();
-
+   
 
 
     <!-- Media -->
