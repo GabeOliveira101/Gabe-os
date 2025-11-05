@@ -417,6 +417,33 @@ section {
       <button id="clearWinsBtn" onclick="clearWins()" class="btn" style="margin-top:10px;background:#fce4e4;color:#a33;">CLEAR WINS</button>
     </div>
   </div>
+  <!-- 🧭 DAILY PLANNER -->
+<div class="card">
+  <div class="card-header"><div class="card-title">🧭 DAILY COMMAND CENTER</div></div>
+  <div class="card-body">
+    <p id="plannerDate" style="font-size:14px;color:#888;margin-bottom:10px;"></p>
+
+    <h4 style="margin-top:0;">🎯 Top 3 Priorities</h4>
+    <ul id="priorityList" class="planner-list"></ul>
+    <div class="planner-input">
+      <input type="text" id="newPriority" placeholder="Add a new priority..." class="focus-input">
+      <button id="addPriorityBtn" class="btn" style="margin-top:10px;">＋</button>
+    </div>
+
+    <h4 style="margin-top:20px;">📋 Task List</h4>
+    <ul id="taskList" class="planner-list"></ul>
+    <div class="planner-input">
+      <input type="text" id="newTask" placeholder="Add a task..." class="focus-input">
+      <button id="addTaskBtn" class="btn" style="margin-top:10px;">＋</button>
+    </div>
+
+    <h4 style="margin-top:20px;">🧠 Reflection</h4>
+    <textarea id="dailyReflection" class="focus-input" style="height:100px;" placeholder="What went well today? What can improve?"></textarea>
+
+    <p id="taskSummary" style="font-size:13px;color:#777;margin-top:10px;"></p>
+  </div>
+</div>
+
 </section>
 
 
