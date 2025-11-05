@@ -414,6 +414,7 @@ section {
         <button class="btn" id="winSubmitBtn" style="margin-top:10px;">LOG IT</button>
       </div>
       <ul id="winsList" class="wins-list"></ul>
+      <button id="clearWinsBtn" onclick="clearWins()" class="btn" style="margin-top:10px;background:#fce4e4;color:#a33;">CLEAR WINS</button>
     </div>
   </div>
 </section>
@@ -1264,6 +1265,64 @@ function updateSummary(){
 
 loadPlanner();
 </script>
+<script>
+// 🕛 Auto-reset Wins Daily + Manual Clear Button
+function resetWinsIfNewDay() {
+  const today = new Date().toDateString();
+  const lastSavedDay = localStorage.getItem('lastWinsDate');
+
+  // If there's no date saved yet, set it now
+  if (!lastSavedDay) {
+    localStorage.setItem('lastWinsDate', today);
+    return;
+  }
+
+  // If it's a new day, clear the wins
+  if (today !== lastSavedDay) {
+    localStorage.removeItem('wins');
+    localStorage.setItem('lastWinsDate', today);
+  }
+}
+
+function clearWins() {
+  if (confirm("Are you sure you want to clear all wins?")) {
+    localStorage.removeItem('wins');
+    document.getElementById('winsList').innerHTML = '';
+  }
+}
+
+<script>
+// 🕛 Auto-reset Wins Daily + Manual Clear Button
+function resetWinsIfNewDay() {
+  const today = new Date().toDateString();
+  const lastSavedDay = localStorage.getItem('lastWinsDate');
+
+  // If no date saved yet, set it now
+  if (!lastSavedDay) {
+    localStorage.setItem('lastWinsDate', today);
+    return;
+  }
+
+  // If it's a new day, clear stored wins
+  if (today !== lastSavedDay) {
+    localStorage.removeItem('wins');
+    localStorage.setItem('lastWinsDate', today);
+    document.getElementById('winsList').innerHTML = '';
+  }
+}
+
+// Manual clear button
+function clearWins() {
+  if (confirm("Clear all wins?")) {
+    localStorage.removeItem('wins');
+    document.getElementById('winsList').innerHTML = '';
+  }
+}
+
+// Run check every time app loads
+resetWinsIfNewDay();
+</script>
+
 
 <!-- Init -->
 <script>
