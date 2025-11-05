@@ -434,27 +434,38 @@ section {
   margin-top: 10px;
 }
 
+/* ✨ Styled Close/Delete buttons — matches '+ ADD WIN' */
+#buttonRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
 #buttonRow button {
-  flex: 1;                  /* same width for both */
+  flex: 1;
+  max-width: 150px;
   background: linear-gradient(90deg, #d4af37, #f0d886);
   border: none;
-  color: #222;
-  border-radius: 10px;
-  padding: 12px 0;
-  cursor: pointer;
+  color: #000;
+  border-radius: 8px;
+  padding: 10px 0;
   font-family: 'League Spartan', sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  transition: opacity 0.25s ease, transform 0.15s ease;
-  box-sizing: border-box;
-  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 #buttonRow button:hover {
-  opacity: 0.85;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
+
 
 
 /* Calendar Grid */
