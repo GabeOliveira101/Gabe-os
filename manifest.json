@@ -1,24 +1,22 @@
 {
-  "name": "Gabe OS",
-  "short_name": "GabeOS",
-  "description": "Personal mission control dashboard",
-  "start_url": "/Gabe-os/",
+  "name": "GABE OS V3 – Royal Precision Ultra Edition",
+  "short_name": "GABE OS V3",
+  "description": "Luxury-grade personal operating system and life command center.",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0a0a0a",
-  "theme_color": "#0a0a0a",
+  "background_color": "#0a0f1f",
+  "theme_color": "#d4af37",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/Gabe-os/icon-192.png",
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTUlEQVR4nO3SQQ3AIBAEQaz/57zCEEGwQ3doUwAAAAAAAAAAAADA2Ttkl9vWq72X+W5d1r9O7a6+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv/I6IAAAAAD//2CkAABf9fPtAAAAAElFTkSuQmCC",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "/Gabe-os/icon-512.png",
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAADDDG89AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFcElEQVR4nO3TsQ3CMAwEwYf+/2dnoByD1MthTnqmQIPDTQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPzS9Tdl7r9Z2/Lv1fZ3eW1rL7t32PvFJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP9q9X4AAQAAAP//AwBYRgFFfAgAKAAAAABJRU5ErkJggg==",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
