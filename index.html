@@ -393,69 +393,7 @@
       </div>
     </section>
 
-  // ===== GALLERY =====
-const photoUpload = document.getElementById("photoUpload");
-const photoFeed   = document.getElementById("photoFeed");
-const photoStats  = document.getElementById("photoStats");
 
-function loadGallery(){
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  photoFeed.innerHTML = "";
-
-  const month = new Date().getMonth();
-  const monthly = arr.filter(p => new Date(p.date||Date.now()).getMonth() === month).length;
-  photoStats.textContent = `${arr.length} total • ${monthly} this month`;
-
-  arr.forEach((p,i)=>{
-    const post = document.createElement("div");
-    post.className = "post";
-    const img = document.createElement("img");
-    img.src = p.src;
-    post.appendChild(img);
-    post.onclick = ()=>expandFeed(i);
-    photoFeed.appendChild(post);
-  });
-}
-
-function expandFeed(index){
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  photoFeed.innerHTML = "";
-  arr.forEach((p,i)=>{
-    const expanded = document.createElement("div");
-    expanded.className = "post-expanded";
-    expanded.innerHTML = `
-      <img src="${p.src}">
-      <div class="post-caption">
-        ${p.note || "<i>No caption</i>"}
-        <div class="post-meta">${new Date(p.date||Date.now()).toLocaleDateString()} • 
-          <button class="delete-btn" style="font-size:.7rem">Delete</button>
-        </div>
-      </div>`;
-    expanded.querySelector("button").onclick = ()=>{
-      arr.splice(i,1);
-      localStorage.setItem("cc-photos",JSON.stringify(arr));
-      loadGallery();
-    };
-    photoFeed.appendChild(expanded);
-  });
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-photoUpload.onchange = e => {
-  const files = [...e.target.files];
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  files.forEach(f=>{
-    const r = new FileReader();
-    r.onload = ()=>{
-      arr.unshift({src:r.result,note:"",date:Date.now()});
-      localStorage.setItem("cc-photos",JSON.stringify(arr));
-      loadGallery();
-    };
-    r.readAsDataURL(f);
-  });
-};
-
-loadGallery();
 // ===== MEDIA =====
 
 
