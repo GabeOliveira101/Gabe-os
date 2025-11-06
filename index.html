@@ -1,496 +1,652 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0f1f">
-  <title>Command Center</title>
-  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0a0f1f;
-      --glass:rgba(255,255,255,0.05);
-      --gold:#d4af37;
-      --text:#ffffff;
-      --radius:16px;
-      --trans:0.35s cubic-bezier(.4,0,.2,1);
-    }
-    *{box-sizing:border-box;}
-    html,body{
-      margin:0;padding:0;height:100%;
-      background:var(--bg);color:var(--text);
-      font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;
-      overflow:hidden;
-    }
-    body::before{
-      content:"";position:fixed;inset:0;
-      background:radial-gradient(circle at top,rgba(212,175,55,0.14),transparent 55%),linear-gradient(180deg,#0a0f1f 0%,#050914 100%);
-      z-index:-1;
-    }
-    header{
-      position:fixed;top:0;left:0;right:0;height:70px;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(10,15,31,0.7);backdrop-filter:blur(14px);
-      border-bottom:1px solid rgba(212,175,55,0.2);z-index:50;
-      padding-top:env(safe-area-inset-top);
-    }
-    header h1{font-family:'League Spartan',sans-serif;letter-spacing:.08em;color:var(--gold);font-size:1.3rem;}
-    #settingsToggle{
-      position:absolute;left:16px;top:50%;transform:translateY(-50%);
-      background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.5);
-      border-radius:999px;padding:5px 14px;color:var(--gold);cursor:pointer;
-      transition:var(--trans);font-size:0.8rem;
-    }
-    #settingsToggle:hover{background:rgba(212,175,55,0.35);}
-    #settingsDrawer{
-      position:fixed;top:-440px;left:0;right:0;
-      background:rgba(5,8,15,0.95);backdrop-filter:blur(14px);
-      border-bottom:2px solid rgba(212,175,55,0.4);
-      padding:16px;padding-top:calc(16px + env(safe-area-inset-top));
-      z-index:60;transition:var(--trans);
-    }
-    #settingsDrawer.open{top:70px;}
-    .settings-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
-    .settings-btn{
-      background:rgba(255,255,255,0.03);
-      border:1px solid rgba(212,175,55,0.3);
-      border-radius:12px;padding:8px 12px;cursor:pointer;
-      color:#fff;transition:var(--trans);font-size:0.78rem;
-    }
-    .settings-btn:hover{background:rgba(212,175,55,0.3);color:#000;}
-    main{
-      position:fixed;top:70px;bottom:70px;left:0;right:0;
-      overflow-y:auto;padding:16px 14px;
-      padding-bottom:calc(16px + env(safe-area-inset-bottom));scroll-behavior:smooth;
-    }
-    section{display:none;animation:fade .45s ease;}
-    section.active{display:block;}
-    @keyframes fade{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    h2.section-title{font-family:'League Spartan',sans-serif;color:var(--gold);margin-bottom:10px;letter-spacing:.04em;}
-    .card{
-      background:rgba(10,15,31,0.45);
-      border:1px solid rgba(212,175,55,0.12);
-      border-radius:16px;padding:14px;margin-bottom:14px;
-      box-shadow:0 16px 35px rgba(0,0,0,0.22);
-    }
-    .input-field{
-      background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.05);
-      border-radius:14px;padding:10px 12px;width:100%;color:#fff;
-    }
-    .btn{
-      background:linear-gradient(120deg,rgba(212,175,55,0.9),rgba(254,219,120,0.7));
-      border:none;border-radius:999px;padding:9px 18px;
-      color:#000;font-weight:600;cursor:pointer;
-      transition:var(--trans);box-shadow:0 8px 18px rgba(212,175,55,0.35);
-    }
-    .btn:hover{transform:translateY(-1px);box-shadow:0 12px 25px rgba(212,175,55,0.45);}
-    .delete-btn{
-      background:none;border:1px solid rgba(212,175,55,0.45);
-      color:var(--gold);border-radius:999px;padding:3px 10px;
-      cursor:pointer;font-size:0.7rem;transition:var(--trans);
-    }
-    .delete-btn:hover{background:rgba(212,175,55,0.4);color:#000;}
-    .row{display:flex;gap:10px;flex-wrap:wrap;}
-    nav{
-      position:fixed;bottom:0;left:0;right:0;height:70px;
-      background:rgba(10,15,31,0.75);backdrop-filter:blur(14px);
-      border-top:1px solid rgba(212,175,55,0.12);
-      display:flex;align-items:center;justify-content:space-around;
-      padding-bottom:env(safe-area-inset-bottom);z-index:50;
-    }
-    nav button{
-      background:none;border:none;color:rgba(255,255,255,0.4);
-      font-weight:500;font-size:0.8rem;cursor:pointer;transition:var(--trans);
-    }
-    nav button.active,nav button:hover{color:var(--gold);}
-    /* planner, workout, gallery extra UI */
-    .planner-tabs{display:flex;gap:8px;margin-bottom:10px;}
-    .planner-tab{flex:1;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);border-radius:12px;padding:8px 5px;text-align:center;cursor:pointer;transition:var(--trans);font-size:0.8rem;}
-    .planner-tab.active{background:rgba(212,175,55,0.95);color:#000;border-color:rgba(212,175,55,0.9);font-weight:600;}
-    .planner-block{display:none;animation:fade .35s ease;}
-    .planner-block.active{display:block;}
-    .daily-task{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);border-radius:12px;padding:6px 8px;margin-bottom:6px;}
-    .daily-task input[type=checkbox]{width:18px;height:18px;}
-    .daily-task.done span{text-decoration:line-through;color:rgba(255,255,255,0.4);}
-    .workout-days{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;}
-    .workout-day-btn{flex:0 0 auto;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);border-radius:12px;padding:6px 10px;cursor:pointer;font-size:0.75rem;}
-    .workout-day-btn.active{background:rgba(212,175,55,0.9);color:#000;}
-    .exercise-line{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);border-radius:10px;padding:6px 8px;margin-bottom:6px;gap:5px;}
-    .exercise-line.complete{opacity:0.55;text-decoration:line-through;}
-    .progress-wrap{height:8px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;margin-bottom:8px;}
-    .progress-inner{height:8px;background:linear-gradient(120deg,rgba(212,175,55,1),rgba(254,219,120,0.7));width:0%;transition:width .3s ease;}
-    .video-grid{display:grid;gap:10px;}
-    @media(min-width:900px){
-      main{max-width:1100px;margin:70px auto 70px;}
-      header,nav{left:50%;transform:translateX(-50%);max-width:1100px;}
-      #settingsDrawer{max-width:1100px;left:50%;transform:translateX(-50%);}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0f1f">
+<title>Command Center Luxury</title>
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#070a13;
+ --gold:#d4af37;
+ --glass:rgba(255,255,255,0.04);
+ --text:#fff;
+ --radius:18px;
+ --blur:20px;
+ --trans:0.35s cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+ height:100%;font-family:'Inter',sans-serif;
+ background:var(--bg);color:var(--text);
+ overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+body::before{
+ content:"";position:fixed;inset:0;z-index:-1;
+ background:radial-gradient(circle at 30% -10%,rgba(212,175,55,0.2),transparent 70%),linear-gradient(180deg,#050710,#0b0f1a);
+}
+header{
+ position:fixed;top:0;left:0;right:0;height:74px;
+ display:flex;align-items:center;justify-content:center;
+ backdrop-filter:blur(var(--blur));
+ background:rgba(5,8,15,0.75);
+ border-bottom:1px solid rgba(212,175,55,0.25);
+ z-index:100;
+}
+header h1{
+ font-family:'League Spartan',sans-serif;
+ color:var(--gold);letter-spacing:.1em;
+ font-size:1.4rem;text-transform:uppercase;
+}
+#settingsToggle{
+ position:absolute;left:18px;top:50%;transform:translateY(-50%);
+ border-radius:999px;padding:7px 16px;font-size:0.8rem;
+ border:1px solid rgba(212,175,55,0.4);
+ background:rgba(212,175,55,0.15);color:var(--gold);
+ cursor:pointer;transition:var(--trans);
+}
+#settingsToggle:hover{background:rgba(212,175,55,0.3);}
+#settingsDrawer{
+ position:fixed;top:-480px;left:0;right:0;
+ background:rgba(8,10,18,0.97);
+ backdrop-filter:blur(var(--blur));
+ border-bottom:2px solid rgba(212,175,55,0.3);
+ padding:22px 16px;z-index:90;
+ transition:var(--trans);
+}
+#settingsDrawer.open{top:74px;}
+.settings-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.settings-btn{
+ flex:1;background:rgba(255,255,255,0.05);
+ border:1px solid rgba(212,175,55,0.25);
+ border-radius:12px;padding:10px 14px;
+ font-size:0.85rem;color:#fff;cursor:pointer;
+ transition:var(--trans);text-align:center;
+}
+.settings-btn:hover{
+ background:linear-gradient(90deg,rgba(212,175,55,0.8),rgba(255,240,150,0.6));
+ color:#000;font-weight:600;
+}
+main{
+ position:fixed;top:74px;bottom:74px;left:0;right:0;
+ overflow-y:auto;padding:20px 18px;
+ scroll-behavior:smooth;
+}
+section{display:none;animation:fade .45s ease;}
+section.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+h2.section-title{
+ font-family:'League Spartan',sans-serif;
+ color:var(--gold);
+ font-size:1.2rem;letter-spacing:.05em;
+ margin-bottom:12px;text-transform:uppercase;
+}
+.card{
+ background:rgba(255,255,255,0.03);
+ border:1px solid rgba(212,175,55,0.1);
+ border-radius:var(--radius);
+ padding:18px;margin-bottom:18px;
+ box-shadow:0 8px 35px rgba(0,0,0,0.25);
+ transition:var(--trans);
+}
+.card:hover{border-color:rgba(212,175,55,0.25);transform:translateY(-2px);}
+.input-field,textarea{
+ width:100%;border:none;
+ border-radius:12px;
+ padding:12px 14px;margin-top:4px;
+ background:rgba(255,255,255,0.05);
+ color:#fff;font-size:0.95rem;
+}
+textarea{min-height:90px;resize:none;}
+.btn{
+ display:inline-block;
+ background:linear-gradient(135deg,rgba(212,175,55,0.95),rgba(255,231,150,0.8));
+ color:#000;font-weight:700;border:none;
+ border-radius:999px;padding:10px 22px;
+ box-shadow:0 8px 20px rgba(212,175,55,0.35);
+ cursor:pointer;transition:var(--trans);
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(212,175,55,0.45);}
+.delete-btn{
+ border:1px solid rgba(212,175,55,0.45);
+ background:none;color:var(--gold);
+ border-radius:999px;padding:5px 12px;
+ font-size:0.8rem;cursor:pointer;transition:var(--trans);
+}
+.delete-btn:hover{background:rgba(212,175,55,0.3);color:#000;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+nav{
+ position:fixed;bottom:0;left:0;right:0;height:74px;
+ background:rgba(10,15,31,0.85);backdrop-filter:blur(var(--blur));
+ border-top:1px solid rgba(212,175,55,0.25);
+ display:flex;align-items:center;justify-content:space-around;
+ z-index:100;
+}
+nav button{
+ background:none;border:none;
+ color:rgba(255,255,255,0.5);
+ font-size:0.85rem;cursor:pointer;
+ transition:var(--trans);
+}
+nav button.active,nav button:hover{color:var(--gold);transform:scale(1.1);}
+/* ===== PLANNER STYLING ===== */
+.planner-tabs{
+ display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;
+}
+.planner-tab{
+ flex:1;background:rgba(255,255,255,0.06);
+ border:1px solid rgba(255,255,255,0.05);
+ border-radius:12px;padding:10px 8px;text-align:center;
+ cursor:pointer;font-size:0.85rem;color:rgba(255,255,255,0.8);
+ transition:var(--trans);
+ text-transform:uppercase;letter-spacing:.04em;
+}
+.planner-tab.active{
+ background:linear-gradient(90deg,rgba(212,175,55,0.95),rgba(255,240,150,0.7));
+ color:#000;font-weight:700;border-color:rgba(212,175,55,0.9);
+}
+.planner-block{display:none;animation:fade .35s ease;}
+.planner-block.active{display:block;}
+.planner-block label{
+ display:block;margin-top:12px;margin-bottom:6px;
+ font-weight:600;font-size:0.9rem;color:var(--gold);
+}
+.daily-task{
+ display:flex;align-items:center;justify-content:space-between;
+ background:rgba(255,255,255,0.03);
+ border:1px solid rgba(255,255,255,0.03);
+ border-radius:12px;padding:8px 10px;margin-bottom:6px;
+ transition:var(--trans);
+}
+.daily-task.done{
+ opacity:0.55;text-decoration:line-through;color:rgba(255,255,255,0.5);
+}
+.daily-task input[type=checkbox]{width:20px;height:20px;cursor:pointer;}
+
+/* ===== WORKOUT STYLING ===== */
+.workout-days{
+ display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;
+}
+.workout-day-btn{
+ flex:0 0 auto;
+ background:rgba(255,255,255,0.04);
+ border:1px solid rgba(255,255,255,0.06);
+ border-radius:12px;padding:8px 12px;cursor:pointer;
+ font-size:0.8rem;transition:var(--trans);
+ color:rgba(255,255,255,0.8);
+ text-transform:uppercase;letter-spacing:.05em;
+}
+.workout-day-btn.active{
+ background:linear-gradient(120deg,rgba(212,175,55,0.95),rgba(255,240,150,0.8));
+ color:#000;font-weight:700;border-color:rgba(212,175,55,0.8);
+}
+.exercise-line{
+ display:flex;justify-content:space-between;align-items:center;
+ background:rgba(255,255,255,0.04);
+ border:1px solid rgba(255,255,255,0.04);
+ border-radius:10px;padding:8px 12px;margin-bottom:6px;
+ transition:var(--trans);
+}
+.exercise-line.complete{opacity:0.5;text-decoration:line-through;}
+.progress-wrap{
+ height:10px;background:rgba(255,255,255,0.06);
+ border-radius:999px;overflow:hidden;margin-bottom:10px;
+ box-shadow:inset 0 0 8px rgba(0,0,0,0.4);
+}
+.progress-inner{
+ height:10px;
+ background:linear-gradient(90deg,rgba(212,175,55,1),rgba(255,235,150,0.9));
+ width:0%;transition:width .35s ease;
+ box-shadow:0 0 15px rgba(212,175,55,0.4);
+}
+
+/* ===== GALLERY STYLING ===== */
+#photoFeed{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+ gap:10px;margin-top:10px;
+}
+#photoFeed img{
+ width:100%;height:130px;object-fit:cover;
+ border-radius:12px;cursor:pointer;
+ transition:transform .25s ease,box-shadow .25s ease;
+}
+#photoFeed img:hover{
+ transform:scale(1.04);
+ box-shadow:0 0 12px rgba(212,175,55,0.4);
+}
+#photoModal{
+ display:none;position:fixed;inset:0;
+ background:rgba(0,0,0,0.85);
+ backdrop-filter:blur(10px);
+ align-items:center;justify-content:center;
+ z-index:200;padding:20px;
+}
+#photoModal img{
+ max-width:95%;max-height:70vh;
+ border-radius:14px;box-shadow:0 10px 35px rgba(0,0,0,0.6);
+}
+#photoModal textarea{
+ width:100%;margin-top:10px;background:rgba(255,255,255,0.08);
+ border:none;border-radius:12px;color:#fff;padding:10px;resize:none;
+}
+#photoModal .btn,#photoModal .delete-btn{
+ margin:4px;
+}
+
+/* ===== MEDIA SECTION ===== */
+.video-grid{
+ display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+ gap:12px;
+}
+.video-grid iframe{
+ width:100%;height:200px;border:none;
+ border-radius:14px;
+ box-shadow:0 8px 25px rgba(0,0,0,0.4);
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:8px;}
+::-webkit-scrollbar-thumb{
+ background:rgba(212,175,55,0.4);border-radius:6px;
+}
+::-webkit-scrollbar-track{
+ background:rgba(255,255,255,0.03);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(min-width:900px){
+ main{max-width:1080px;margin:0 auto;}
+ header,nav{max-width:1080px;left:50%;transform:translateX(-50%);}
+ #settingsDrawer{max-width:1080px;left:50%;transform:translateX(-50%);}
+}
+</style>
 </head>
 <body>
-  <header>
-    <button id="settingsToggle">Settings</button>
-    <h1>COMMAND CENTER</h1>
-  </header>
+<header>
+ <button id="settingsToggle">Settings</button>
+ <h1>COMMAND CENTER</h1>
+</header>
 
-  <div id="settingsDrawer">
-    <h2>Command Center Settings</h2>
-    <div class="settings-row">
-      <button class="settings-btn" data-theme="gold">Royal Gold</button>
-      <button class="settings-btn" data-theme="emerald">Emerald Verde</button>
-      <button class="settings-btn" data-theme="titanium">Titanium Silver</button>
-    </div>
-    <div class="settings-row">
-      <button class="settings-btn" id="exportData">Export All Data</button>
-      <label class="settings-btn" style="cursor:pointer;">
-        Import Data
-        <input type="file" id="importData" accept=".json" style="display:none;">
-      </label>
-      <button class="settings-btn" id="resetAll">Reset All</button>
-      <button class="settings-btn" id="installInfo">How to Install on iPhone</button>
-    </div>
-  </div>
+<div id="settingsDrawer">
+ <h2 style="color:var(--gold);font-family:'League Spartan';margin-bottom:10px;">Settings</h2>
+ <div class="settings-row">
+   <button class="settings-btn" data-theme="gold">Royal Gold</button>
+   <button class="settings-btn" data-theme="emerald">Emerald</button>
+   <button class="settings-btn" data-theme="titanium">Titanium</button>
+ </div>
+ <div class="settings-row">
+   <button class="settings-btn" id="exportData">Export</button>
+   <label class="settings-btn">Import<input type="file" id="importData" accept=".json" style="display:none;"></label>
+   <button class="settings-btn" id="resetAll">Reset</button>
+   <button class="settings-btn" id="installInfo">Install Guide</button>
+ </div>
+</div>
 
-  <main>
-    <!-- Focus & Wins -->
-    <section id="focusWins" class="active">
-      <div class="card">
-        <h2 class="section-title">Today's Focus</h2>
-        <input id="focusInput" class="input-field" placeholder="Most important outcome today">
-        <small id="todayDate" style="opacity:0.5;font-size:0.7rem;display:block;margin-top:6px;"></small>
-      </div>
-      <div class="card">
-        <h2 class="section-title">Wins</h2>
-        <div class="row">
-          <input id="winInput" class="input-field" placeholder="Capture a win…">
-          <button id="addWin" class="btn" style="flex:0 0 auto;">Add</button>
-        </div>
-        <div id="winsList" style="margin-top:10px;"></div>
-      </div>
-    </section>
+<main>
+<section id="focusWins" class="active">
+ <div class="card">
+   <h2 class="section-title">Today's Focus</h2>
+   <input id="focusInput" class="input-field" placeholder="What will you dominate today?">
+   <small id="todayDate" style="opacity:0.6;display:block;margin-top:6px;font-size:0.8rem;"></small>
+ </div>
+ <div class="card">
+   <h2 class="section-title">Wins</h2>
+   <div class="row">
+     <input id="winInput" class="input-field" placeholder="Capture a win...">
+     <button id="addWin" class="btn">Add</button>
+   </div>
+   <div id="winsList" style="margin-top:10px;"></div>
+ </div>
+</section>
+<!-- ===== PLANNER ===== -->
+<section id="planner">
+ <div class="card">
+   <h2 class="section-title">Planner</h2>
+   <div class="planner-tabs">
+     <div class="planner-tab active" data-target="yearlyBlock">Yearly</div>
+     <div class="planner-tab" data-target="weeklyBlock">Weekly</div>
+     <div class="planner-tab" data-target="dailyBlock">Daily</div>
+   </div>
 
-    <!-- Planner -->
-    <section id="planner">
-      <div class="card">
-        <h2 class="section-title">Planner</h2>
-        <div class="planner-tabs">
-          <div class="planner-tab active" data-target="yearlyBlock">Yearly Intent</div>
-          <div class="planner-tab" data-target="weeklyBlock">Weekly Plan</div>
-          <div class="planner-tab" data-target="dailyBlock">Daily Checklist</div>
-        </div>
-        <div id="yearlyBlock" class="planner-block active">
-          <label>Year Word / Theme</label>
-          <input id="yearWord" class="input-field" placeholder="e.g. Discipline, Build, Expansion">
-          <label style="margin-top:10px;display:block;">Year Goal</label>
-          <textarea id="yearGoal" placeholder="Write the one or two big outcomes for the year."></textarea>
-        </div>
-        <div id="weeklyBlock" class="planner-block">
-          <label>This Week's 3 Priorities</label>
-          <input class="input-field weekly-input" data-key="w1" placeholder="Priority 1">
-          <input class="input-field weekly-input" data-key="w2" placeholder="Priority 2">
-          <input class="input-field weekly-input" data-key="w3" placeholder="Priority 3">
-          <label style="margin-top:10px;display:block;">Supporting Notes</label>
-          <textarea id="weeklyNotes" placeholder="Block your week, protect deep work."></textarea>
-        </div>
-        <div id="dailyBlock" class="planner-block">
-          <label>Add Daily Task</label>
-          <div class="row">
-            <input id="dailyTaskInput" class="input-field" placeholder="Add a daily task…">
-            <button id="addDailyTask" class="btn" style="flex:0 0 auto;">Add</button>
-          </div>
-          <div id="dailyTasks" style="margin-top:10px;"></div>
-        </div>
-      </div>
-    </section>
+   <div id="yearlyBlock" class="planner-block active">
+     <label>Year Word / Theme</label>
+     <input id="yearWord" class="input-field" placeholder="e.g. Discipline, Build, Expansion">
+     <label>Primary Goals</label>
+     <textarea id="yearGoal" placeholder="Write the one or two big outcomes for the year."></textarea>
+   </div>
 
-    <!-- Workout -->
-    <section id="workout">
-      <div class="card">
-        <h2 class="section-title">Workout</h2>
-        <div class="workout-days" id="workoutDays"></div>
-        <div class="progress-wrap"><div class="progress-inner" id="workoutProgress"></div></div>
-        <div id="workoutList"></div>
-        <button id="addCustomExercise" class="btn" style="margin-top:10px;">Add Custom Exercise</button>
-      </div>
-    </section>
+   <div id="weeklyBlock" class="planner-block">
+     <label>Top 3 Priorities for This Week</label>
+     <input class="input-field weekly-input" data-key="w1" placeholder="Priority 1">
+     <input class="input-field weekly-input" data-key="w2" placeholder="Priority 2">
+     <input class="input-field weekly-input" data-key="w3" placeholder="Priority 3">
+     <label>Notes / Intentions</label>
+     <textarea id="weeklyNotes" placeholder="Block your week, protect deep work."></textarea>
+   </div>
 
-    <!-- Gallery -->
-    <section id="gallery">
-      <div class="card">
-        <h2 class="section-title">Photo Gallery</h2>
-        <div class="row" style="margin-bottom:10px;">
-          <input id="photoUpload" type="file" multiple accept="image/*" class="input-field" style="flex:1;">
-        </div>
-        <small id="photoStats" style="opacity:0.6;display:block;margin-bottom:8px;"></small>
-        <div id="photoFeed" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;"></div>
-      </div>
-    </section>
+   <div id="dailyBlock" class="planner-block">
+     <label>Add Daily Task</label>
+     <div class="row">
+       <input id="dailyTaskInput" class="input-field" placeholder="Add a daily task…">
+       <button id="addDailyTask" class="btn">Add</button>
+     </div>
+     <div id="dailyTasks" style="margin-top:10px;"></div>
+   </div>
+ </div>
+</section>
 
-    <div id="photoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100;">
-      <div style="max-width:90%;max-height:90%;position:relative;">
-        <img id="modalImg" src="" style="max-width:100%;max-height:75vh;display:block;margin:0 auto;border-radius:14px;">
-        <textarea id="modalNote" placeholder="Add a note..." style="width:100%;margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.1);color:#fff;border:none;resize:none;"></textarea>
-        <div style="margin-top:10px;text-align:center;">
-          <button id="saveNote" class="btn">Save</button>
-          <button id="deletePhoto" class="delete-btn">Delete</button>
-          <button id="closeModal" class="btn" style="background:rgba(255,255,255,0.1);color:#fff;">Close</button>
-        </div>
-      </div>
-    </div>
+<!-- ===== WORKOUT ===== -->
+<section id="workout">
+ <div class="card">
+   <h2 class="section-title">Workout Log</h2>
+   <div class="workout-days" id="workoutDays"></div>
+   <div class="progress-wrap"><div class="progress-inner" id="workoutProgress"></div></div>
+   <div id="workoutList"></div>
+   <button id="addCustomExercise" class="btn" style="margin-top:10px;">Add Exercise</button>
+ </div>
+</section>
 
-    <!-- Media -->
-    <section id="media">
-      <div class="card"><h2 class="section-title">Media Center</h2><div class="video-grid" id="videoGrid"></div></div>
-    </section>
-  </main>
+<!-- ===== GALLERY ===== -->
+<section id="gallery">
+ <div class="card">
+   <h2 class="section-title">Photo Gallery</h2>
+   <div class="row" style="margin-bottom:10px;">
+     <input id="photoUpload" type="file" multiple accept="image/*" class="input-field" style="flex:1;">
+   </div>
+   <small id="photoStats" style="opacity:0.6;display:block;margin-bottom:8px;"></small>
+   <div id="photoFeed"></div>
+ </div>
+</section>
 
-  <nav>
-    <button data-target="focusWins" class="active">Focus & Wins</button>
-    <button data-target="planner">Planner</button>
-    <button data-target="workout">Workout</button>
-    <button data-target="gallery">Gallery</button>
-    <button data-target="media">Media</button>
-  </nav>
-  <script>
-    /* ===== NAVIGATION ===== */
-    const sections=document.querySelectorAll("main section");
-    const navButtons=document.querySelectorAll("nav button");
-    navButtons.forEach(btn=>{
-      btn.onclick=()=>{
-        navButtons.forEach(b=>b.classList.remove("active"));
-        btn.classList.add("active");
-        sections.forEach(s=>s.classList.remove("active"));
-        document.getElementById(btn.dataset.target).classList.add("active");
-      };
-    });
+<div id="photoModal">
+ <div style="max-width:90%;max-height:90%;position:relative;">
+   <img id="modalImg" src="">
+   <textarea id="modalNote" placeholder="Add a note…"></textarea>
+   <div style="margin-top:10px;text-align:center;">
+     <button id="saveNote" class="btn">Save</button>
+     <button id="deletePhoto" class="delete-btn">Delete</button>
+     <button id="closeModal" class="btn" style="background:rgba(255,255,255,0.1);color:#fff;">Close</button>
+   </div>
+ </div>
+</div>
 
-    /* ===== SETTINGS ===== */
-    const settingsToggle=document.getElementById("settingsToggle");
-    const settingsDrawer=document.getElementById("settingsDrawer");
-    settingsToggle.onclick=()=>settingsDrawer.classList.toggle("open");
-    document.querySelectorAll(".settings-btn[data-theme]").forEach(b=>{
-      b.onclick=()=>{
-        const t=b.dataset.theme;
-        let bg,gold;
-        if(t==="emerald"){bg="#001b12";gold="#0aff90";}
-        else if(t==="titanium"){bg="#0a0a0a";gold="#c0c0c0";}
-        else{bg="#0a0f1f";gold="#d4af37";}
-        document.documentElement.style.setProperty("--bg",bg);
-        document.documentElement.style.setProperty("--gold",gold);
-        localStorage.setItem("cc-theme",JSON.stringify({bg,gold}));
-      };
-    });
-    const savedTheme=localStorage.getItem("cc-theme");
-    if(savedTheme){
-      const t=JSON.parse(savedTheme);
-      document.documentElement.style.setProperty("--bg",t.bg);
-      document.documentElement.style.setProperty("--gold",t.gold);
-    }
-    document.getElementById("resetAll").onclick=()=>{
-      if(confirm("Clear all saved data?")){
-        localStorage.clear();location.reload();
-      }
+<!-- ===== MEDIA ===== -->
+<section id="media">
+ <div class="card">
+   <h2 class="section-title">Media Center</h2>
+   <div class="video-grid" id="videoGrid"></div>
+ </div>
+</section>
+</main>
+
+<nav>
+ <button data-target="focusWins" class="active">Focus & Wins</button>
+ <button data-target="planner">Planner</button>
+ <button data-target="workout">Workout</button>
+ <button data-target="gallery">Gallery</button>
+ <button data-target="media">Media</button>
+</nav>
+<script>
+/* ---------- NAVIGATION ---------- */
+const sections = document.querySelectorAll("main section");
+const navButtons = document.querySelectorAll("nav button");
+navButtons.forEach(btn=>{
+  btn.onclick=()=>{
+    navButtons.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    sections.forEach(s=>s.classList.remove("active"));
+    document.getElementById(btn.dataset.target).classList.add("active");
+    window.scrollTo(0,0);
+  };
+});
+
+/* ---------- SETTINGS ---------- */
+const settingsToggle=document.getElementById("settingsToggle");
+const settingsDrawer=document.getElementById("settingsDrawer");
+settingsToggle.onclick=()=>settingsDrawer.classList.toggle("open");
+document.querySelectorAll(".settings-btn[data-theme]").forEach(b=>{
+  b.onclick=()=>{
+    const t=b.dataset.theme;let bg,gold;
+    if(t==="emerald"){bg="#001b12";gold="#0aff90";}
+    else if(t==="titanium"){bg="#0a0a0a";gold="#c0c0c0";}
+    else{bg="#070a13";gold="#d4af37";}
+    document.documentElement.style.setProperty("--bg",bg);
+    document.documentElement.style.setProperty("--gold",gold);
+    localStorage.setItem("cc-theme",JSON.stringify({bg,gold}));
+  };
+});
+const savedTheme=localStorage.getItem("cc-theme");
+if(savedTheme){
+  const t=JSON.parse(savedTheme);
+  document.documentElement.style.setProperty("--bg",t.bg);
+  document.documentElement.style.setProperty("--gold",t.gold);
+}
+document.getElementById("resetAll").onclick=()=>{
+  if(confirm("Clear all saved data?")){localStorage.clear();location.reload();}
+};
+document.getElementById("exportData").onclick=()=>{
+  const data=JSON.stringify(localStorage);
+  const blob=new Blob([data],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="command-center-backup.json";a.click();
+};
+document.getElementById("importData").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{const obj=JSON.parse(r.result);
+    for(const k in obj)localStorage.setItem(k,obj[k]);
+    alert("Imported successfully. Reloading…");location.reload();
+  };
+  r.readAsText(f);
+};
+document.getElementById("installInfo").onclick=()=>{
+  alert("On iPhone Safari: Tap the share icon → 'Add to Home Screen'.");
+};
+
+/* ---------- FOCUS & WINS ---------- */
+const focusInput=document.getElementById("focusInput");
+focusInput.value=localStorage.getItem("cc-focus")||"";
+focusInput.oninput=()=>localStorage.setItem("cc-focus",focusInput.value);
+document.getElementById("todayDate").textContent=
+  new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+
+const winInput=document.getElementById("winInput"),
+ addWin=document.getElementById("addWin"),
+ winsList=document.getElementById("winsList");
+function loadWins(){
+  const arr=JSON.parse(localStorage.getItem("cc-wins")||"[]");
+  winsList.innerHTML="";
+  arr.forEach((w,i)=>{
+    const div=document.createElement("div");
+    div.className="daily-task";
+    div.innerHTML=`<span>${w.text}</span><button class='delete-btn'>X</button>`;
+    div.querySelector("button").onclick=()=>{
+      arr.splice(i,1);localStorage.setItem("cc-wins",JSON.stringify(arr));loadWins();
     };
-    document.getElementById("exportData").onclick=()=>{
-      const data=JSON.stringify(localStorage);
-      const blob=new Blob([data],{type:"application/json"});
-      const a=document.createElement("a");
-      a.href=URL.createObjectURL(blob);
-      a.download="command-center-backup.json";a.click();
-    };
-    document.getElementById("importData").onchange=e=>{
-      const f=e.target.files[0];if(!f)return;
-      const r=new FileReader();
-      r.onload=()=>{const obj=JSON.parse(r.result);
-        for(const k in obj)localStorage.setItem(k,obj[k]);
-        alert("Imported successfully. Reloading...");location.reload();
-      };
-      r.readAsText(f);
-    };
-    document.getElementById("installInfo").onclick=()=>{
-      alert("On iPhone Safari: Tap the share icon → 'Add to Home Screen' to install this app.");
-    };
+    winsList.appendChild(div);
+  });
+}
+addWin.onclick=()=>{
+  const t=winInput.value.trim();if(!t)return;
+  const arr=JSON.parse(localStorage.getItem("cc-wins")||"[]");
+  arr.unshift({text:t,date:Date.now()});
+  localStorage.setItem("cc-wins",JSON.stringify(arr));
+  winInput.value="";loadWins();
+};
+loadWins();
 
-    /* ===== FOCUS & WINS ===== */
-    const focusInput=document.getElementById("focusInput");
-    focusInput.value=localStorage.getItem("cc-focus")||"";
-    focusInput.oninput=()=>localStorage.setItem("cc-focus",focusInput.value);
-    document.getElementById("todayDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
-    const winInput=document.getElementById("winInput"),addWin=document.getElementById("addWin"),winsList=document.getElementById("winsList");
-    function loadWins(){
-      const arr=JSON.parse(localStorage.getItem("cc-wins")||"[]");
-      winsList.innerHTML="";
-      arr.forEach((w,i)=>{
-        const div=document.createElement("div");
-        div.textContent=w.text;
-        div.className="daily-task";
-        div.onclick=()=>{arr.splice(i,1);localStorage.setItem("cc-wins",JSON.stringify(arr));loadWins();};
-        winsList.appendChild(div);
-      });
-    }
-    addWin.onclick=()=>{
-      const t=winInput.value.trim();if(!t)return;
-      const arr=JSON.parse(localStorage.getItem("cc-wins")||"[]");
-      arr.unshift({text:t,date:Date.now()});
-      localStorage.setItem("cc-wins",JSON.stringify(arr));
-      winInput.value="";loadWins();
-    };
-    loadWins();
+/* ---------- PLANNER ---------- */
+const plannerTabs=document.querySelectorAll(".planner-tab");
+const blocks=document.querySelectorAll(".planner-block");
+plannerTabs.forEach(t=>t.onclick=()=>{
+  plannerTabs.forEach(x=>x.classList.remove("active"));
+  blocks.forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  document.getElementById(t.dataset.target).classList.add("active");
+});
+const yearWord=document.getElementById("yearWord"),
+ yearGoal=document.getElementById("yearGoal");
+yearWord.value=localStorage.getItem("cc-yearWord")||"";
+yearGoal.value=localStorage.getItem("cc-yearGoal")||"";
+yearWord.oninput=()=>localStorage.setItem("cc-yearWord",yearWord.value);
+yearGoal.oninput=()=>localStorage.setItem("cc-yearGoal",yearGoal.value);
 
-    /* ===== PLANNER ===== */
-    const plannerTabs=document.querySelectorAll(".planner-tab");
-    const blocks=document.querySelectorAll(".planner-block");
-    plannerTabs.forEach(t=>t.onclick=()=>{
-      plannerTabs.forEach(x=>x.classList.remove("active"));
-      blocks.forEach(x=>x.classList.remove("active"));
-      t.classList.add("active");
-      document.getElementById(t.dataset.target).classList.add("active");
-    });
-    const yearWord=document.getElementById("yearWord"),yearGoal=document.getElementById("yearGoal");
-    yearWord.value=localStorage.getItem("cc-yearWord")||"";
-    yearGoal.value=localStorage.getItem("cc-yearGoal")||"";
-    yearWord.oninput=()=>localStorage.setItem("cc-yearWord",yearWord.value);
-    yearGoal.oninput=()=>localStorage.setItem("cc-yearGoal",yearGoal.value);
-    document.querySelectorAll(".weekly-input").forEach(i=>{
-      i.value=localStorage.getItem("cc-"+i.dataset.key)||"";
-      i.oninput=()=>localStorage.setItem("cc-"+i.dataset.key,i.value);
-    });
-    const weeklyNotes=document.getElementById("weeklyNotes");
-    weeklyNotes.value=localStorage.getItem("cc-weeklyNotes")||"";
-    weeklyNotes.oninput=()=>localStorage.setItem("cc-weeklyNotes",weeklyNotes.value);
-    const dailyTaskInput=document.getElementById("dailyTaskInput"),addDailyTask=document.getElementById("addDailyTask"),dailyTasks=document.getElementById("dailyTasks");
-    function loadDaily(){
-      const arr=JSON.parse(localStorage.getItem("cc-dailyTasks")||"[]");
-      dailyTasks.innerHTML="";
-      arr.forEach((t,i)=>{
-        const d=document.createElement("div");
-        d.className="daily-task"+(t.done?" done":"");
-        d.innerHTML=`<input type="checkbox" ${t.done?"checked":""}><span>${t.text}</span>`;
-        const box=d.querySelector("input");
-        box.onchange=()=>{arr[i].done=box.checked;localStorage.setItem("cc-dailyTasks",JSON.stringify(arr));loadDaily();};
-        dailyTasks.appendChild(d);
-      });
-    }
-    addDailyTask.onclick=()=>{
-      const val=dailyTaskInput.value.trim();if(!val)return;
-      const arr=JSON.parse(localStorage.getItem("cc-dailyTasks")||"[]");
-      arr.push({text:val,done:false});
-      localStorage.setItem("cc-dailyTasks",JSON.stringify(arr));
-      dailyTaskInput.value="";loadDaily();
-    };
-    loadDaily();
+document.querySelectorAll(".weekly-input").forEach(i=>{
+  i.value=localStorage.getItem("cc-"+i.dataset.key)||"";
+  i.oninput=()=>localStorage.setItem("cc-"+i.dataset.key,i.value);
+});
+const weeklyNotes=document.getElementById("weeklyNotes");
+weeklyNotes.value=localStorage.getItem("cc-weeklyNotes")||"";
+weeklyNotes.oninput=()=>localStorage.setItem("cc-weeklyNotes",weeklyNotes.value);
 
-    /* ===== WORKOUT ===== */
-    const workoutDaysEl=document.getElementById("workoutDays");
-    const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-    days.forEach((d,i)=>{
-      const b=document.createElement("div");
-      b.className="workout-day-btn";
-      b.textContent=d;
-      b.onclick=()=>{selectDay(i);};
-      workoutDaysEl.appendChild(b);
-    });
-    const workoutList=document.getElementById("workoutList");
-    const workoutProgress=document.getElementById("workoutProgress");
-    let currentDay=0;
-    function selectDay(i){currentDay=i;renderWorkout();}
-    function renderWorkout(){
-      document.querySelectorAll(".workout-day-btn").forEach((b,idx)=>b.classList.toggle("active",idx===currentDay));
-      const arr=JSON.parse(localStorage.getItem("cc-workouts")||"{}");
-      const list=arr[days[currentDay]]||[];
-      workoutList.innerHTML="";
-      list.forEach((e,idx)=>{
-        const line=document.createElement("div");
-        line.className="exercise-line"+(e.done?" complete":"");
-        line.innerHTML=`<span>${e.name}</span><input type='checkbox' ${e.done?"checked":""}>`;
-        const box=line.querySelector("input");
-        box.onchange=()=>{list[idx].done=box.checked;arr[days[currentDay]]=list;localStorage.setItem("cc-workouts",JSON.stringify(arr));renderWorkout();};
-        workoutList.appendChild(line);
-      });
-      const done=list.filter(x=>x.done).length;
-      const pct=list.length?Math.round((done/list.length)*100):0;
-      workoutProgress.style.width=pct+"%";
-    }
-    document.getElementById("addCustomExercise").onclick=()=>{
-      const name=prompt("Exercise name?");
-      if(!name)return;
-      const arr=JSON.parse(localStorage.getItem("cc-workouts")||"{}");
-      arr[days[currentDay]]=arr[days[currentDay]]||[];
-      arr[days[currentDay]].push({name,done:false});
-      localStorage.setItem("cc-workouts",JSON.stringify(arr));
-      renderWorkout();
-    };
-    renderWorkout();
+const dailyTaskInput=document.getElementById("dailyTaskInput"),
+ addDailyTask=document.getElementById("addDailyTask"),
+ dailyTasks=document.getElementById("dailyTasks");
+function loadDaily(){
+  const arr=JSON.parse(localStorage.getItem("cc-dailyTasks")||"[]");
+  dailyTasks.innerHTML="";
+  arr.forEach((t,i)=>{
+    const d=document.createElement("div");
+    d.className="daily-task"+(t.done?" done":"");
+    d.innerHTML=`<input type='checkbox' ${t.done?"checked":""}><span>${t.text}</span>`;
+    const box=d.querySelector("input");
+    box.onchange=()=>{arr[i].done=box.checked;
+      localStorage.setItem("cc-dailyTasks",JSON.stringify(arr));loadDaily();};
+    dailyTasks.appendChild(d);
+  });
+}
+addDailyTask.onclick=()=>{
+  const val=dailyTaskInput.value.trim();if(!val)return;
+  const arr=JSON.parse(localStorage.getItem("cc-dailyTasks")||"[]");
+  arr.push({text:val,done:false});
+  localStorage.setItem("cc-dailyTasks",JSON.stringify(arr));
+  dailyTaskInput.value="";loadDaily();
+};
+loadDaily();
 
-    /* ===== GALLERY ===== */
-    const photoUpload=document.getElementById("photoUpload"),photoFeed=document.getElementById("photoFeed"),photoStats=document.getElementById("photoStats"),modal=document.getElementById("photoModal"),modalImg=document.getElementById("modalImg"),modalNote=document.getElementById("modalNote"),saveNote=document.getElementById("saveNote"),deletePhoto=document.getElementById("deletePhoto"),closeModal=document.getElementById("closeModal");
-    let currentIndex=null;
-    function loadGallery(){
-      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-      photoFeed.innerHTML="";
-      const m=new Date().getMonth();
-      const monthly=arr.filter(p=>new Date(p.date||Date.now()).getMonth()===m).length;
-      photoStats.textContent=`${arr.length} total • ${monthly} this month`;
-      arr.forEach((p,i)=>{
-        const img=document.createElement("img");
-        img.src=p.src;
-        img.style.width="100%";
-        img.style.height="100px";
-        img.style.objectFit="cover";
-        img.style.borderRadius="10px";
-        img.style.cursor="pointer";
-        img.onclick=()=>openModal(i);
-        photoFeed.appendChild(img);
-      });
-    }
-    photoUpload.onchange=e=>{
-      const files=[...e.target.files];
-      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-      files.forEach(f=>{
-        const r=new FileReader();
-        r.onload=()=>{
-          arr.unshift({src:r.result,note:"",date:Date.now()});
-          localStorage.setItem("cc-photos",JSON.stringify(arr));
-          loadGallery();
-        };
-        r.readAsDataURL(f);
-      });
+/* ---------- WORKOUT ---------- */
+const workoutDaysEl=document.getElementById("workoutDays");
+const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+days.forEach((d,i)=>{
+  const b=document.createElement("div");
+  b.className="workout-day-btn";
+  b.textContent=d;
+  b.onclick=()=>selectDay(i);
+  workoutDaysEl.appendChild(b);
+});
+const workoutList=document.getElementById("workoutList");
+const workoutProgress=document.getElementById("workoutProgress");
+let currentDay=0;
+function selectDay(i){currentDay=i;renderWorkout();}
+function renderWorkout(){
+  document.querySelectorAll(".workout-day-btn")
+    .forEach((b,idx)=>b.classList.toggle("active",idx===currentDay));
+  const arr=JSON.parse(localStorage.getItem("cc-workouts")||"{}");
+  const list=arr[days[currentDay]]||[];
+  workoutList.innerHTML="";
+  list.forEach((e,idx)=>{
+    const line=document.createElement("div");
+    line.className="exercise-line"+(e.done?" complete":"");
+    line.innerHTML=`<span>${e.name}</span><input type='checkbox' ${e.done?"checked":""}>`;
+    const box=line.querySelector("input");
+    box.onchange=()=>{
+      list[idx].done=box.checked;arr[days[currentDay]]=list;
+      localStorage.setItem("cc-workouts",JSON.stringify(arr));renderWorkout();
     };
-    function openModal(i){
-      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-      currentIndex=i;
-      const p=arr[i];
-      modalImg.src=p.src;
-      modalNote.value=p.note||"";
-      modal.style.display="flex";
-    }
-    saveNote.onclick=()=>{
-      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-      if(currentIndex!==null){
-        arr[currentIndex].note=modalNote.value.trim();
-        localStorage.setItem("cc-photos",JSON.stringify(arr));
-      }
-      modal.style.display="none";
+    workoutList.appendChild(line);
+  });
+  const done=list.filter(x=>x.done).length;
+  const pct=list.length?Math.round((done/list.length)*100):0;
+  workoutProgress.style.width=pct+"%";
+}
+document.getElementById("addCustomExercise").onclick=()=>{
+  const name=prompt("Exercise name?");
+  if(!name)return;
+  const arr=JSON.parse(localStorage.getItem("cc-workouts")||"{}");
+  arr[days[currentDay]]=arr[days[currentDay]]||[];
+  arr[days[currentDay]].push({name,done:false});
+  localStorage.setItem("cc-workouts",JSON.stringify(arr));
+  renderWorkout();
+};
+renderWorkout();
+
+/* ---------- GALLERY ---------- */
+const photoUpload=document.getElementById("photoUpload"),
+ photoFeed=document.getElementById("photoFeed"),
+ photoStats=document.getElementById("photoStats"),
+ modal=document.getElementById("photoModal"),
+ modalImg=document.getElementById("modalImg"),
+ modalNote=document.getElementById("modalNote"),
+ saveNote=document.getElementById("saveNote"),
+ deletePhoto=document.getElementById("deletePhoto"),
+ closeModal=document.getElementById("closeModal");
+let currentIndex=null;
+function loadGallery(){
+  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+  photoFeed.innerHTML="";
+  const m=new Date().getMonth();
+  const monthly=arr.filter(p=>new Date(p.date||Date.now()).getMonth()===m).length;
+  photoStats.textContent=`${arr.length} total • ${monthly} this month`;
+  arr.forEach((p,i)=>{
+    const img=document.createElement("img");
+    img.src=p.src;
+    img.onclick=()=>openModal(i);
+    photoFeed.appendChild(img);
+  });
+}
+photoUpload.onchange=e=>{
+  const files=[...e.target.files];
+  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+  files.forEach(f=>{
+    const r=new FileReader();
+    r.onload=()=>{
+      arr.unshift({src:r.result,note:"",date:Date.now()});
+      localStorage.setItem("cc-photos",JSON.stringify(arr));
       loadGallery();
     };
-    deletePhoto.onclick=()=>{
-      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-      if(currentIndex!==null){
-        arr.splice(currentIndex,1);
-        localStorage.setItem("cc-photos",JSON.stringify(arr));
-      }
-      modal.style.display="none";
-      loadGallery();
-    };
-    closeModal.onclick=()=>modal.style.display="none";
-    window.onclick=e=>{if(e.target===modal)modal.style.display="none";};
-    loadGallery();
+    r.readAsDataURL(f);
+  });
+};
+function openModal(i){
+  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+  currentIndex=i;
+  const p=arr[i];
+  modalImg.src=p.src;
+  modalNote.value=p.note||"";
+  modal.style.display="flex";
+}
+saveNote.onclick=()=>{
+  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+  if(currentIndex!==null){
+    arr[currentIndex].note=modalNote.value.trim();
+    localStorage.setItem("cc-photos",JSON.stringify(arr));
+  }
+  modal.style.display="none";loadGallery();
+};
+deletePhoto.onclick=()=>{
+  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+  if(currentIndex!==null){
+    arr.splice(currentIndex,1);
+    localStorage.setItem("cc-photos",JSON.stringify(arr));
+  }
+  modal.style.display="none";loadGallery();
+};
+closeModal.onclick=()=>modal.style.display="none";
+window.onclick=e=>{if(e.target===modal)modal.style.display="none";};
+loadGallery();
 
-    /* ===== MEDIA ===== */
-    const videoGrid=document.getElementById("videoGrid");
-    const vids=["https://www.youtube.com/embed/ZXsQAXx_ao0","https://www.youtube.com/embed/26U_seo0a1g","https://www.youtube.com/embed/KxGRhd_iWuE"];
-    videoGrid.innerHTML=vids.map(v=>`<iframe src="${v}" allowfullscreen style="width:100%;height:200px;border:none;border-radius:12px;"></iframe>`).join("");
-  </script>
+/* ---------- MEDIA ---------- */
+const videoGrid=document.getElementById("videoGrid");
+const vids=[
+  "https://www.youtube.com/embed/ZXsQAXx_ao0",
+  "https://www.youtube.com/embed/26U_seo0a1g",
+  "https://www.youtube.com/embed/KxGRhd_iWuE"
+];
+videoGrid.innerHTML=vids.map(v=>
+  `<iframe src='${v}' allowfullscreen></iframe>`).join("");
+</script>
 </body>
 </html>
