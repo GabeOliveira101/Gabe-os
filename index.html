@@ -746,9 +746,6 @@ photoUpload.onchange = async e => {
         arr.unshift({ src: r.result, note: "", date: Date.now() });
         resolve();
       };
-      r.readAsDataURL(file);
-    });
-  }
 
   localStorage.setItem("cc-photos", JSON.stringify(arr));
   e.target.value = "";
