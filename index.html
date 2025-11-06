@@ -707,17 +707,18 @@ document.getElementById("addCustomExercise").onclick=()=>{
 };
 renderWorkout();
 
-/* ---------- GALLERY (Instagram-Style) ---------- */
+/* ---------- GALLERY ---------- */
 const photoUpload = document.getElementById("photoUpload");
-const photoFeed   = document.getElementById("photoFeed");
-const photoStats  = document.getElementById("photoStats");
-const modal       = document.getElementById("photoModal");
-const modalImg    = document.getElementById("modalImg");
-const modalNote   = document.getElementById("modalNote");
-const saveNote    = document.getElementById("saveNote");
+const photoFeed = document.getElementById("photoFeed");
+const photoStats = document.getElementById("photoStats");
+const photoModal = document.getElementById("photoModal");
+const modalImg = document.getElementById("modalImg");
+const modalNote = document.getElementById("modalNote");
+const saveNote = document.getElementById("saveNote");
 const deletePhoto = document.getElementById("deletePhoto");
-const closeModal  = document.getElementById("closeModal");
-let currentIndex  = null;
+const closeModal = document.getElementById("closeModal");
+
+let currentIndex = null;
 
 function loadGallery() {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
@@ -735,6 +736,65 @@ function loadGallery() {
     photoFeed.appendChild(img);
   });
 }
+
+photoUpload.onchange = async e => {
+  const files = [...e.target.files];
+  if (!files.length) return;
+
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+
+  for (const file of files) {
+    await new Promise(resolve => {
+      const r = new FileReader();
+      r.onload = () => {
+        arr.unshift({ src: r.result, note: "", date: Date.now() });
+        resolve();
+      };
+      r.readAsDataURL(file);
+    });
+  }
+
+  localStorage.setItem("cc-photos", JSON.stringify(arr));
+  e.target.value = "";
+  loadGallery();
+};
+
+function openModal(i) {
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  currentIndex = i;
+  const p = arr[i];
+  modalImg.src = p.src;
+  modalNote.value = p.note || "";
+  photoModal.style.display = "flex";
+}
+
+saveNote.onclick = () => {
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  if (currentIndex !== null) {
+    arr[currentIndex].note = modalNote.value.trim();
+    localStorage.setItem("cc-photos", JSON.stringify(arr));
+  }
+  photoModal.style.display = "none";
+  loadGallery();
+};
+
+deletePhoto.onclick = () => {
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  if (currentIndex !== null) {
+    arr.splice(currentIndex, 1);
+    localStorage.setItem("cc-photos", JSON.stringify(arr));
+  }
+  photoModal.style.display = "none";
+  loadGallery();
+};
+
+closeModal.onclick = () => (photoModal.style.display = "none");
+window.onclick = e => {
+  if (e.target === photoModal) photoModal.style.display = "none";
+};
+
+loadGallery();
+
 
 /* fixed multi-upload */
 photoUpload.onchange = async e => {
