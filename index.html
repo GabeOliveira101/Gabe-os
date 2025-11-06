@@ -302,10 +302,47 @@ main {
   -webkit-overflow-scrolling: touch;
   height: calc(100vh - 140px); /* subtract header+nav height */
 }
+/* Responsive center layout for desktop and mobile */
+#appWrapper {
+  width: 100%;
+  max-width: 600px;        /* keeps your layout nicely centered on Mac */
+  margin: 0 auto;          /* centers horizontally */
+  padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom);
+  box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+  #appWrapper {
+    max-width: 100%;
+    padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom);
+  }
+}
+
+html, body {
+  overflow-x: hidden;
+  background-color: #000;  /* keeps background consistent edge-to-edge */
+}
+/* ---------- MEDIA STYLING ---------- */
+#videoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+
+#videoGrid iframe {
+  width: 100%;
+  height: 200px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
 
 </style>
 </head>
 <body>
+ <div id="appWrapper">
 <header>
  <button id="settingsToggle">Settings</button>
  <h1>COMMAND CENTER</h1>
@@ -810,14 +847,26 @@ photoFeed.style.paddingBottom = "20px";
 loadGallery();
 
 /* ---------- MEDIA ---------- */
-const videoGrid=document.getElementById("videoGrid");
-const vids=[
-  "https://www.youtube.com/embed/ZXsQAXx_ao0",
-  "https://www.youtube.com/embed/26U_seo0a1g",
-  "https://www.youtube.com/embed/KxGRhd_iWuE"
+const videoGrid = document.getElementById("videoGrid");
+const vids = [
+  "https://www.youtube.com/embed/uVxSgm2GGmY",
+  "https://www.youtube.com/embed/LPTx6G8r_UY",
+  "https://www.youtube.com/embed/WE50ZSVQeDs"
 ];
-videoGrid.innerHTML=vids.map(v=>
-  `<iframe src='${v}' allowfullscreen></iframe>`).join("");
+
+// Create responsive grid of embedded videos
+videoGrid.innerHTML = vids
+  .map(v => `
+    <iframe 
+      src="${v}" 
+      title="YouTube video"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen>
+    </iframe>`)
+  .join("");
+
 </script>
+   </div>
 </body>
 </html>
