@@ -261,6 +261,48 @@ nav button.active,nav button:hover{color:var(--gold);transform:scale(1.1);}
  header,nav{max-width:1080px;left:50%;transform:translateX(-50%);}
  #settingsDrawer{max-width:1080px;left:50%;transform:translateX(-50%);}
 }
+ /* ===== MOBILE SAFE AREA / VIEW HEIGHT FIX ===== */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Reserve space for fixed header and nav so content isn’t hidden */
+body {
+  padding-top: 70px;   /* matches your header height */
+  padding-bottom: 70px; /* matches your nav height */
+  box-sizing: border-box;
+}
+
+/* Adjustments for iPhone safe area (PWA, notch devices) */
+@supports(padding: max(0px)) {
+  body {
+    padding-top: max(70px, env(safe-area-inset-top));
+    padding-bottom: max(70px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Header / Nav tweaks to stay within view */
+header, nav {
+  position: fixed;
+  left: 0; right: 0;
+  z-index: 100;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+header { top: 0; }
+nav { bottom: 0; }
+
+/* Main area scrolls properly on small screens */
+main {
+  padding: 0 10px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  height: calc(100vh - 140px); /* subtract header+nav height */
+}
+
 </style>
 </head>
 <body>
