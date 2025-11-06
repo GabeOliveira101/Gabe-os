@@ -691,19 +691,25 @@ document.getElementById("addCustomExercise").onclick=()=>{
 };
 renderWorkout();
 
-/* ---------- GALLERY ---------- */
-const photoUpload = document.getElementById("photoUpload"),
-      photoFeed   = document.getElementById("photoFeed"),
-      photoStats  = document.getElementById("photoStats"),
-      modal       = document.getElementById("photoModal"),
-      modalImg    = document.getElementById("modalImg"),
-      modalNote   = document.getElementById("modalNote"),
-      saveNote    = document.getElementById("saveNote"),
-      deletePhoto = document.getElementById("deletePhoto"),
-      closeModal  = document.getElementById("closeModal");
+/* ---------- GALLERY (Instagram-Style) ---------- */
+const photoUpload = document.getElementById("photoUpload");
+const photoFeed   = document.getElementById("photoFeed");
+const photoStats  = document.getElementById("photoStats");
+const modal       = document.getElementById("photoModal");
+const modalImg    = document.getElementById("modalImg");
+const modalNote   = document.getElementById("modalNote");
+const saveNote    = document.getElementById("saveNote");
+const deletePhoto = document.getElementById("deletePhoto");
+const closeModal  = document.getElementById("closeModal");
+let currentIndex  = null;
 
-let currentIndex = null;
+/* Build responsive 3-column Instagram-style grid */
+photoFeed.style.display = "grid";
+photoFeed.style.gridTemplateColumns = "repeat(auto-fill, minmax(110px, 1fr))";
+photoFeed.style.gap = "5px";
+photoFeed.style.marginTop = "10px";
 
+/* Load all photos with lazy loading */
 function loadGallery() {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   photoFeed.innerHTML = "";
@@ -716,31 +722,38 @@ function loadGallery() {
     const img = document.createElement("img");
     img.src = p.src;
     img.loading = "lazy";
+    img.style.width = "100%";
+    img.style.height = "110px";
+    img.style.objectFit = "cover";
+    img.style.borderRadius = "8px";
+    img.style.cursor = "pointer";
     img.onclick = () => openModal(i);
     photoFeed.appendChild(img);
   });
 }
 
-/* allow multiple uploads, even re-selecting same file */
+/* Multi-file upload, can re-upload same image */
 photoUpload.onchange = e => {
   const files = [...e.target.files];
   if (!files.length) return;
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-
+  let loaded = 0;
   files.forEach(f => {
     const r = new FileReader();
     r.onload = () => {
       arr.unshift({ src: r.result, note: "", date: Date.now() });
-      localStorage.setItem("cc-photos", JSON.stringify(arr));
-      loadGallery();
+      loaded++;
+      if (loaded === files.length) {
+        localStorage.setItem("cc-photos", JSON.stringify(arr));
+        loadGallery();
+      }
     };
     r.readAsDataURL(f);
   });
-
-  // reset input so selecting the same photo again still triggers onchange
-  e.target.value = "";
+  e.target.value = ""; // reset input
 };
 
+/* Modal behavior (view full image + note) */
 function openModal(i) {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   currentIndex = i;
@@ -748,10 +761,10 @@ function openModal(i) {
   modalImg.src = p.src;
   modalNote.value = p.note || "";
   modal.style.display = "flex";
-  document.body.style.overflow = "hidden"; // prevent background scroll
+  document.body.style.overflow = "hidden";
 }
 
-/* close modal helpers */
+/* Close modal on button, click outside, or Esc */
 function closeGalleryModal() {
   modal.style.display = "none";
   document.body.style.overflow = "";
@@ -763,7 +776,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape" && modal.style.display === "flex") closeGalleryModal();
 });
 
-/* save / delete note logic */
+/* Save or delete photo */
 saveNote.onclick = () => {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   if (currentIndex !== null) {
@@ -773,7 +786,6 @@ saveNote.onclick = () => {
   closeGalleryModal();
   loadGallery();
 };
-
 deletePhoto.onclick = () => {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   if (currentIndex !== null) {
@@ -784,8 +796,14 @@ deletePhoto.onclick = () => {
   loadGallery();
 };
 
-loadGallery();
+/* Scroll behavior (infinite feed effect) */
+photoFeed.style.overflowY = "auto";
+photoFeed.style.maxHeight = "calc(100vh - 200px)";
+photoFeed.style.scrollBehavior = "smooth";
+photoFeed.style.paddingBottom = "20px";
 
+/* Initial render */
+loadGallery();
 
 /* ---------- MEDIA ---------- */
 const videoGrid=document.getElementById("videoGrid");
