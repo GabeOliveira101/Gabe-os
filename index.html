@@ -733,21 +733,28 @@ function loadGallery() {
 }
 
 /* Multi-file upload, can re-upload same image */
-photoUpload.onchange = e => {
+photoUpload.onchange = async e => {
   const files = [...e.target.files];
   if (!files.length) return;
+
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  let loaded = 0;
-  files.forEach(f => {
-    const r = new FileReader();
-    r.onload = () => {
-      arr.unshift({ src: r.result, note: "", date: Date.now() });
-      loaded++;
-      if (loaded === files.length) {
-        localStorage.setItem("cc-photos", JSON.stringify(arr));
-        loadGallery();
-      }
-    };
+
+  for (const file of files) {
+    await new Promise(resolve => {
+      const r = new FileReader();
+      r.onload = () => {
+        arr.unshift({ src: r.result, note: "", date: Date.now() });
+        resolve();
+      };
+      r.readAsDataURL(file);
+    });
+  }
+
+  localStorage.setItem("cc-photos", JSON.stringify(arr));
+  e.target.value = "";
+  loadGallery();
+};
+
     r.readAsDataURL(f);
   });
   e.target.value = ""; // reset input
