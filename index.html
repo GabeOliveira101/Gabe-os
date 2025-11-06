@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0a0f1f">
   <title>Command Center</title>
-  <!-- fonts -->
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -18,282 +17,110 @@
     }
     *{box-sizing:border-box;}
     html,body{
-      margin:0;
-      padding:0;
-      height:100%;
-      background:var(--bg);
-      color:var(--text);
-      font-family:'Inter',sans-serif;
-      -webkit-font-smoothing:antialiased;
+      margin:0;padding:0;height:100%;
+      background:var(--bg);color:var(--text);
+      font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;
       overflow:hidden;
     }
     body::before{
-      content:"";
-      position:fixed;
-      inset:0;
+      content:"";position:fixed;inset:0;
       background:radial-gradient(circle at top,rgba(212,175,55,0.14),transparent 55%),linear-gradient(180deg,#0a0f1f 0%,#050914 100%);
       z-index:-1;
     }
     header{
-      position:fixed;
-      top:0;left:0;right:0;
-      height:70px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(10,15,31,0.7);
-      backdrop-filter:blur(14px);
-      border-bottom:1px solid rgba(212,175,55,0.2);
-      z-index:50;
+      position:fixed;top:0;left:0;right:0;height:70px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(10,15,31,0.7);backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(212,175,55,0.2);z-index:50;
       padding-top:env(safe-area-inset-top);
     }
-    header h1{
-      font-family:'League Spartan',sans-serif;
-      letter-spacing:.08em;
-      color:var(--gold);
-      font-size:1.3rem;
-    }
+    header h1{font-family:'League Spartan',sans-serif;letter-spacing:.08em;color:var(--gold);font-size:1.3rem;}
     #settingsToggle{
-      position:absolute;
-      left:16px;
-      top:50%;
-      transform:translateY(-50%);
-      background:rgba(212,175,55,0.15);
-      border:1px solid rgba(212,175,55,0.5);
-      border-radius:999px;
-      padding:5px 14px;
-      color:var(--gold);
-      font-weight:500;
-      cursor:pointer;
-      transition:var(--trans);
-      font-size:0.8rem;
+      position:absolute;left:16px;top:50%;transform:translateY(-50%);
+      background:rgba(212,175,55,0.15);border:1px solid rgba(212,175,55,0.5);
+      border-radius:999px;padding:5px 14px;color:var(--gold);cursor:pointer;
+      transition:var(--trans);font-size:0.8rem;
     }
     #settingsToggle:hover{background:rgba(212,175,55,0.35);}
     #settingsDrawer{
-      position:fixed;
-      top:-430px;
-      left:0;right:0;
-      background:rgba(5,8,15,0.95);
-      backdrop-filter:blur(14px);
+      position:fixed;top:-440px;left:0;right:0;
+      background:rgba(5,8,15,0.95);backdrop-filter:blur(14px);
       border-bottom:2px solid rgba(212,175,55,0.4);
-      padding:16px;
-      padding-top:calc(16px + env(safe-area-inset-top));
-      z-index:60;
-      transition:var(--trans);
+      padding:16px;padding-top:calc(16px + env(safe-area-inset-top));
+      z-index:60;transition:var(--trans);
     }
     #settingsDrawer.open{top:70px;}
-    #settingsDrawer h2{
-      font-family:'League Spartan',sans-serif;
-      margin-top:0;
-      color:var(--gold);
-      font-size:1rem;
-    }
     .settings-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
     .settings-btn{
       background:rgba(255,255,255,0.03);
       border:1px solid rgba(212,175,55,0.3);
-      border-radius:12px;
-      padding:8px 12px;
-      cursor:pointer;
-      color:#fff;
-      transition:var(--trans);
-      font-size:0.78rem;
+      border-radius:12px;padding:8px 12px;cursor:pointer;
+      color:#fff;transition:var(--trans);font-size:0.78rem;
     }
     .settings-btn:hover{background:rgba(212,175,55,0.3);color:#000;}
     main{
-      position:fixed;
-      top:70px;
-      bottom:70px;
-      left:0;right:0;
-      overflow-y:auto;
-      padding:16px 14px;
-      padding-bottom:calc(16px + env(safe-area-inset-bottom));
-      scroll-behavior:smooth;
+      position:fixed;top:70px;bottom:70px;left:0;right:0;
+      overflow-y:auto;padding:16px 14px;
+      padding-bottom:calc(16px + env(safe-area-inset-bottom));scroll-behavior:smooth;
     }
-    section{
-      display:none;
-      animation:fade .45s ease;
-    }
+    section{display:none;animation:fade .45s ease;}
     section.active{display:block;}
     @keyframes fade{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    h2.section-title{
-      font-family:'League Spartan',sans-serif;
-      color:var(--gold);
-      margin-bottom:10px;
-      letter-spacing:.04em;
-    }
+    h2.section-title{font-family:'League Spartan',sans-serif;color:var(--gold);margin-bottom:10px;letter-spacing:.04em;}
     .card{
       background:rgba(10,15,31,0.45);
       border:1px solid rgba(212,175,55,0.12);
-      border-radius:16px;
-      padding:14px 14px 12px;
-      margin-bottom:14px;
+      border-radius:16px;padding:14px;margin-bottom:14px;
       box-shadow:0 16px 35px rgba(0,0,0,0.22);
     }
     .input-field{
       background:rgba(255,255,255,0.02);
       border:1px solid rgba(255,255,255,0.05);
-      border-radius:14px;
-      padding:10px 12px;
-      width:100%;
-      color:#fff;
-      transition:var(--trans);
-    }
-    .input-field:focus{
-      border:1px solid rgba(212,175,55,0.6);
-      box-shadow:0 0 0 3px rgba(212,175,55,0.13);
-      background:rgba(10,15,31,0.8);
-      outline:none;
+      border-radius:14px;padding:10px 12px;width:100%;color:#fff;
     }
     .btn{
       background:linear-gradient(120deg,rgba(212,175,55,0.9),rgba(254,219,120,0.7));
-      border:none;
-      border-radius:999px;
-      padding:9px 18px;
-      color:#000;
-      font-weight:600;
-      cursor:pointer;
-      transition:var(--trans);
-      box-shadow:0 8px 18px rgba(212,175,55,0.35);
+      border:none;border-radius:999px;padding:9px 18px;
+      color:#000;font-weight:600;cursor:pointer;
+      transition:var(--trans);box-shadow:0 8px 18px rgba(212,175,55,0.35);
     }
     .btn:hover{transform:translateY(-1px);box-shadow:0 12px 25px rgba(212,175,55,0.45);}
-    .row{display:flex;gap:10px;flex-wrap:wrap;}
-    .wins-list-item{
-      background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.05);
-      border-radius:12px;
-      padding:8px 10px;
-      margin-top:6px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    }
-    .wins-list-item small{color:rgba(255,255,255,0.35);font-size:0.7rem;}
     .delete-btn{
-      background:none;
-      border:1px solid rgba(212,175,55,0.45);
-      color:var(--gold);
-      border-radius:999px;
-      padding:3px 10px;
-      cursor:pointer;
-      transition:var(--trans);
-      font-size:0.7rem;
+      background:none;border:1px solid rgba(212,175,55,0.45);
+      color:var(--gold);border-radius:999px;padding:3px 10px;
+      cursor:pointer;font-size:0.7rem;transition:var(--trans);
     }
     .delete-btn:hover{background:rgba(212,175,55,0.4);color:#000;}
-    /* planner tabs */
-    .planner-tabs{
-      display:flex;
-      gap:8px;
-      margin-bottom:10px;
-    }
-    .planner-tab{
-      flex:1;
-      background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.03);
-      border-radius:12px;
-      padding:8px 5px;
-      text-align:center;
-      cursor:pointer;
-      transition:var(--trans);
-      font-size:0.8rem;
-    }
-    .planner-tab.active{
-      background:rgba(212,175,55,0.95);
-      color:#000;
-      border-color:rgba(212,175,55,0.9);
-      font-weight:600;
-    }
-    .planner-block{display:none;animation:fade .35s ease;}
-    .planner-block.active{display:block;}
-    textarea{
-      width:100%;
-      min-height:110px;
-      background:rgba(255,255,255,0.01);
-      border:1px solid rgba(255,255,255,0.03);
-      border-radius:14px;
-      padding:10px 12px;
-      color:#fff;
-      resize:vertical;
-    }
-    .daily-task{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.02);
-      border-radius:12px;
-      padding:6px 8px;
-      margin-bottom:6px;
-    }
-    .daily-task input[type=checkbox]{width:18px;height:18px;}
-    .daily-task.done span{text-decoration:line-through;color:rgba(255,255,255,0.4);}
-    /* workout */
-    .workout-days{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;}
-    .workout-day-btn{
-      flex:0 0 auto;
-      background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.03);
-      border-radius:12px;
-      padding:6px 10px;
-      cursor:pointer;
-      font-size:0.75rem;
-    }
-    .workout-day-btn.active{background:rgba(212,175,55,0.9);color:#000;}
-    .exercise-line{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.02);
-      border-radius:10px;
-      padding:6px 8px;
-      margin-bottom:6px;
-      gap:5px;
-    }
-    .exercise-line.complete{opacity:0.55;text-decoration:line-through;}
-    .progress-wrap{
-      height:8px;
-      background:rgba(255,255,255,0.06);
-      border-radius:999px;
-      overflow:hidden;
-      margin-bottom:8px;
-    }
-    .progress-inner{
-      height:8px;
-      background:linear-gradient(120deg,rgba(212,175,55,1),rgba(254,219,120,0.7));
-      width:0%;
-      transition:width .3s ease;
-    }
-
-    /* media */
-    .video-grid{display:grid;gap:10px;}
-    /* nav */
+    .row{display:flex;gap:10px;flex-wrap:wrap;}
     nav{
-      position:fixed;
-      bottom:0;left:0;right:0;
-      height:70px;
-      background:rgba(10,15,31,0.75);
-      backdrop-filter:blur(14px);
+      position:fixed;bottom:0;left:0;right:0;height:70px;
+      background:rgba(10,15,31,0.75);backdrop-filter:blur(14px);
       border-top:1px solid rgba(212,175,55,0.12);
-      display:flex;
-      align-items:center;
-      justify-content:space-around;
-      padding-bottom:env(safe-area-inset-bottom);
-      z-index:50;
+      display:flex;align-items:center;justify-content:space-around;
+      padding-bottom:env(safe-area-inset-bottom);z-index:50;
     }
     nav button{
-      background:none;
-      border:none;
-      color:rgba(255,255,255,0.4);
-      font-weight:500;
-      font-size:0.8rem;
-      cursor:pointer;
-      transition:var(--trans);
+      background:none;border:none;color:rgba(255,255,255,0.4);
+      font-weight:500;font-size:0.8rem;cursor:pointer;transition:var(--trans);
     }
     nav button.active,nav button:hover{color:var(--gold);}
-
-    /* responsive */
+    /* planner, workout, gallery extra UI */
+    .planner-tabs{display:flex;gap:8px;margin-bottom:10px;}
+    .planner-tab{flex:1;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);border-radius:12px;padding:8px 5px;text-align:center;cursor:pointer;transition:var(--trans);font-size:0.8rem;}
+    .planner-tab.active{background:rgba(212,175,55,0.95);color:#000;border-color:rgba(212,175,55,0.9);font-weight:600;}
+    .planner-block{display:none;animation:fade .35s ease;}
+    .planner-block.active{display:block;}
+    .daily-task{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);border-radius:12px;padding:6px 8px;margin-bottom:6px;}
+    .daily-task input[type=checkbox]{width:18px;height:18px;}
+    .daily-task.done span{text-decoration:line-through;color:rgba(255,255,255,0.4);}
+    .workout-days{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;}
+    .workout-day-btn{flex:0 0 auto;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);border-radius:12px;padding:6px 10px;cursor:pointer;font-size:0.75rem;}
+    .workout-day-btn.active{background:rgba(212,175,55,0.9);color:#000;}
+    .exercise-line{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02);border-radius:10px;padding:6px 8px;margin-bottom:6px;gap:5px;}
+    .exercise-line.complete{opacity:0.55;text-decoration:line-through;}
+    .progress-wrap{height:8px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;margin-bottom:8px;}
+    .progress-inner{height:8px;background:linear-gradient(120deg,rgba(212,175,55,1),rgba(254,219,120,0.7));width:0%;transition:width .3s ease;}
+    .video-grid{display:grid;gap:10px;}
     @media(min-width:900px){
       main{max-width:1100px;margin:70px auto 70px;}
       header,nav{left:50%;transform:translateX(-50%);max-width:1100px;}
@@ -330,7 +157,7 @@
     <section id="focusWins" class="active">
       <div class="card">
         <h2 class="section-title">Today's Focus</h2>
-        <input id="focusInput" class="input-field" placeholder="What is the single most important outcome today?">
+        <input id="focusInput" class="input-field" placeholder="Most important outcome today">
         <small id="todayDate" style="opacity:0.5;font-size:0.7rem;display:block;margin-top:6px;"></small>
       </div>
       <div class="card">
@@ -352,23 +179,20 @@
           <div class="planner-tab" data-target="weeklyBlock">Weekly Plan</div>
           <div class="planner-tab" data-target="dailyBlock">Daily Checklist</div>
         </div>
-        <!-- Yearly -->
         <div id="yearlyBlock" class="planner-block active">
           <label>Year Word / Theme</label>
           <input id="yearWord" class="input-field" placeholder="e.g. Discipline, Build, Expansion">
           <label style="margin-top:10px;display:block;">Year Goal</label>
-          <textarea id="yearGoal" placeholder="Write the one or two big outcomes for the year. Keep it specific."></textarea>
+          <textarea id="yearGoal" placeholder="Write the one or two big outcomes for the year."></textarea>
         </div>
-        <!-- Weekly -->
         <div id="weeklyBlock" class="planner-block">
           <label>This Week's 3 Priorities</label>
           <input class="input-field weekly-input" data-key="w1" placeholder="Priority 1">
           <input class="input-field weekly-input" data-key="w2" placeholder="Priority 2">
           <input class="input-field weekly-input" data-key="w3" placeholder="Priority 3">
           <label style="margin-top:10px;display:block;">Supporting Notes</label>
-          <textarea id="weeklyNotes" placeholder="Block your week, match energy to tasks, protect deep work."></textarea>
+          <textarea id="weeklyNotes" placeholder="Block your week, protect deep work."></textarea>
         </div>
-        <!-- Daily -->
         <div id="dailyBlock" class="planner-block">
           <label>Add Daily Task</label>
           <div class="row">
@@ -385,24 +209,41 @@
       <div class="card">
         <h2 class="section-title">Workout</h2>
         <div class="workout-days" id="workoutDays"></div>
-        <div class="progress-wrap">
-          <div class="progress-inner" id="workoutProgress"></div>
-        </div>
+        <div class="progress-wrap"><div class="progress-inner" id="workoutProgress"></div></div>
         <div id="workoutList"></div>
         <button id="addCustomExercise" class="btn" style="margin-top:10px;">Add Custom Exercise</button>
       </div>
     </section>
 
+    <!-- Gallery -->
+    <section id="gallery">
+      <div class="card">
+        <h2 class="section-title">Photo Gallery</h2>
+        <div class="row" style="margin-bottom:10px;">
+          <input id="photoUpload" type="file" multiple accept="image/*" class="input-field" style="flex:1;">
+        </div>
+        <small id="photoStats" style="opacity:0.6;display:block;margin-bottom:8px;"></small>
+        <div id="photoFeed" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;"></div>
+      </div>
+    </section>
+
+    <div id="photoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100;">
+      <div style="max-width:90%;max-height:90%;position:relative;">
+        <img id="modalImg" src="" style="max-width:100%;max-height:75vh;display:block;margin:0 auto;border-radius:14px;">
+        <textarea id="modalNote" placeholder="Add a note..." style="width:100%;margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.1);color:#fff;border:none;resize:none;"></textarea>
+        <div style="margin-top:10px;text-align:center;">
+          <button id="saveNote" class="btn">Save</button>
+          <button id="deletePhoto" class="delete-btn">Delete</button>
+          <button id="closeModal" class="btn" style="background:rgba(255,255,255,0.1);color:#fff;">Close</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Media -->
     <section id="media">
-      <div class="card">
-        <h2 class="section-title">Media Center</h2>
-        <div class="video-grid" id="videoGrid"></div>
-      </div>
+      <div class="card"><h2 class="section-title">Media Center</h2><div class="video-grid" id="videoGrid"></div></div>
     </section>
   </main>
-
 
   <nav>
     <button data-target="focusWins" class="active">Focus & Wins</button>
@@ -411,418 +252,245 @@
     <button data-target="gallery">Gallery</button>
     <button data-target="media">Media</button>
   </nav>
-
   <script>
-    // ===== NAVIGATION =====
-    const sections = document.querySelectorAll("main section");
-    const navButtons = document.querySelectorAll("nav button");
+    /* ===== NAVIGATION ===== */
+    const sections=document.querySelectorAll("main section");
+    const navButtons=document.querySelectorAll("nav button");
     navButtons.forEach(btn=>{
-      btn.addEventListener("click",()=>{
+      btn.onclick=()=>{
         navButtons.forEach(b=>b.classList.remove("active"));
         btn.classList.add("active");
         sections.forEach(s=>s.classList.remove("active"));
         document.getElementById(btn.dataset.target).classList.add("active");
-      });
+      };
     });
 
-    // ===== SETTINGS DRAWER =====
-    const settingsToggle = document.getElementById("settingsToggle");
-    const settingsDrawer = document.getElementById("settingsDrawer");
-    settingsToggle.onclick = ()=> settingsDrawer.classList.toggle("open");
-
-    // ===== THEME SWITCH =====
-    const themeButtons = document.querySelectorAll(".settings-btn[data-theme]");
-    function applyTheme(t){
-      if(t==="gold"){
-        document.documentElement.style.setProperty("--bg","#0a0f1f");
-        document.documentElement.style.setProperty("--gold","#d4af37");
-      } else if (t==="emerald"){
-        document.documentElement.style.setProperty("--bg","#041913");
-        document.documentElement.style.setProperty("--gold","#7ef2c3");
-      } else if (t==="titanium"){
-        document.documentElement.style.setProperty("--bg","#0d0d0d");
-        document.documentElement.style.setProperty("--gold","#d7d7d7");
+    /* ===== SETTINGS ===== */
+    const settingsToggle=document.getElementById("settingsToggle");
+    const settingsDrawer=document.getElementById("settingsDrawer");
+    settingsToggle.onclick=()=>settingsDrawer.classList.toggle("open");
+    document.querySelectorAll(".settings-btn[data-theme]").forEach(b=>{
+      b.onclick=()=>{
+        const t=b.dataset.theme;
+        let bg,gold;
+        if(t==="emerald"){bg="#001b12";gold="#0aff90";}
+        else if(t==="titanium"){bg="#0a0a0a";gold="#c0c0c0";}
+        else{bg="#0a0f1f";gold="#d4af37";}
+        document.documentElement.style.setProperty("--bg",bg);
+        document.documentElement.style.setProperty("--gold",gold);
+        localStorage.setItem("cc-theme",JSON.stringify({bg,gold}));
+      };
+    });
+    const savedTheme=localStorage.getItem("cc-theme");
+    if(savedTheme){
+      const t=JSON.parse(savedTheme);
+      document.documentElement.style.setProperty("--bg",t.bg);
+      document.documentElement.style.setProperty("--gold",t.gold);
+    }
+    document.getElementById("resetAll").onclick=()=>{
+      if(confirm("Clear all saved data?")){
+        localStorage.clear();location.reload();
       }
-      localStorage.setItem("cc-theme",t);
-    }
-    themeButtons.forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
-    const savedTheme = localStorage.getItem("cc-theme"); if(savedTheme) applyTheme(savedTheme);
+    };
+    document.getElementById("exportData").onclick=()=>{
+      const data=JSON.stringify(localStorage);
+      const blob=new Blob([data],{type:"application/json"});
+      const a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="command-center-backup.json";a.click();
+    };
+    document.getElementById("importData").onchange=e=>{
+      const f=e.target.files[0];if(!f)return;
+      const r=new FileReader();
+      r.onload=()=>{const obj=JSON.parse(r.result);
+        for(const k in obj)localStorage.setItem(k,obj[k]);
+        alert("Imported successfully. Reloading...");location.reload();
+      };
+      r.readAsText(f);
+    };
+    document.getElementById("installInfo").onclick=()=>{
+      alert("On iPhone Safari: Tap the share icon → 'Add to Home Screen' to install this app.");
+    };
 
-    // ===== DATE / MIDNIGHT RESET =====
-    const todaySpan = document.getElementById("todayDate");
-    function formatToday(){
-      const d = new Date();
-      return d.toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
-    }
-    todaySpan.textContent = formatToday();
-    function checkDayChange(){
-      const stored = localStorage.getItem("cc-date");
-      const today = new Date().toDateString();
-      if(stored !== today){
-        // new day -> reset focus, wins, daily tasks checked state
-        localStorage.setItem("cc-date",today);
-        localStorage.removeItem("cc-focus");
-        localStorage.removeItem("cc-wins");
-        // do not wipe planner, weekly, yearly
-      }
-    }
-    checkDayChange();
-
-    // ===== FOCUS & WINS =====
-    const focusInput = document.getElementById("focusInput");
-    focusInput.value = localStorage.getItem("cc-focus") || "";
-    focusInput.oninput = ()=> localStorage.setItem("cc-focus",focusInput.value);
-
-    const winInput = document.getElementById("winInput");
-    const addWinBtn = document.getElementById("addWin");
-    const winsList = document.getElementById("winsList");
-
+    /* ===== FOCUS & WINS ===== */
+    const focusInput=document.getElementById("focusInput");
+    focusInput.value=localStorage.getItem("cc-focus")||"";
+    focusInput.oninput=()=>localStorage.setItem("cc-focus",focusInput.value);
+    document.getElementById("todayDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+    const winInput=document.getElementById("winInput"),addWin=document.getElementById("addWin"),winsList=document.getElementById("winsList");
     function loadWins(){
-      const arr = JSON.parse(localStorage.getItem("cc-wins")||"[]");
-      winsList.innerHTML = "";
-      arr.forEach((w,idx)=>{
-        const div = document.createElement("div");
-        div.className="wins-list-item";
-        const left=document.createElement("div");
-        left.innerHTML = `<div>${w.text}</div><small>${w.time}</small>`;
-        const del=document.createElement("button");
-        del.className="delete-btn";
-        del.textContent="Delete";
-        del.onclick=()=>{
-          arr.splice(idx,1);
-          localStorage.setItem("cc-wins",JSON.stringify(arr));
-          loadWins();
-        };
-        div.append(left,del);
+      const arr=JSON.parse(localStorage.getItem("cc-wins")||"[]");
+      winsList.innerHTML="";
+      arr.forEach((w,i)=>{
+        const div=document.createElement("div");
+        div.textContent=w.text;
+        div.className="daily-task";
+        div.onclick=()=>{arr.splice(i,1);localStorage.setItem("cc-wins",JSON.stringify(arr));loadWins();};
         winsList.appendChild(div);
       });
     }
+    addWin.onclick=()=>{
+      const t=winInput.value.trim();if(!t)return;
+      const arr=JSON.parse(localStorage.getItem("cc-wins")||"[]");
+      arr.unshift({text:t,date:Date.now()});
+      localStorage.setItem("cc-wins",JSON.stringify(arr));
+      winInput.value="";loadWins();
+    };
     loadWins();
 
-    addWinBtn.onclick = ()=>{
-      const text = winInput.value.trim();
-      if(!text) return;
-      const arr = JSON.parse(localStorage.getItem("cc-wins")||"[]");
-      arr.push({text, time:new Date().toLocaleTimeString()});
-      localStorage.setItem("cc-wins",JSON.stringify(arr));
-      winInput.value="";
-      loadWins();
-    };
-
-    // ===== PLANNER =====
-    const plannerTabs = document.querySelectorAll(".planner-tab");
-    const plannerBlocks = document.querySelectorAll(".planner-block");
-    plannerTabs.forEach(t=>{
-      t.onclick=()=>{
-        plannerTabs.forEach(x=>x.classList.remove("active"));
-        t.classList.add("active");
-        plannerBlocks.forEach(b=>b.classList.remove("active"));
-        document.getElementById(t.dataset.target).classList.add("active");
-      };
+    /* ===== PLANNER ===== */
+    const plannerTabs=document.querySelectorAll(".planner-tab");
+    const blocks=document.querySelectorAll(".planner-block");
+    plannerTabs.forEach(t=>t.onclick=()=>{
+      plannerTabs.forEach(x=>x.classList.remove("active"));
+      blocks.forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+      document.getElementById(t.dataset.target).classList.add("active");
     });
-
-    // yearly
-    const yearWord = document.getElementById("yearWord");
-    const yearGoal = document.getElementById("yearGoal");
-    yearWord.value = localStorage.getItem("cc-year-word") || "";
-    yearGoal.value = localStorage.getItem("cc-year-goal") || "";
-    yearWord.oninput = ()=> localStorage.setItem("cc-year-word",yearWord.value);
-    yearGoal.oninput = ()=> localStorage.setItem("cc-year-goal",yearGoal.value);
-
-    // weekly
-    const weeklyInputs = document.querySelectorAll(".weekly-input");
-    weeklyInputs.forEach(inp=>{
-      const key = "cc-weekly-"+inp.dataset.key;
-      inp.value = localStorage.getItem(key) || "";
-      inp.oninput = ()=> localStorage.setItem(key,inp.value);
+    const yearWord=document.getElementById("yearWord"),yearGoal=document.getElementById("yearGoal");
+    yearWord.value=localStorage.getItem("cc-yearWord")||"";
+    yearGoal.value=localStorage.getItem("cc-yearGoal")||"";
+    yearWord.oninput=()=>localStorage.setItem("cc-yearWord",yearWord.value);
+    yearGoal.oninput=()=>localStorage.setItem("cc-yearGoal",yearGoal.value);
+    document.querySelectorAll(".weekly-input").forEach(i=>{
+      i.value=localStorage.getItem("cc-"+i.dataset.key)||"";
+      i.oninput=()=>localStorage.setItem("cc-"+i.dataset.key,i.value);
     });
-    const weeklyNotes = document.getElementById("weeklyNotes");
-    weeklyNotes.value = localStorage.getItem("cc-weekly-notes") || "";
-    weeklyNotes.oninput = ()=> localStorage.setItem("cc-weekly-notes",weeklyNotes.value);
-
-    // daily checklist
-    const dailyInput = document.getElementById("dailyTaskInput");
-    const addDailyBtn = document.getElementById("addDailyTask");
-    const dailyTasksWrap = document.getElementById("dailyTasks");
-
-    function loadDailyTasks(){
-      const arr = JSON.parse(localStorage.getItem("cc-daily-tasks")||"[]");
-      dailyTasksWrap.innerHTML="";
-      arr.forEach((task,idx)=>{
-        const row=document.createElement("div");
-        row.className="daily-task"+(task.done?" done":"");
-        const cb=document.createElement("input");
-        cb.type="checkbox";
-        cb.checked=task.done;
-        cb.onchange=()=>{
-          task.done = cb.checked;
-          arr[idx]=task;
-          localStorage.setItem("cc-daily-tasks",JSON.stringify(arr));
-          loadDailyTasks();
-        };
-        const span=document.createElement("span");
-        span.textContent=task.text;
-        const del=document.createElement("button");
-        del.className="delete-btn";
-        del.textContent="Delete";
-        del.onclick=()=>{
-          arr.splice(idx,1);
-          localStorage.setItem("cc-daily-tasks",JSON.stringify(arr));
-          loadDailyTasks();
-        };
-        row.append(cb,span,del);
-        dailyTasksWrap.appendChild(row);
+    const weeklyNotes=document.getElementById("weeklyNotes");
+    weeklyNotes.value=localStorage.getItem("cc-weeklyNotes")||"";
+    weeklyNotes.oninput=()=>localStorage.setItem("cc-weeklyNotes",weeklyNotes.value);
+    const dailyTaskInput=document.getElementById("dailyTaskInput"),addDailyTask=document.getElementById("addDailyTask"),dailyTasks=document.getElementById("dailyTasks");
+    function loadDaily(){
+      const arr=JSON.parse(localStorage.getItem("cc-dailyTasks")||"[]");
+      dailyTasks.innerHTML="";
+      arr.forEach((t,i)=>{
+        const d=document.createElement("div");
+        d.className="daily-task"+(t.done?" done":"");
+        d.innerHTML=`<input type="checkbox" ${t.done?"checked":""}><span>${t.text}</span>`;
+        const box=d.querySelector("input");
+        box.onchange=()=>{arr[i].done=box.checked;localStorage.setItem("cc-dailyTasks",JSON.stringify(arr));loadDaily();};
+        dailyTasks.appendChild(d);
       });
     }
-    loadDailyTasks();
-
-    addDailyBtn.onclick = ()=>{
-      const text = dailyInput.value.trim();
-      if(!text) return;
-      const arr = JSON.parse(localStorage.getItem("cc-daily-tasks")||"[]");
-      arr.push({text,done:false});
-      localStorage.setItem("cc-daily-tasks",JSON.stringify(arr));
-      dailyInput.value="";
-      loadDailyTasks();
+    addDailyTask.onclick=()=>{
+      const val=dailyTaskInput.value.trim();if(!val)return;
+      const arr=JSON.parse(localStorage.getItem("cc-dailyTasks")||"[]");
+      arr.push({text:val,done:false});
+      localStorage.setItem("cc-dailyTasks",JSON.stringify(arr));
+      dailyTaskInput.value="";loadDaily();
     };
+    loadDaily();
 
-    // ===== WORKOUT =====
-    const workoutDaysEl = document.getElementById("workoutDays");
-    const workoutListEl = document.getElementById("workoutList");
-    const workoutProgress = document.getElementById("workoutProgress");
-    const addCustomExercise = document.getElementById("addCustomExercise");
-
-    // prebuilt split (you said "what we had before" so making a full 7 day split)
-    const baseWorkouts = {
-      Monday:[
-        "Flat Barbell Bench Press 4x8",
-        "Incline Dumbbell Press 3x10",
-        "Cable Fly 3x12",
-        "Pushups 2x15"
-      ],
-      Tuesday:[
-        "Deadlift 4x5",
-        "Bent Over Row 3x8",
-        "Lat Pulldown 3x10",
-        "Seated Cable Row 3x10"
-      ],
-      Wednesday:[
-        "Back Squat 4x8",
-        "Leg Press 3x12",
-        "Walking Lunges 2x20 steps",
-        "Leg Curl 3x12"
-      ],
-      Thursday:[
-        "Shoulder Press 4x8",
-        "Side Lateral Raises 3x12",
-        "Rear Delt Fly 3x12",
-        "Close Grip Pushups 2x15"
-      ],
-      Friday:[
-        "Hanging Leg Raises 3x12",
-        "Plank 3x45s",
-        "Russian Twists 3x20",
-        "Bike 10 minutes"
-      ],
-      Saturday:[
-        "Full Body Circuit 3 rounds",
-        "Pullups 3xMax",
-        "Dips 3x10"
-      ],
-      Sunday:[
-        "Mobility Flow 20min",
-        "Walk 30min"
-      ]
-    };
-
-    const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    const todayName = dayNames[new Date().getDay()];
-
-    let currentWorkoutDay = todayName;
-
-    function renderWorkoutDays(){
-      workoutDaysEl.innerHTML="";
-      dayNames.forEach(day=>{
-        const b=document.createElement("button");
-        b.className="workout-day-btn"+(day===currentWorkoutDay?" active":"");
-        b.textContent=day;
-        b.onclick=()=>{
-          currentWorkoutDay=day;
-          renderWorkoutDays();
-          renderWorkoutList();
-        };
-        workoutDaysEl.appendChild(b);
-      });
-    }
-
-    function getWorkoutData(){
-      const local = JSON.parse(localStorage.getItem("cc-workouts")||"{}");
-      // ensure all days
-      dayNames.forEach(d=>{
-        if(!local[d]) local[d] = baseWorkouts[d] ? baseWorkouts[d].map(name=>({name,done:false})) : [];
-      });
-      return local;
-    }
-
-    function saveWorkoutData(data){
-      localStorage.setItem("cc-workouts",JSON.stringify(data));
-    }
-
-    function renderWorkoutList(){
-      const data = getWorkoutData();
-      const list = data[currentWorkoutDay] || [];
-      workoutListEl.innerHTML="";
-      let doneCount=0;
-      list.forEach((ex,idx)=>{
+    /* ===== WORKOUT ===== */
+    const workoutDaysEl=document.getElementById("workoutDays");
+    const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+    days.forEach((d,i)=>{
+      const b=document.createElement("div");
+      b.className="workout-day-btn";
+      b.textContent=d;
+      b.onclick=()=>{selectDay(i);};
+      workoutDaysEl.appendChild(b);
+    });
+    const workoutList=document.getElementById("workoutList");
+    const workoutProgress=document.getElementById("workoutProgress");
+    let currentDay=0;
+    function selectDay(i){currentDay=i;renderWorkout();}
+    function renderWorkout(){
+      document.querySelectorAll(".workout-day-btn").forEach((b,idx)=>b.classList.toggle("active",idx===currentDay));
+      const arr=JSON.parse(localStorage.getItem("cc-workouts")||"{}");
+      const list=arr[days[currentDay]]||[];
+      workoutList.innerHTML="";
+      list.forEach((e,idx)=>{
         const line=document.createElement("div");
-        line.className="exercise-line"+(ex.done?" complete":"");
-        const name=document.createElement("span");
-        name.textContent=ex.name;
-        const actions=document.createElement("div");
-        const toggleBtn=document.createElement("button");
-        toggleBtn.className="delete-btn";
-        toggleBtn.textContent=ex.done ? "Undo" : "Done";
-        toggleBtn.onclick=()=>{
-          ex.done = !ex.done;
-          data[currentWorkoutDay][idx] = ex;
-          saveWorkoutData(data);
-          renderWorkoutList();
-        };
-        const delBtn=document.createElement("button");
-        delBtn.className="delete-btn";
-        delBtn.textContent="Delete";
-        delBtn.onclick=()=>{
-          data[currentWorkoutDay].splice(idx,1);
-          saveWorkoutData(data);
-          renderWorkoutList();
-        };
-        actions.append(toggleBtn,delBtn);
-        line.append(name,actions);
-        workoutListEl.appendChild(line);
-        if(ex.done) doneCount++;
+        line.className="exercise-line"+(e.done?" complete":"");
+        line.innerHTML=`<span>${e.name}</span><input type='checkbox' ${e.done?"checked":""}>`;
+        const box=line.querySelector("input");
+        box.onchange=()=>{list[idx].done=box.checked;arr[days[currentDay]]=list;localStorage.setItem("cc-workouts",JSON.stringify(arr));renderWorkout();};
+        workoutList.appendChild(line);
       });
-      const pct = list.length ? (doneCount/list.length)*100 : 0;
-      workoutProgress.style.width = pct+"%";
+      const done=list.filter(x=>x.done).length;
+      const pct=list.length?Math.round((done/list.length)*100):0;
+      workoutProgress.style.width=pct+"%";
     }
-
-    addCustomExercise.onclick = ()=>{
-      const name = prompt("Exercise name");
-      if(!name) return;
-      const data = getWorkoutData();
-      data[currentWorkoutDay].push({name,done:false});
-      saveWorkoutData(data);
-      renderWorkoutList();
+    document.getElementById("addCustomExercise").onclick=()=>{
+      const name=prompt("Exercise name?");
+      if(!name)return;
+      const arr=JSON.parse(localStorage.getItem("cc-workouts")||"{}");
+      arr[days[currentDay]]=arr[days[currentDay]]||[];
+      arr[days[currentDay]].push({name,done:false});
+      localStorage.setItem("cc-workouts",JSON.stringify(arr));
+      renderWorkout();
     };
+    renderWorkout();
 
-    renderWorkoutDays();
-    renderWorkoutList();
-
-<!-- ===== GALLERY ===== -->
-<section id="gallery">
-  <div class="card">
-    <h2 class="section-title">Photo Gallery</h2>
-    <div class="row" style="margin-bottom:10px;">
-      <input id="photoUpload" type="file" multiple accept="image/*" class="input-field" style="flex:1;">
-    </div>
-    <small id="photoStats" style="opacity:0.6;display:block;margin-bottom:8px;"></small>
-    <div id="photoFeed" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;"></div>
-  </div>
-</section>
-
-<!-- ===== GALLERY MODAL ===== -->
-<div id="photoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100;">
-  <div style="max-width:90%;max-height:90%;position:relative;">
-    <img id="modalImg" src="" style="max-width:100%;max-height:75vh;display:block;margin:0 auto;border-radius:14px;">
-    <textarea id="modalNote" placeholder="Add a note about this photo..." style="width:100%;margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.1);color:#fff;border:none;resize:none;"></textarea>
-    <div style="margin-top:10px;text-align:center;">
-      <button id="saveNote" class="btn">Save</button>
-      <button id="deletePhoto" class="delete-btn">Delete</button>
-      <button id="closeModal" class="btn" style="background:rgba(255,255,255,0.1);color:#fff;">Close</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ===== GALLERY SCRIPT =====
-const photoUpload = document.getElementById("photoUpload");
-const photoFeed   = document.getElementById("photoFeed");
-const photoStats  = document.getElementById("photoStats");
-const modal       = document.getElementById("photoModal");
-const modalImg    = document.getElementById("modalImg");
-const modalNote   = document.getElementById("modalNote");
-const saveNoteBtn = document.getElementById("saveNote");
-const deleteBtn   = document.getElementById("deletePhoto");
-const closeBtn    = document.getElementById("closeModal");
-let currentIndex = null;
-
-function loadGallery(){
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  photoFeed.innerHTML = "";
-  const month = new Date().getMonth();
-  const monthly = arr.filter(p => new Date(p.date || Date.now()).getMonth() === month).length;
-  photoStats.textContent = `${arr.length} total • ${monthly} this month`;
-
-  arr.forEach((p,i)=>{
-    const img = document.createElement("img");
-    img.src = p.src;
-    img.style.width = "100%";
-    img.style.height = "100px";
-    img.style.objectFit = "cover";
-    img.style.borderRadius = "10px";
-    img.style.cursor = "pointer";
-    img.onclick = ()=>openModal(i);
-    photoFeed.appendChild(img);
-  });
-}
-
-photoUpload.onchange = e =>
-
-    // ===== MEDIA =====
-    const videoGrid = document.getElementById("videoGrid");
-    const videos = [
-      "https://www.youtube.com/embed/ZXsQAXx_ao0",
-      "https://www.youtube.com/embed/26U_seo0a1g",
-      "https://www.youtube.com/embed/KxGRhd_iWuE"
-    ];
-    videoGrid.innerHTML = videos.map(v=>`<iframe src="${v}" allowfullscreen></iframe>`).join("");
-
-    // ===== SETTINGS: EXPORT / IMPORT / RESET / INSTALL INFO =====
-    document.getElementById("exportData").onclick = ()=>{
-      const dump = JSON.stringify(localStorage,null,2);
-      const blob = new Blob([dump],{type:"application/json"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "command-center-backup.json";
-      a.click();
+    /* ===== GALLERY ===== */
+    const photoUpload=document.getElementById("photoUpload"),photoFeed=document.getElementById("photoFeed"),photoStats=document.getElementById("photoStats"),modal=document.getElementById("photoModal"),modalImg=document.getElementById("modalImg"),modalNote=document.getElementById("modalNote"),saveNote=document.getElementById("saveNote"),deletePhoto=document.getElementById("deletePhoto"),closeModal=document.getElementById("closeModal");
+    let currentIndex=null;
+    function loadGallery(){
+      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+      photoFeed.innerHTML="";
+      const m=new Date().getMonth();
+      const monthly=arr.filter(p=>new Date(p.date||Date.now()).getMonth()===m).length;
+      photoStats.textContent=`${arr.length} total • ${monthly} this month`;
+      arr.forEach((p,i)=>{
+        const img=document.createElement("img");
+        img.src=p.src;
+        img.style.width="100%";
+        img.style.height="100px";
+        img.style.objectFit="cover";
+        img.style.borderRadius="10px";
+        img.style.cursor="pointer";
+        img.onclick=()=>openModal(i);
+        photoFeed.appendChild(img);
+      });
+    }
+    photoUpload.onchange=e=>{
+      const files=[...e.target.files];
+      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+      files.forEach(f=>{
+        const r=new FileReader();
+        r.onload=()=>{
+          arr.unshift({src:r.result,note:"",date:Date.now()});
+          localStorage.setItem("cc-photos",JSON.stringify(arr));
+          loadGallery();
+        };
+        r.readAsDataURL(f);
+      });
     };
-    document.getElementById("importData").onchange = e=>{
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = ()=>{
-        const json = JSON.parse(reader.result);
-        for(const [k,v] of Object.entries(json)){
-          localStorage.setItem(k,v);
-        }
-        alert("Data imported. Reloading.");
-        location.reload();
-      };
-      reader.readAsText(file);
-    };
-    document.getElementById("resetAll").onclick = ()=>{
-      if(confirm("Reset all Command Center data?")){
-        localStorage.clear();
-        location.reload();
+    function openModal(i){
+      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+      currentIndex=i;
+      const p=arr[i];
+      modalImg.src=p.src;
+      modalNote.value=p.note||"";
+      modal.style.display="flex";
+    }
+    saveNote.onclick=()=>{
+      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+      if(currentIndex!==null){
+        arr[currentIndex].note=modalNote.value.trim();
+        localStorage.setItem("cc-photos",JSON.stringify(arr));
       }
+      modal.style.display="none";
+      loadGallery();
     };
-    document.getElementById("installInfo").onclick = ()=>{
-      alert("On iPhone: Open this page in Safari → Share → Add to Home Screen. Then it opens like an app.");
+    deletePhoto.onclick=()=>{
+      const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
+      if(currentIndex!==null){
+        arr.splice(currentIndex,1);
+        localStorage.setItem("cc-photos",JSON.stringify(arr));
+      }
+      modal.style.display="none";
+      loadGallery();
     };
+    closeModal.onclick=()=>modal.style.display="none";
+    window.onclick=e=>{if(e.target===modal)modal.style.display="none";};
+    loadGallery();
 
-    // ===== REGISTER SW (PWA) =====
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
-    }
+    /* ===== MEDIA ===== */
+    const videoGrid=document.getElementById("videoGrid");
+    const vids=["https://www.youtube.com/embed/ZXsQAXx_ao0","https://www.youtube.com/embed/26U_seo0a1g","https://www.youtube.com/embed/KxGRhd_iWuE"];
+    videoGrid.innerHTML=vids.map(v=>`<iframe src="${v}" allowfullscreen style="width:100%;height:200px;border:none;border-radius:12px;"></iframe>`).join("");
   </script>
 </body>
 </html>
