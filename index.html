@@ -265,17 +265,6 @@
       width:0%;
       transition:width .3s ease;
     }
-   <!-- ========================= GALLERY ========================= -->
-<section id="gallery">
-  <div class="card">
-    <h2 class="section-title">Gallery</h2>
-    <div id="photoStats" class="gallery-stats"></div>
-    <label for="photoUpload" class="upload-btn">＋ Add Photos</label>
-    <input type="file" id="photoUpload" accept="image/*" multiple hidden>
-    <div id="photoFeed"></div>
-  </div>
-</section>
-<!-- ======================= END GALLERY ======================= -->
 
     /* media */
     .video-grid{display:grid;gap:10px;}
@@ -310,73 +299,6 @@
       header,nav{left:50%;transform:translateX(-50%);max-width:1100px;}
       #settingsDrawer{max-width:1100px;left:50%;transform:translateX(-50%);}
     }
-  /* --- enhanced gallery --- */
-.gallery-stats{
-  font-size:.8rem;
-  opacity:.7;
-  margin-bottom:6px;
-  text-align:center;
-}
-.upload-btn{
-  width:100%;
-  border:1px dashed rgba(212,175,55,0.4);
-  border-radius:12px;
-  background:rgba(255,255,255,0.02);
-  padding:12px;
-  color:#aaa;
-  cursor:pointer;
-  margin-bottom:12px;
-  transition:var(--trans);
-}
-.upload-btn:hover{
-  background:rgba(212,175,55,0.15);
-  color:var(--gold);
-}
-#photoFeed{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  gap:4px;
-}
-.post{
-  position:relative;
-  overflow:hidden;
-  cursor:pointer;
-  border-radius:6px;
-}
-.post img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  transition:transform .3s ease;
-}
-.post:hover img{transform:scale(1.05);}
-.post-expanded{
-  grid-column:1 / -1;
-  background:rgba(255,255,255,0.02);
-  border:1px solid rgba(212,175,55,0.1);
-  border-radius:16px;
-  overflow:hidden;
-  animation:fade .4s ease;
-}
-.post-expanded img{
-  width:100%;
-  height:auto;
-  display:block;
-  border-bottom:1px solid rgba(212,175,55,0.2);
-}
-.post-caption{
-  padding:10px 14px;
-  font-size:0.9rem;
-}
-.post-meta{
-  font-size:0.7rem;
-  opacity:0.6;
-  margin-top:4px;
-}
-@media(min-width:700px){
-  #photoFeed{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
-}
-
   </style>
 </head>
 <body>
