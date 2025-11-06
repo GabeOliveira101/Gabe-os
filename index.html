@@ -265,36 +265,18 @@
       width:0%;
       transition:width .3s ease;
     }
-    /* gallery */
-    #photoGrid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:5px;
-    }
-    #photoGrid img{
-      width:100%;
-      border-radius:6px;
-      cursor:pointer;
-      transition:var(--trans);
-    }
-    #photoGrid img:hover{transform:scale(1.02);}
-    #photoModal{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.7);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      z-index:200;
-      padding:16px;
-    }
-    #photoModal img{max-width:90%;max-height:60%;border-radius:10px;}
-    #photoModal textarea{
-      margin-top:10px;
-      max-width:480px;
-      width:100%;
-    }
+   <!-- ========================= GALLERY ========================= -->
+<section id="gallery">
+  <div class="card">
+    <h2 class="section-title">Gallery</h2>
+    <div id="photoStats" class="gallery-stats"></div>
+    <label for="photoUpload" class="upload-btn">＋ Add Photos</label>
+    <input type="file" id="photoUpload" accept="image/*" multiple hidden>
+    <div id="photoFeed"></div>
+  </div>
+</section>
+<!-- ======================= END GALLERY ======================= -->
+
     /* media */
     .video-grid{display:grid;gap:10px;}
     /* nav */
@@ -489,7 +471,71 @@
       </div>
     </section>
 
-   
+  // ===== GALLERY =====
+const photoUpload = document.getElementById("photoUpload");
+const photoFeed   = document.getElementById("photoFeed");
+const photoStats  = document.getElementById("photoStats");
+
+function loadGallery(){
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  photoFeed.innerHTML = "";
+
+  const month = new Date().getMonth();
+  const monthly = arr.filter(p => new Date(p.date||Date.now()).getMonth() === month).length;
+  photoStats.textContent = `${arr.length} total • ${monthly} this month`;
+
+  arr.forEach((p,i)=>{
+    const post = document.createElement("div");
+    post.className = "post";
+    const img = document.createElement("img");
+    img.src = p.src;
+    post.appendChild(img);
+    post.onclick = ()=>expandFeed(i);
+    photoFeed.appendChild(post);
+  });
+}
+
+function expandFeed(index){
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  photoFeed.innerHTML = "";
+  arr.forEach((p,i)=>{
+    const expanded = document.createElement("div");
+    expanded.className = "post-expanded";
+    expanded.innerHTML = `
+      <img src="${p.src}">
+      <div class="post-caption">
+        ${p.note || "<i>No caption</i>"}
+        <div class="post-meta">${new Date(p.date||Date.now()).toLocaleDateString()} • 
+          <button class="delete-btn" style="font-size:.7rem">Delete</button>
+        </div>
+      </div>`;
+    expanded.querySelector("button").onclick = ()=>{
+      arr.splice(i,1);
+      localStorage.setItem("cc-photos",JSON.stringify(arr));
+      loadGallery();
+    };
+    photoFeed.appendChild(expanded);
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+photoUpload.onchange = e => {
+  const files = [...e.target.files];
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  files.forEach(f=>{
+    const r = new FileReader();
+    r.onload = ()=>{
+      arr.unshift({src:r.result,note:"",date:Date.now()});
+      localStorage.setItem("cc-photos",JSON.stringify(arr));
+      loadGallery();
+    };
+    r.readAsDataURL(f);
+  });
+};
+
+loadGallery();
+// ===== MEDIA =====
+
 
 
     <!-- Media -->
