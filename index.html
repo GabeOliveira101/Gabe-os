@@ -393,83 +393,6 @@
       </div>
     </section>
 
-// ===== GALLERY =====
-const photoUpload = document.getElementById("photoUpload");
-const photoFeed   = document.getElementById("photoFeed");
-const photoStats  = document.getElementById("photoStats");
-
-const modal       = document.getElementById("photoModal");
-const modalImg    = document.getElementById("modalImg");
-const modalNote   = document.getElementById("modalNote");
-const saveNoteBtn = document.getElementById("saveNote");
-const deleteBtn   = document.getElementById("deletePhoto");
-const closeBtn    = document.getElementById("closeModal");
-
-let currentIndex = null;
-
-function loadGallery(){
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  photoFeed.innerHTML = "";
-  const month = new Date().getMonth();
-  const monthly = arr.filter(p => new Date(p.date||Date.now()).getMonth() === month).length;
-  photoStats.textContent = `${arr.length} total • ${monthly} this month`;
-
-  arr.forEach((p,i)=>{
-    const img = document.createElement("img");
-    img.src = p.src;
-    img.onclick = ()=>openModal(i);
-    photoFeed.appendChild(img);
-  });
-}
-
-photoUpload.onchange = e => {
-  const files = [...e.target.files];
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  files.forEach(f=>{
-    const r = new FileReader();
-    r.onload = ()=>{
-      arr.unshift({src:r.result,note:"",date:Date.now()});
-      localStorage.setItem("cc-photos",JSON.stringify(arr));
-      loadGallery();
-    };
-    r.readAsDataURL(f);
-  });
-};
-
-function openModal(index){
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  const p = arr[index];
-  currentIndex = index;
-  modalImg.src = p.src;
-  modalNote.value = p.note || "";
-  modal.style.display = "flex";
-}
-
-saveNoteBtn.onclick = ()=>{
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  if(currentIndex!==null){
-    arr[currentIndex].note = modalNote.value.trim();
-    localStorage.setItem("cc-photos",JSON.stringify(arr));
-  }
-  modal.style.display = "none";
-  loadGallery();
-};
-
-deleteBtn.onclick = ()=>{
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-  if(currentIndex!==null){
-    arr.splice(currentIndex,1);
-    localStorage.setItem("cc-photos",JSON.stringify(arr));
-  }
-  modal.style.display = "none";
-  loadGallery();
-};
-
-closeBtn.onclick = ()=> modal.style.display = "none";
-
-window.onclick = e => { if(e.target===modal) modal.style.display="none"; };
-
-loadGallery();
 
     <!-- Media -->
     <section id="media">
@@ -794,68 +717,65 @@ loadGallery();
     renderWorkoutDays();
     renderWorkoutList();
 
- // ===== GALLERY =====
-const photoUpload=document.getElementById("photoUpload");
-const photoFeed=document.getElementById("photoFeed");
-const photoStats=document.getElementById("photoStats");
+<!-- ===== GALLERY ===== -->
+<section id="gallery">
+  <div class="card">
+    <h2 class="section-title">Photo Gallery</h2>
+    <div class="row" style="margin-bottom:10px;">
+      <input id="photoUpload" type="file" multiple accept="image/*" class="input-field" style="flex:1;">
+    </div>
+    <small id="photoStats" style="opacity:0.6;display:block;margin-bottom:8px;"></small>
+    <div id="photoFeed" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;"></div>
+  </div>
+</section>
+
+<!-- ===== GALLERY MODAL ===== -->
+<div id="photoModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100;">
+  <div style="max-width:90%;max-height:90%;position:relative;">
+    <img id="modalImg" src="" style="max-width:100%;max-height:75vh;display:block;margin:0 auto;border-radius:14px;">
+    <textarea id="modalNote" placeholder="Add a note about this photo..." style="width:100%;margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.1);color:#fff;border:none;resize:none;"></textarea>
+    <div style="margin-top:10px;text-align:center;">
+      <button id="saveNote" class="btn">Save</button>
+      <button id="deletePhoto" class="delete-btn">Delete</button>
+      <button id="closeModal" class="btn" style="background:rgba(255,255,255,0.1);color:#fff;">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== GALLERY SCRIPT =====
+const photoUpload = document.getElementById("photoUpload");
+const photoFeed   = document.getElementById("photoFeed");
+const photoStats  = document.getElementById("photoStats");
+const modal       = document.getElementById("photoModal");
+const modalImg    = document.getElementById("modalImg");
+const modalNote   = document.getElementById("modalNote");
+const saveNoteBtn = document.getElementById("saveNote");
+const deleteBtn   = document.getElementById("deletePhoto");
+const closeBtn    = document.getElementById("closeModal");
+let currentIndex = null;
 
 function loadGallery(){
-  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-  photoFeed.innerHTML="";
-  // stats
-  const month=new Date().getMonth();
-  const monthly=arr.filter(p=>new Date(p.date||Date.now()).getMonth()===month).length;
-  photoStats.textContent=`${arr.length} total • ${monthly} this month`;
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  photoFeed.innerHTML = "";
+  const month = new Date().getMonth();
+  const monthly = arr.filter(p => new Date(p.date || Date.now()).getMonth() === month).length;
+  photoStats.textContent = `${arr.length} total • ${monthly} this month`;
 
   arr.forEach((p,i)=>{
-    const post=document.createElement("div");
-    post.className="post";
-    const img=document.createElement("img");
-    img.src=p.src;
-    post.appendChild(img);
-    post.onclick=()=>expandPost(i);
-    photoFeed.appendChild(post);
+    const img = document.createElement("img");
+    img.src = p.src;
+    img.style.width = "100%";
+    img.style.height = "100px";
+    img.style.objectFit = "cover";
+    img.style.borderRadius = "10px";
+    img.style.cursor = "pointer";
+    img.onclick = ()=>openModal(i);
+    photoFeed.appendChild(img);
   });
 }
 
-function expandPost(index){
-  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-  const feed=document.getElementById("photoFeed");
-  feed.innerHTML="";
-  arr.forEach((p,i)=>{
-    const expanded=document.createElement("div");
-    expanded.className="post-expanded";
-    expanded.innerHTML=`
-      <img src="${p.src}">
-      <div class="post-caption">
-        ${p.note||"<i>No caption</i>"}
-        <div class="post-meta">${new Date(p.date||Date.now()).toLocaleDateString()} • <button class="delete-btn" style="font-size:.7rem">Delete</button></div>
-      </div>`;
-    expanded.querySelector("button").onclick=()=>{
-      arr.splice(i,1);
-      localStorage.setItem("cc-photos",JSON.stringify(arr));
-      loadGallery();
-    };
-    feed.appendChild(expanded);
-  });
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-photoUpload.onchange=e=>{
-  const files=[...e.target.files];
-  const arr=JSON.parse(localStorage.getItem("cc-photos")||"[]");
-  files.forEach(f=>{
-    const r=new FileReader();
-    r.onload=()=>{
-      arr.unshift({src:r.result,note:"",date:Date.now()});
-      localStorage.setItem("cc-photos",JSON.stringify(arr));
-      loadGallery();
-    };
-    r.readAsDataURL(f);
-  });
-};
-loadGallery();
-
+photoUpload.onchange = e =>
 
     // ===== MEDIA =====
     const videoGrid = document.getElementById("videoGrid");
