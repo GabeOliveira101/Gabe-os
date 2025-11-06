@@ -776,6 +776,12 @@ photoUpload.onchange = async e => {
 
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
 
+  photoUpload.onchange = async e => {
+  const files = [...e.target.files];
+  if (!files.length) return;
+
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+
   for (const file of files) {
     await new Promise(resolve => {
       const r = new FileReader();
@@ -783,16 +789,15 @@ photoUpload.onchange = async e => {
         arr.unshift({ src: r.result, note: "", date: Date.now() });
         resolve();
       };
+      r.readAsDataURL(file);
+    });
+  }
 
   localStorage.setItem("cc-photos", JSON.stringify(arr));
-  e.target.value = "";
-  loadGallery();
-
-
-    r.readAsDataURL(f);
-  });
-  e.target.value = ""; // reset input
+  e.target.value = ""; // reset file input
+  loadGallery(); // re-render after all uploads finish
 };
+
 
 /* Modal behavior (view full image + note) */
 function openModal(i) {
