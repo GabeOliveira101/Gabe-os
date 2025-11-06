@@ -393,100 +393,83 @@
       </div>
     </section>
 
-<!-- ========================= GALLERY ========================= -->
-<section id="gallery">
-  <div class="card">
-    <h2 class="section-title">Gallery</h2>
-    <div id="photoStats" class="gallery-stats"></div>
+// ===== GALLERY =====
+const photoUpload = document.getElementById("photoUpload");
+const photoFeed   = document.getElementById("photoFeed");
+const photoStats  = document.getElementById("photoStats");
 
-    <label for="photoUpload" class="upload-btn">＋ Upload Photos</label>
-    <input type="file" id="photoUpload" accept="image/*" multiple hidden>
+const modal       = document.getElementById("photoModal");
+const modalImg    = document.getElementById("modalImg");
+const modalNote   = document.getElementById("modalNote");
+const saveNoteBtn = document.getElementById("saveNote");
+const deleteBtn   = document.getElementById("deletePhoto");
+const closeBtn    = document.getElementById("closeModal");
 
-    <div id="photoFeed" class="photo-grid"></div>
-  </div>
+let currentIndex = null;
 
-  <!-- Fullscreen Modal -->
-  <div id="photoModal" class="modal">
-    <div class="modal-content">
-      <img id="modalImg" src="" alt="">
-      <textarea id="modalNote" placeholder="Add a note about this photo..."></textarea>
-      <div class="modal-actions">
-        <button id="saveNote">💾 Save</button>
-        <button id="deletePhoto">🗑️ Delete</button>
-        <button id="closeModal">✖ Close</button>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- ======================= END GALLERY ======================= -->
-/* --- Enhanced Instagram-Style Gallery --- */
-.photo-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:6px;
-}
-.photo-grid img{
-  width:100%;
-  height:130px;
-  object-fit:cover;
-  border-radius:8px;
-  cursor:pointer;
-  transition:transform .25s ease;
-}
-.photo-grid img:hover{transform:scale(1.05);}
+function loadGallery(){
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  photoFeed.innerHTML = "";
+  const month = new Date().getMonth();
+  const monthly = arr.filter(p => new Date(p.date||Date.now()).getMonth() === month).length;
+  photoStats.textContent = `${arr.length} total • ${monthly} this month`;
 
-/* Modal */
-.modal{
-  position:fixed;
-  top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.8);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
+  arr.forEach((p,i)=>{
+    const img = document.createElement("img");
+    img.src = p.src;
+    img.onclick = ()=>openModal(i);
+    photoFeed.appendChild(img);
+  });
 }
-.modal-content{
-  background:#0d0f1a;
-  padding:16px;
-  border-radius:16px;
-  max-width:90%;
-  box-shadow:0 0 20px rgba(212,175,55,0.25);
-}
-.modal-content img{
-  width:100%;
-  border-radius:12px;
-  margin-bottom:10px;
-}
-.modal-content textarea{
-  width:100%;
-  min-height:60px;
-  border:none;
-  border-radius:8px;
-  padding:8px;
-  background:rgba(255,255,255,0.05);
-  color:#fff;
-  font-family:Inter,sans-serif;
-  resize:none;
-}
-.modal-actions{
-  display:flex;
-  justify-content:space-between;
-  margin-top:8px;
-}
-.modal-actions button{
-  background:rgba(212,175,55,0.15);
-  border:none;
-  border-radius:8px;
-  color:#FFD700;
-  padding:8px 12px;
-  cursor:pointer;
-  font-weight:600;
-  transition:all .2s ease;
-}
-.modal-actions button:hover{background:rgba(212,175,55,0.35);}
 
+photoUpload.onchange = e => {
+  const files = [...e.target.files];
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  files.forEach(f=>{
+    const r = new FileReader();
+    r.onload = ()=>{
+      arr.unshift({src:r.result,note:"",date:Date.now()});
+      localStorage.setItem("cc-photos",JSON.stringify(arr));
+      loadGallery();
+    };
+    r.readAsDataURL(f);
+  });
+};
 
+function openModal(index){
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  const p = arr[index];
+  currentIndex = index;
+  modalImg.src = p.src;
+  modalNote.value = p.note || "";
+  modal.style.display = "flex";
+}
 
+saveNoteBtn.onclick = ()=>{
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  if(currentIndex!==null){
+    arr[currentIndex].note = modalNote.value.trim();
+    localStorage.setItem("cc-photos",JSON.stringify(arr));
+  }
+  modal.style.display = "none";
+  loadGallery();
+};
+
+deleteBtn.onclick = ()=>{
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  if(currentIndex!==null){
+    arr.splice(currentIndex,1);
+    localStorage.setItem("cc-photos",JSON.stringify(arr));
+  }
+  modal.style.display = "none";
+  loadGallery();
+};
+
+closeBtn.onclick = ()=> modal.style.display = "none";
+
+window.onclick = e => { if(e.target===modal) modal.style.display="none"; };
+
+loadGallery();
 
     <!-- Media -->
     <section id="media">
