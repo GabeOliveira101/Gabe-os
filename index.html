@@ -794,19 +794,21 @@ window.onclick = e => {
 };
 
 loadGallery();
-
-
-/* fixed multi-upload */
+/* ---------- FIXED GALLERY ---------- */
 photoUpload.onchange = async e => {
   const files = [...e.target.files];
   if (!files.length) return;
+
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
 
   for (const file of files) {
     await new Promise(resolve => {
       const r = new FileReader();
       r.onload = () => {
-        arr.unshift({ src: r.result, note: "", date: Date.now() });
+        // Skip saving large photos to avoid storage errors
+        if (r.result.length < 2000000) { // ~2MB max
+          arr.unshift({ src: r.result, note: "", date: Date.now() });
+        }
         resolve();
       };
       r.readAsDataURL(file);
@@ -824,19 +826,22 @@ function openModal(i) {
   const p = arr[i];
   modalImg.src = p.src;
   modalNote.value = p.note || "";
-  modal.style.display = "flex";
+  photoModal.style.display = "flex";
   document.body.style.overflow = "hidden";
 }
+
 function closeGalleryModal() {
-  modal.style.display = "none";
+  photoModal.style.display = "none";
   document.body.style.overflow = "";
   currentIndex = null;
 }
+
 closeModal.onclick = closeGalleryModal;
-window.onclick = e => { if (e.target === modal) closeGalleryModal(); };
+window.onclick = e => { if (e.target === photoModal) closeGalleryModal(); };
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && modal.style.display === "flex") closeGalleryModal();
+  if (e.key === "Escape" && photoModal.style.display === "flex") closeGalleryModal();
 });
+
 saveNote.onclick = () => {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   if (currentIndex !== null) {
@@ -846,6 +851,7 @@ saveNote.onclick = () => {
   closeGalleryModal();
   loadGallery();
 };
+
 deletePhoto.onclick = () => {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   if (currentIndex !== null) {
@@ -855,7 +861,7 @@ deletePhoto.onclick = () => {
   closeGalleryModal();
   loadGallery();
 };
-loadGallery();
+
 
 /* ---------- MEDIA ---------- */
 const videoGrid = document.getElementById("videoGrid");
