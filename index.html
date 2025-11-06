@@ -530,6 +530,82 @@ loadDaily();
 /* ---------- WORKOUT ---------- */
 const workoutDaysEl=document.getElementById("workoutDays");
 const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+ const defaultPlan = {
+  Mon:[ // Chest & Triceps (Power Aesthetic)
+    {name:"Flat Barbell Bench Press",done:false},
+    {name:"Incline Dumbbell Press",done:false},
+    {name:"Cable Fly (Mid-Chest)",done:false},
+    {name:"Weighted Dips",done:false},
+    {name:"Close-Grip Bench Press",done:false},
+    {name:"Overhead Dumbbell Extension",done:false},
+    {name:"Triceps Rope Pushdown",done:false},
+    {name:"Push-ups Burnout",done:false}
+  ],
+  Tue:[ // Back & Biceps (Width & Strength)
+    {name:"Wide-Grip Pull-Ups",done:false},
+    {name:"Lat Pulldown",done:false},
+    {name:"T-Bar Row",done:false},
+    {name:"Seated Cable Row",done:false},
+    {name:"Barbell Curl",done:false},
+    {name:"Incline Dumbbell Curl",done:false},
+    {name:"Hammer Curl",done:false},
+    {name:"Face Pull",done:false}
+  ],
+  Wed:[ // Legs & Core (Explosive)
+    {name:"Back Squat",done:false},
+    {name:"Leg Press (Heavy)",done:false},
+    {name:"Romanian Deadlift",done:false},
+    {name:"Walking Lunges",done:false},
+    {name:"Leg Extension",done:false},
+    {name:"Lying Leg Curl",done:false},
+    {name:"Hanging Leg Raise",done:false},
+    {name:"Weighted Decline Sit-Up",done:false}
+  ],
+  Thu:[ // Shoulders & Traps (Detail)
+    {name:"Standing Overhead Press",done:false},
+    {name:"Seated Arnold Press",done:false},
+    {name:"Lateral Raise (Slow Eccentric)",done:false},
+    {name:"Front Plate Raise",done:false},
+    {name:"Reverse Pec Deck",done:false},
+    {name:"Barbell Shrug",done:false},
+    {name:"Dumbbell Upright Row",done:false},
+    {name:"Handstand Hold (Wall)",done:false}
+  ],
+  Fri:[ // HIIT / Conditioning
+    {name:"Sprints (10×100m)",done:false},
+    {name:"Burpees (5×15)",done:false},
+    {name:"Jump Rope (5 min rounds)",done:false},
+    {name:"Box Jump",done:false},
+    {name:"Mountain Climbers",done:false},
+    {name:"Plank (1 min × 3)",done:false},
+    {name:"Cable Crunch",done:false},
+    {name:"Hanging Knee Raise",done:false}
+  ],
+  Sat:[ // Functional / Mobility / Calisthenics
+    {name:"TRX Rows",done:false},
+    {name:"Push-Ups (Varied)",done:false},
+    {name:"Pistol Squats",done:false},
+    {name:"Parallel Bar Dips",done:false},
+    {name:"Ab-Wheel Rollout",done:false},
+    {name:"Russian Twists",done:false},
+    {name:"Mobility Flow / Stretch",done:false},
+    {name:"Jog or Light Bike 20 min",done:false}
+  ],
+  Sun:[ // Recovery / Athletic Stretch
+    {name:"Foam Rolling (Full Body)",done:false},
+    {name:"Yoga Flow",done:false},
+    {name:"Deep Static Stretching",done:false},
+    {name:"Walking or Swimming",done:false},
+    {name:"Sauna / Cold Shower",done:false}
+  ]
+};
+
+const stored = JSON.parse(localStorage.getItem("cc-workouts")||"{}");
+for (const d of days) {
+  if (!stored[d] || !stored[d].length) stored[d] = defaultPlan[d];
+}
+localStorage.setItem("cc-workouts", JSON.stringify(stored));
+
 days.forEach((d,i)=>{
   const b=document.createElement("div");
   b.className="workout-day-btn";
@@ -637,6 +713,59 @@ deletePhoto.onclick=()=>{
 closeModal.onclick=()=>modal.style.display="none";
 window.onclick=e=>{if(e.target===modal)modal.style.display="none";};
 loadGallery();
+/* ---------- GALLERY INFINITE SCROLL PATCH ---------- */
+let galleryOffset = 0;
+const batchSize = 15; // load 15 photos at a time
+
+function renderGalleryBatch() {
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  const end = Math.min(galleryOffset + batchSize, arr.length);
+  const slice = arr.slice(galleryOffset, end);
+
+  slice.forEach((p, i) => {
+    const img = document.createElement("img");
+    img.src = p.src;
+    img.loading = "lazy";               // lazy-load like Instagram
+    img.onclick = () => openModal(galleryOffset + i);
+    photoFeed.appendChild(img);
+  });
+
+  galleryOffset = end;
+  if (galleryOffset >= arr.length) observer.disconnect(); // stop when done
+}
+
+const observer = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) renderGalleryBatch();
+}, {rootMargin: "200px"});
+
+function enableInfiniteGallery() {
+  photoFeed.innerHTML = "";
+  galleryOffset = 0;
+  const sentinel = document.createElement("div");
+  sentinel.id = "gallery-sentinel";
+  sentinel.style.height = "2px";
+  photoFeed.appendChild(sentinel);
+  observer.observe(sentinel);
+  renderGalleryBatch();
+}
+
+/* ---------- TRUE INFINITE GALLERY (NO LIMIT) ---------- */
+function loadGallery() {
+  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
+  photoFeed.innerHTML = "";
+
+  const m = new Date().getMonth();
+  const monthly = arr.filter(p => new Date(p.date || Date.now()).getMonth() === m).length;
+  photoStats.textContent = `${arr.length} total • ${monthly} this month`;
+
+  arr.forEach((p, i) => {
+    const img = document.createElement("img");
+    img.src = p.src;
+    img.loading = "lazy";          // allows infinite scrolling performance
+    img.onclick = () => openModal(i);
+    photoFeed.appendChild(img);
+  });
+}
 
 /* ---------- MEDIA ---------- */
 const videoGrid=document.getElementById("videoGrid");
