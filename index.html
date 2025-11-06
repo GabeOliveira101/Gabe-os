@@ -261,7 +261,8 @@ nav button.active,nav button:hover{color:var(--gold);transform:scale(1.1);}
  header,nav{max-width:1080px;left:50%;transform:translateX(-50%);}
  #settingsDrawer{max-width:1080px;left:50%;transform:translateX(-50%);}
 }
- /* ===== MOBILE SAFE AREA / VIEW HEIGHT FIX ===== */
+
+/* ===== MOBILE SAFE AREA / VIEW HEIGHT FIX ===== */
 html, body {
   height: 100%;
   overflow-x: hidden;
@@ -271,12 +272,11 @@ html, body {
 
 /* Reserve space for fixed header and nav so content isn’t hidden */
 body {
-  padding-top: 70px;   /* matches your header height */
-  padding-bottom: 70px; /* matches your nav height */
+  padding-top: 70px;
+  padding-bottom: 70px;
   box-sizing: border-box;
 }
 
-/* Adjustments for iPhone safe area (PWA, notch devices) */
 @supports(padding: max(0px)) {
   body {
     padding-top: max(70px, env(safe-area-inset-top));
@@ -284,29 +284,11 @@ body {
   }
 }
 
-/* Header / Nav tweaks to stay within view */
-header, nav {
-  position: fixed;
-  left: 0; right: 0;
-  z-index: 100;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-}
-header { top: 0; }
-nav { bottom: 0; }
-
-/* Main area scrolls properly on small screens */
-main {
-  padding: 0 10px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  height: calc(100vh - 140px); /* subtract header+nav height */
-}
 /* Responsive center layout for desktop and mobile */
 #appWrapper {
   width: 100%;
-  max-width: 600px;        /* keeps your layout nicely centered on Mac */
-  margin: 0 auto;          /* centers horizontally */
+  max-width: 600px;
+  margin: 0 auto;
   padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom);
   box-sizing: border-box;
 }
@@ -318,11 +300,13 @@ main {
   }
 }
 
+/* put navy back (it was overridden by #000) */
 html, body {
+  background-color: #070a13;
   overflow-x: hidden;
-  background-color: #000;  /* keeps background consistent edge-to-edge */
 }
-/* ---------- MEDIA STYLING ---------- */
+
+/* ---------- MEDIA STYLING (your custom videos) ---------- */
 #videoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -330,7 +314,6 @@ html, body {
   margin-top: 20px;
   padding-bottom: 20px;
 }
-
 #videoGrid iframe {
   width: 100%;
   height: 200px;
@@ -338,7 +321,6 @@ html, body {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
-
 </style>
 </head>
 <body>
@@ -379,7 +361,7 @@ html, body {
    <div id="winsList" style="margin-top:10px;"></div>
  </div>
 </section>
-<!-- ===== PLANNER ===== -->
+
 <section id="planner">
  <div class="card">
    <h2 class="section-title">Planner</h2>
@@ -416,7 +398,6 @@ html, body {
  </div>
 </section>
 
-<!-- ===== WORKOUT ===== -->
 <section id="workout">
  <div class="card">
    <h2 class="section-title">Workout Log</h2>
@@ -427,7 +408,6 @@ html, body {
  </div>
 </section>
 
-<!-- ===== GALLERY ===== -->
 <section id="gallery">
  <div class="card">
    <h2 class="section-title">Photo Gallery</h2>
@@ -451,7 +431,6 @@ html, body {
  </div>
 </div>
 
-<!-- ===== MEDIA ===== -->
 <section id="media">
  <div class="card">
    <h2 class="section-title">Media Center</h2>
@@ -467,6 +446,7 @@ html, body {
  <button data-target="gallery">Gallery</button>
  <button data-target="media">Media</button>
 </nav>
+
 <script>
 /* ---------- NAVIGATION ---------- */
 const sections = document.querySelectorAll("main section");
@@ -609,8 +589,8 @@ loadDaily();
 /* ---------- WORKOUT ---------- */
 const workoutDaysEl=document.getElementById("workoutDays");
 const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
- const defaultPlan = {
-  Mon:[ // Chest & Triceps (Power Aesthetic)
+const defaultPlan = {
+  Mon:[
     {name:"Flat Barbell Bench Press",done:false},
     {name:"Incline Dumbbell Press",done:false},
     {name:"Cable Fly (Mid-Chest)",done:false},
@@ -620,7 +600,7 @@ const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
     {name:"Triceps Rope Pushdown",done:false},
     {name:"Push-ups Burnout",done:false}
   ],
-  Tue:[ // Back & Biceps (Width & Strength)
+  Tue:[
     {name:"Wide-Grip Pull-Ups",done:false},
     {name:"Lat Pulldown",done:false},
     {name:"T-Bar Row",done:false},
@@ -630,7 +610,7 @@ const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
     {name:"Hammer Curl",done:false},
     {name:"Face Pull",done:false}
   ],
-  Wed:[ // Legs & Core (Explosive)
+  Wed:[
     {name:"Back Squat",done:false},
     {name:"Leg Press (Heavy)",done:false},
     {name:"Romanian Deadlift",done:false},
@@ -640,7 +620,7 @@ const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
     {name:"Hanging Leg Raise",done:false},
     {name:"Weighted Decline Sit-Up",done:false}
   ],
-  Thu:[ // Shoulders & Traps (Detail)
+  Thu:[
     {name:"Standing Overhead Press",done:false},
     {name:"Seated Arnold Press",done:false},
     {name:"Lateral Raise (Slow Eccentric)",done:false},
@@ -650,7 +630,7 @@ const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
     {name:"Dumbbell Upright Row",done:false},
     {name:"Handstand Hold (Wall)",done:false}
   ],
-  Fri:[ // HIIT / Conditioning
+  Fri:[
     {name:"Sprints (10×100m)",done:false},
     {name:"Burpees (5×15)",done:false},
     {name:"Jump Rope (5 min rounds)",done:false},
@@ -660,7 +640,7 @@ const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
     {name:"Cable Crunch",done:false},
     {name:"Hanging Knee Raise",done:false}
   ],
-  Sat:[ // Functional / Mobility / Calisthenics
+  Sat:[
     {name:"TRX Rows",done:false},
     {name:"Push-Ups (Varied)",done:false},
     {name:"Pistol Squats",done:false},
@@ -670,7 +650,7 @@ const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
     {name:"Mobility Flow / Stretch",done:false},
     {name:"Jog or Light Bike 20 min",done:false}
   ],
-  Sun:[ // Recovery / Athletic Stretch
+  Sun:[
     {name:"Foam Rolling (Full Body)",done:false},
     {name:"Yoga Flow",done:false},
     {name:"Deep Static Stretching",done:false},
@@ -678,7 +658,6 @@ const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
     {name:"Sauna / Cold Shower",done:false}
   ]
 };
-
 const stored = JSON.parse(localStorage.getItem("cc-workouts")||"{}");
 for (const d of days) {
   if (!stored[d] || !stored[d].length) stored[d] = defaultPlan[d];
@@ -740,13 +719,6 @@ const deletePhoto = document.getElementById("deletePhoto");
 const closeModal  = document.getElementById("closeModal");
 let currentIndex  = null;
 
-/* Build responsive 3-column Instagram-style grid */
-photoFeed.style.display = "grid";
-photoFeed.style.gridTemplateColumns = "repeat(auto-fill, minmax(110px, 1fr))";
-photoFeed.style.gap = "5px";
-photoFeed.style.marginTop = "10px";
-
-/* Load all photos with lazy loading */
 function loadGallery() {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   photoFeed.innerHTML = "";
@@ -759,27 +731,15 @@ function loadGallery() {
     const img = document.createElement("img");
     img.src = p.src;
     img.loading = "lazy";
-    img.style.width = "100%";
-    img.style.height = "110px";
-    img.style.objectFit = "cover";
-    img.style.borderRadius = "8px";
-    img.style.cursor = "pointer";
     img.onclick = () => openModal(i);
     photoFeed.appendChild(img);
   });
 }
 
-/* Multi-file upload, can re-upload same image */
+/* fixed multi-upload */
 photoUpload.onchange = async e => {
   const files = [...e.target.files];
   if (!files.length) return;
-
-  const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
-
-  photoUpload.onchange = async e => {
-  const files = [...e.target.files];
-  if (!files.length) return;
-
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
 
   for (const file of files) {
@@ -794,12 +754,10 @@ photoUpload.onchange = async e => {
   }
 
   localStorage.setItem("cc-photos", JSON.stringify(arr));
-  e.target.value = ""; // reset file input
-  loadGallery(); // re-render after all uploads finish
+  e.target.value = "";
+  loadGallery();
 };
 
-
-/* Modal behavior (view full image + note) */
 function openModal(i) {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   currentIndex = i;
@@ -809,8 +767,6 @@ function openModal(i) {
   modal.style.display = "flex";
   document.body.style.overflow = "hidden";
 }
-
-/* Close modal on button, click outside, or Esc */
 function closeGalleryModal() {
   modal.style.display = "none";
   document.body.style.overflow = "";
@@ -821,8 +777,6 @@ window.onclick = e => { if (e.target === modal) closeGalleryModal(); };
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && modal.style.display === "flex") closeGalleryModal();
 });
-
-/* Save or delete photo */
 saveNote.onclick = () => {
   const arr = JSON.parse(localStorage.getItem("cc-photos") || "[]");
   if (currentIndex !== null) {
@@ -841,14 +795,6 @@ deletePhoto.onclick = () => {
   closeGalleryModal();
   loadGallery();
 };
-
-/* Scroll behavior (infinite feed effect) */
-photoFeed.style.overflowY = "auto";
-photoFeed.style.maxHeight = "calc(100vh - 200px)";
-photoFeed.style.scrollBehavior = "smooth";
-photoFeed.style.paddingBottom = "20px";
-
-/* Initial render */
 loadGallery();
 
 /* ---------- MEDIA ---------- */
@@ -858,8 +804,6 @@ const vids = [
   "https://www.youtube.com/embed/LPTx6G8r_UY",
   "https://www.youtube.com/embed/WE50ZSVQeDs"
 ];
-
-// Create responsive grid of embedded videos
 videoGrid.innerHTML = vids
   .map(v => `
     <iframe 
@@ -870,8 +814,7 @@ videoGrid.innerHTML = vids
       allowfullscreen>
     </iframe>`)
   .join("");
-
 </script>
-</div> <!-- closes #appWrapper -->
+</div>
 </body>
 </html>
